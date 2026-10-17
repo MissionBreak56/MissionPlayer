@@ -1,6 +1,7 @@
-## MissionPlayer v2.6.2 — Correção do toque que não respondia
+## MissionPlayer v2.6.3 — Aleatório que nunca termina
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.6.2-arm64-v8a.apk`.
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.6.3-arm64-v8a.apk`.
 
 ### Correções
-- **Toque ignorado ao voltar de outra tela** (ex.: sair do player e tocar em uma pasta): ao retornar, o app recarregava a biblioteca e reconstruía todas as listas mesmo sem nenhuma mudança, o que "engolia" o primeiro toque. Agora a biblioteca só atualiza as listas quando algo realmente mudou, e as listas não são redesenhadas se o conteúdo é o mesmo.
+- **Aleatório não trava mais no fim da lista**: ao chegar na última música da rodada, o botão avançar continua funcionando (e a reprodução segue sozinha). O app escolhe uma música diferente, aleatória e tocada há mais tempo, para começar uma nova rodada embaralhada, sem repetir a que acabou de tocar. Cada rodada toca todas as músicas uma vez antes de qualquer repetição.
+- Com o aleatório ligado, o modo "repetir desligado" passa a se comportar como "repetir todas", já que o aleatório não deve parar.

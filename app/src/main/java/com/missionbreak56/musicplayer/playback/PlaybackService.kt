@@ -53,11 +53,24 @@ class PlaybackService : MediaSessionService() {
     private val stateListener = object : Player.Listener {
         override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
             Prefs.shuffleMode = shuffleModeEnabled
-            if (shuffleModeEnabled) handler.post { exo?.let { reshuffleFromCurrent(it) } }
+            if (shuffleModeEnabled) {
+                handler.post {
+                    exo?.let {
+                        if (it.repeatMode == Player.REPEAT_MODE_OFF) it.repeatMode = Player.REPEAT_MODE_ALL
+                        reshuffleFromCurrent(it)
+                    }
+                }
+            }
         }
 
         override fun onRepeatModeChanged(repeatMode: Int) {
             Prefs.repeatMode = repeatMode
+            // Shuffle never ends: with "repeat off" the queue would stop (and "next" would stop
+            // working) after the last song, so shuffle keeps the cycle going instead.
+            val p = exo
+            if (p != null && p.shuffleModeEnabled && repeatMode == Player.REPEAT_MODE_OFF) {
+                handler.post { p.repeatMode = Player.REPEAT_MODE_ALL }
+            }
         }
 
         override fun onTimelineChanged(timeline: Timeline, reason: Int) {
@@ -69,21 +82,29 @@ class PlaybackService : MediaSessionService() {
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             val p = exo ?: return
             PlaybackState.savePosition(p)
-            // Repeat-all just wrapped around: start a fresh random order for the next round.
-            if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO &&
-                p.shuffleModeEnabled &&
-                p.repeatMode == Player.REPEAT_MODE_ALL &&
-                p.mediaItemCount > 2 &&
-                p.currentMediaItemIndex == p.currentTimeline.getFirstWindowIndex(true)
-            ) {
-                handler.post { reshuffleFromCurrent(p) }
+            if (p.shuffleModeEnabled && p.mediaItemCount > 1) {
+                val order = currentOrder(p)
+                val cur = p.currentMediaItemIndex
+                if (order.size == p.mediaItemCount) {
+                    if (lastIndex == order.last() && cur == order.first() && lastIndex != cur) {
+                        // The cycle just wrapped (automatically or with "next"): new random round.
+                        handler.post { reshuffleFromCurrent(p) }
+                    } else if (cur == order.last()) {
+                        // Last song of the round: pick a different, long-unplayed song to start the next.
+                        rotateStart(p, order)
+                    }
+                }
             }
+            lastIndex = p.currentMediaItemIndex
         }
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             exo?.let { PlaybackState.savePosition(it) }
         }
     }
+
+    /** Queue index that was playing before the latest transition. */
+    private var lastIndex = -1
 
     private val sessionCallback = object : MediaSession.Callback {
         override fun onConnect(
@@ -129,6 +150,21 @@ class PlaybackService : MediaSessionService() {
         val current = p.currentMediaItemIndex.coerceIn(0, n - 1)
         val rest = (0 until n).filter { it != current }.shuffled()
         applyOrder(p, listOf(current) + rest)
+    }
+
+    /**
+     * Called when the last song of a shuffle round starts: swaps a random, early-played song into
+     * the first slot so the round after this one begins with a different song, not a repeat.
+     */
+    private fun rotateStart(p: ExoPlayer, order: List<Int>) {
+        if (order.size < 2) return
+        val pool = order.subList(0, maxOf(1, (order.size - 1) / 2))
+        val pick = pool.random()
+        val at = order.indexOf(pick)
+        if (at <= 0) return
+        val m = order.toMutableList()
+        java.util.Collections.swap(m, 0, at)
+        applyOrder(p, m)
     }
 
     /** Current shuffle order as a list of queue indexes (first to last). */
@@ -184,6 +220,10 @@ class PlaybackService : MediaSessionService() {
         // Restore the last chosen shuffle / repeat mode (before the listener starts saving).
         player.shuffleModeEnabled = Prefs.shuffleMode
         player.repeatMode = Prefs.repeatMode.coerceIn(Player.REPEAT_MODE_OFF, Player.REPEAT_MODE_ALL)
+
+        if (player.shuffleModeEnabled && player.repeatMode == Player.REPEAT_MODE_OFF) {
+            player.repeatMode = Player.REPEAT_MODE_ALL
+        }
 
         player.addListener(statsListener)
         player.addListener(stateListener)
