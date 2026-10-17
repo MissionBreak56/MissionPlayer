@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:visibility="gone"
-    app:cardBackgroundColor="?attr/colorSurfaceVariant"
-    app:cardCornerRadius="18dp"
+    app:cardBackgroundColor="?attr/colorPrimaryContainer"
+    app:cardCornerRadius="32dp"
     app:cardElevation="4dp"
     app:strokeWidth="0dp">
 
@@ -29,19 +29,19 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="10dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="4dp"
+            android:paddingStart="8dp"
+            android:paddingTop="7dp"
+            android:paddingEnd="8dp"
             android:paddingBottom="8dp">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/miniArt"
-                android:layout_width="46dp"
-                android:layout_height="46dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:contentDescription="@string/cd_art"
                 android:scaleType="centerCrop"
                 android:src="@drawable/art_placeholder"
-                app:shapeAppearanceOverlay="@style/Shape.Rounded8" />
+                app:shapeAppearanceOverlay="@style/Shape.Circle" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -56,8 +56,8 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textSize="15sp"
+                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -66,20 +66,22 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:alpha="0.7"
                     android:textSize="13sp" />
             </LinearLayout>
 
             <ImageButton
             android:id="@+id/miniPlay"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/bg_circle_outline"
             android:contentDescription="@string/cd_play_pause"
-            android:padding="11dp"
+            android:padding="9dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_play"
-            app:tint="?attr/colorOnSurface" />
+            app:tint="?attr/colorOnPrimaryContainer" />
             <ImageButton
             android:id="@+id/miniNext"
             android:layout_width="46dp"
@@ -89,7 +91,7 @@
             android:padding="11dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_next"
-            app:tint="?attr/colorOnSurface" />
+            app:tint="?attr/colorOnPrimaryContainer" />
             <ImageButton
             android:id="@+id/miniQueue"
             android:layout_width="46dp"
@@ -99,7 +101,7 @@
             android:padding="11dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_queue"
-            app:tint="?attr/colorOnSurface" />
+            app:tint="?attr/colorOnPrimaryContainer" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

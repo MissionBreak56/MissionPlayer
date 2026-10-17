@@ -31,7 +31,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="@drawable/bg_search_pill"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:hint="@string/search_hint"
             android:imeOptions="actionSearch"
             android:importantForAutofill="no"
@@ -40,8 +42,21 @@
             android:minHeight="48dp"
             android:textColor="?attr/colorOnSurface"
             android:textColorHint="?attr/colorOnSurfaceVariant"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textIndexing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="24dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="24dp"
+        android:text="@string/indexing_lyrics"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/topBar" />
 
     <FrameLayout
         android:layout_width="0dp"
@@ -49,7 +64,7 @@
         app:layout_constraintBottom_toTopOf="@id/miniPlayer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topBar">
+        app:layout_constraintTop_toBottomOf="@id/textIndexing">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list"

@@ -82,4 +82,4 @@ jobs:
           gh release create "$TAG" "MissionPlayer-$TAG-arm64-v8a.apk" \
             --target "$GITHUB_SHA" \
             --title "MissionPlayer $TAG" \
-            --notes "Novo visual do MissionPlayer. APK release (arm64-v8a) já compilado."
+            --notes-file RELEASE_NOTES.md

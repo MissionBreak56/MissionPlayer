@@ -8,9 +8,12 @@ import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.missionbreak56.musicplayer.data.Library
+import com.missionbreak56.musicplayer.data.LyricsIndex
 import com.missionbreak56.musicplayer.databinding.ActivitySearchBinding
 import com.missionbreak56.musicplayer.playback.PlaybackQueue
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchActivity : PlayerBoundActivity() {
 
@@ -45,7 +48,25 @@ class SearchActivity : PlayerBoundActivity() {
         lifecycleScope.launch {
             Library.load(this@SearchActivity, force = false)
             filter(binding.editSearch.text?.toString().orEmpty())
+            buildLyricsIndex()
         }
+    }
+
+    /** Reads the lyrics inside the music files (and .lrc files) once so the search can match them. */
+    private suspend fun buildLyricsIndex() {
+        if (LyricsIndex.done) return
+        binding.textIndexing.visibility = View.VISIBLE
+        val app = applicationContext
+        val songs = Library.songs
+        withContext(Dispatchers.IO) {
+            LyricsIndex.build(app, songs) {
+                runOnUiThread {
+                    if (!isDestroyed) filter(binding.editSearch.text?.toString().orEmpty())
+                }
+            }
+        }
+        binding.textIndexing.visibility = View.GONE
+        filter(binding.editSearch.text?.toString().orEmpty())
     }
 
     private fun filter(query: String) {
@@ -55,11 +76,19 @@ class SearchActivity : PlayerBoundActivity() {
             binding.textEmpty.visibility = View.GONE
             return
         }
-        val results = Library.songs.filter {
+        val byMeta = Library.songs.filter {
             it.displayTitle.lowercase().contains(q) ||
                 it.displayArtist.lowercase().contains(q) ||
                 it.displayAlbum.lowercase().contains(q)
         }
+        val metaIds = byMeta.map { it.id }.toHashSet()
+        val byLyrics = if (q.length >= 2) {
+            Library.songs.filter { !metaIds.contains(it.id) && LyricsIndex.matches(it.id, q) }
+        } else {
+            emptyList()
+        }
+        adapter.snippets = byLyrics.associate { it.id to LyricsIndex.snippet(it.id, q).orEmpty() }
+        val results = byMeta + byLyrics
         adapter.submit(results)
         binding.textEmpty.visibility = if (results.isEmpty()) View.VISIBLE else View.GONE
     }

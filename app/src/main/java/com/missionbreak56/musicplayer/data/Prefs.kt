@@ -18,6 +18,8 @@ object Prefs {
     private const val KEY_THEME = "theme"
     private const val KEY_NIGHT = "night_mode"
     private const val KEY_SORT = "sort_order"
+    private const val KEY_HIDDEN_SONGS = "hidden_songs"
+    private const val KEY_HIDDEN_FOLDERS = "hidden_folders"
     private const val KEY_FX_ENABLED = "fx_enabled"
     private const val KEY_FX_PRESET = "fx_preset"
     private const val KEY_FX_LEVELS = "fx_levels"
@@ -57,6 +59,26 @@ object Prefs {
     var sortOrder: Int
         get() = sp?.getInt(KEY_SORT, 0) ?: 0
         set(value) { store().edit().putInt(KEY_SORT, value).apply() }
+
+    // ----- Hidden songs / folders -----
+
+    fun hiddenSongs(): MutableSet<String> {
+        val s = sp ?: return mutableSetOf()
+        return (s.getStringSet(KEY_HIDDEN_SONGS, emptySet()) ?: emptySet()).toMutableSet()
+    }
+
+    fun hiddenFolders(): MutableSet<String> {
+        val s = sp ?: return mutableSetOf()
+        return (s.getStringSet(KEY_HIDDEN_FOLDERS, emptySet()) ?: emptySet()).toMutableSet()
+    }
+
+    fun setHiddenSongs(set: Set<String>) {
+        store().edit().putStringSet(KEY_HIDDEN_SONGS, HashSet(set)).apply()
+    }
+
+    fun setHiddenFolders(set: Set<String>) {
+        store().edit().putStringSet(KEY_HIDDEN_FOLDERS, HashSet(set)).apply()
+    }
 
     // ----- Favorites -----
 

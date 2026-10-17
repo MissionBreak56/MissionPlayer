@@ -16,21 +16,44 @@
         android:paddingEnd="4dp"
         android:paddingBottom="4dp">
 
-        <com.google.android.material.button.MaterialButton
+        <LinearLayout
             android:id="@+id/btnShuffleAll"
-            style="@style/Widget.Material3.Button.TonalButton.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/shuffle_all"
-            app:icon="@drawable/ic_shuffle" />
-
-        <TextView
-            android:id="@+id/textCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:minHeight="48dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/bg_circle_filled"
+                android:importantForAccessibility="no"
+                android:padding="9dp"
+                android:src="@drawable/ic_play"
+                app:tint="?android:attr/colorBackground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="@string/shuffle_all"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
             android:gravity="end"
-            android:paddingEnd="8dp"
+            android:paddingEnd="4dp"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="13sp" />
 

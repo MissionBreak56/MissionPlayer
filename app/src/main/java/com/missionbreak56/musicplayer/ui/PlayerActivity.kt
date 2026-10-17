@@ -20,7 +20,9 @@ import com.google.android.material.color.MaterialColors
 import com.missionbreak56.musicplayer.R
 import com.missionbreak56.musicplayer.data.Labels
 import com.missionbreak56.musicplayer.data.Library
+import com.missionbreak56.musicplayer.data.LrcParser
 import com.missionbreak56.musicplayer.data.LyricLine
+import com.missionbreak56.musicplayer.data.LyricsIndex
 import com.missionbreak56.musicplayer.data.LyricsStore
 import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.databinding.ActivityPlayerBinding
@@ -86,6 +88,8 @@ class PlayerActivity : PlayerBoundActivity() {
         binding.imageArt.setOnClickListener { toggleLyrics() }
         binding.btnQueue.setOnClickListener { showQueue() }
         binding.btnAddLyrics.setOnClickListener { pickLyrics.launch(arrayOf("*/*")) }
+        binding.btnAddLyricsPanel.setOnClickListener { pickLyrics.launch(arrayOf("*/*")) }
+        binding.btnThemes.setOnClickListener { startActivity(Intent(this, ThemesActivity::class.java)) }
 
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -143,7 +147,7 @@ class PlayerActivity : PlayerBoundActivity() {
             if (c.repeatMode == Player.REPEAT_MODE_OFF) idle else active
         )
         binding.btnFavorite.setImageResource(
-            if (id > 0 && Prefs.isFavorite(id)) R.drawable.ic_favorite else R.drawable.ic_favorite_border
+            if (id > 0 && Prefs.isFavorite(id)) R.drawable.ic_star else R.drawable.ic_star_border
         )
         binding.btnLyrics.imageTintList = ColorStateList.valueOf(
             if (showLyrics) active else binding.root.onSurfaceColor()
@@ -212,8 +216,12 @@ class PlayerActivity : PlayerBoundActivity() {
 
     private fun loadLyrics(id: Long) {
         lifecycleScope.launch {
-            val lines = if (id > 0) {
-                withContext(Dispatchers.IO) { LyricsStore.load(applicationContext, id) }
+            val song = Library.song(id)
+            val lines = if (id > 0 && song != null) {
+                withContext(Dispatchers.IO) {
+                    val text = LyricsIndex.fullText(applicationContext, song)
+                    if (text.isNullOrBlank()) emptyList() else LrcParser.parse(text)
+                }
             } else {
                 emptyList()
             }
@@ -223,6 +231,9 @@ class PlayerActivity : PlayerBoundActivity() {
             lyricsAdapter.submit(lines)
             binding.lyricsList.visibility = if (lines.isEmpty()) View.GONE else View.VISIBLE
             binding.lyricsEmpty.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
+            binding.textLyricsHint.text = if (lines.isEmpty()) getString(R.string.no_lyrics_short) else ""
+            binding.textLyricsHint.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
+            binding.btnAddLyrics.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
         }
     }
 

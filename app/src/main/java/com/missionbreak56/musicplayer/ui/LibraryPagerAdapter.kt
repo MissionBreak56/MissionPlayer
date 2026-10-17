@@ -20,6 +20,7 @@ interface LibraryHost {
     fun onShuffle(list: List<Song>)
     fun onOpenGroup(group: Group)
     fun onSongMenu(anchor: View, song: Song)
+    fun onFolderMenu(anchor: View, group: Group)
 }
 
 /**
@@ -45,6 +46,10 @@ class LibraryPagerAdapter(
         GroupAdapter(false) { host.onOpenGroup(it) }
     )
 
+    init {
+        groupAdapters[4]?.onMore = { view, group -> host.onFolderMenu(view, group) }
+    }
+
     fun setPlayingId(id: Long) {
         songAdapter.playingId = id
     }
@@ -59,8 +64,16 @@ class LibraryPagerAdapter(
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageHolder =
-        PageHolder(PageListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    // One view type per page so a recycled holder never carries another page's layout manager
+    // (this used to turn the songs list into the 2-column album grid).
+    override fun getItemViewType(position: Int): Int = position
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageHolder {
+        val b = PageListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val ctx = parent.context
+        b.list.layoutManager = if (viewType == 2) GridLayoutManager(ctx, 3) else LinearLayoutManager(ctx)
+        return PageHolder(b)
+    }
 
     override fun onBindViewHolder(holder: PageHolder, position: Int) = holder.bind(position)
 
@@ -70,10 +83,6 @@ class LibraryPagerAdapter(
 
         fun bind(page: Int) {
             val ctx = b.root.context
-            if (b.list.layoutManager == null) {
-                b.list.layoutManager =
-                    if (page == 2) GridLayoutManager(ctx, 2) else LinearLayoutManager(ctx)
-            }
             val adapter: RecyclerView.Adapter<*> =
                 if (page == 0) songAdapter else groupAdapters[page] ?: songAdapter
             if (b.list.adapter !== adapter) b.list.adapter = adapter

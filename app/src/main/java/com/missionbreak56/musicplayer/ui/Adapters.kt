@@ -25,6 +25,9 @@ class SongAdapter(
 
     private var items: List<Song> = emptyList()
 
+    /** Optional per-song line shown instead of "artist | album" (e.g. a lyrics match). */
+    var snippets: Map<Long, String> = emptyMap()
+
     var playingId: Long = -1L
         set(value) {
             if (field != value) {
@@ -51,7 +54,12 @@ class SongAdapter(
         fun bind(song: Song) {
             b.textTitle.text = song.displayTitle
             b.textTitle.setTextColor(if (song.id == playingId) b.root.primaryColor() else b.root.onSurfaceColor())
-            b.textSubtitle.text = "${song.displayArtist} \u00B7 ${song.displayAlbum}"
+            val snippet = snippets[song.id]
+            b.textSubtitle.text = if (snippet != null) {
+                "\u266A $snippet"
+            } else {
+                "${song.displayArtist} | ${song.displayAlbum}"
+            }
             b.textDuration.text = Format.time(song.durationMs)
             ArtLoader.load(b.imageArt, song, 160)
             b.root.setOnClickListener {
@@ -69,6 +77,9 @@ class GroupAdapter(
 ) : RecyclerView.Adapter<GroupAdapter.VH>() {
 
     private var items: List<Group> = emptyList()
+
+    /** Overflow button shown on folder rows (hide folder). */
+    var onMore: ((View, Group) -> Unit)? = null
 
     fun submit(list: List<Group>) {
         items = list
@@ -116,6 +127,24 @@ class GroupAdapter(
                 ArtLoader.load(art, group.songs.firstOrNull(), 320)
             }
             itemView.setOnClickListener { onClick(group) }
+
+            val more: View? = itemView.findViewById(R.id.btnMore)
+            val chevron: View? = itemView.findViewById(R.id.chevron)
+            val handler = onMore
+            if (more != null) {
+                val show = handler != null && group.kind == Kind.FOLDER
+                more.visibility = if (show) View.VISIBLE else View.GONE
+                chevron?.visibility = if (show) View.GONE else View.VISIBLE
+                more.setOnClickListener { v -> handler?.invoke(v, group) }
+            }
+            itemView.setOnLongClickListener {
+                if (handler != null && group.kind == Kind.FOLDER) {
+                    handler(itemView, group)
+                    true
+                } else {
+                    false
+                }
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import android.content.ContentUris
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.util.LruCache
@@ -26,19 +27,44 @@ object ArtLoader {
     private val missing = HashSet<String>()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-    private fun key(song: Song, size: Int) = "${song.albumId}_$size"
+    private fun key(song: Song, size: Int) =
+        if (song.albumId > 0 && song.album.isNotBlank()) "a${song.albumId}_$size" else "s${song.id}_$size"
 
-    private fun decode(context: Context, song: Song, size: Int): Bitmap? = try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            context.contentResolver.loadThumbnail(song.uri, Size(size, size), null)
-        } else {
-            val artUri = ContentUris.withAppendedId(
-                Uri.parse("content://media/external/audio/albumart"), song.albumId
-            )
-            context.contentResolver.openInputStream(artUri)?.use { BitmapFactory.decodeStream(it) }
+    private fun missingKey(song: Song, size: Int) = "${song.id}_$size"
+
+    private fun decode(context: Context, song: Song, size: Int): Bitmap? {
+        val primary = try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                context.contentResolver.loadThumbnail(song.uri, Size(size, size), null)
+            } else {
+                val artUri = ContentUris.withAppendedId(
+                    Uri.parse("content://media/external/audio/albumart"), song.albumId
+                )
+                context.contentResolver.openInputStream(artUri)?.use { BitmapFactory.decodeStream(it) }
+            }
+        } catch (_: Exception) {
+            null
         }
-    } catch (_: Exception) {
-        null
+        return primary ?: decodeEmbedded(context, song, size)
+    }
+
+    /** Fallback: read the picture embedded in the audio file when MediaStore has no thumbnail. */
+    private fun decodeEmbedded(context: Context, song: Song, size: Int): Bitmap? {
+        val retriever = MediaMetadataRetriever()
+        return try {
+            retriever.setDataSource(context, song.uri)
+            val bytes = retriever.embeddedPicture ?: return null
+            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
+            var sample = 1
+            while (bounds.outWidth / (sample * 2) >= size && bounds.outHeight / (sample * 2) >= size) sample *= 2
+            val opts = BitmapFactory.Options().apply { inSampleSize = sample }
+            BitmapFactory.decodeByteArray(bytes, 0, bytes.size, opts)
+        } catch (_: Throwable) {
+            null
+        } finally {
+            try { retriever.release() } catch (_: Throwable) {}
+        }
     }
 
     /** Suspending variant used when the raw bitmap is needed (e.g. for colour extraction). */
@@ -65,11 +91,12 @@ object ArtLoader {
             return
         }
         view.setImageResource(R.drawable.art_placeholder)
-        if (missing.contains(k)) return
+        val mk = missingKey(song, size)
+        if (missing.contains(mk)) return
         val app = view.context.applicationContext
         scope.launch {
             val bmp = withContext(Dispatchers.IO) { decode(app, song, size) }
-            if (bmp != null) cache.put(k, bmp) else missing.add(k)
+            if (bmp != null) cache.put(k, bmp) else missing.add(mk)
             if (bmp != null && view.getTag(R.id.tag_art) == k) view.setImageBitmap(bmp)
         }
     }

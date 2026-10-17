@@ -7,9 +7,43 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.missionbreak56.musicplayer.R
+import com.missionbreak56.musicplayer.data.Library
+import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.playback.SleepTimer
 
 object Dialogs {
+
+    /** Lists hidden folders and songs; unchecking an entry shows it again. */
+    fun manageHidden(activity: Activity, onChanged: () -> Unit) {
+        val folders = Prefs.hiddenFolders().sorted()
+        val songs = Prefs.hiddenSongs().mapNotNull { it.toLongOrNull() }.mapNotNull { Library.song(it) }
+        if (folders.isEmpty() && songs.isEmpty()) {
+            Toast.makeText(activity, R.string.hidden_none, Toast.LENGTH_SHORT).show()
+            return
+        }
+        val labels = folders.map { activity.getString(R.string.hidden_folder_label, it.substringAfterLast('/')) } +
+            songs.map { "${it.displayTitle} \u2013 ${it.displayArtist}" }
+        val checked = BooleanArray(labels.size) { true }
+        MaterialAlertDialogBuilder(activity)
+            .setTitle(R.string.menu_hidden)
+            .setMultiChoiceItems(labels.toTypedArray(), checked) { _, which, isChecked ->
+                checked[which] = isChecked
+            }
+            .setPositiveButton(R.string.save) { _, _ ->
+                val hiddenFolders = Prefs.hiddenFolders()
+                val hiddenSongs = Prefs.hiddenSongs()
+                folders.forEachIndexed { i, path -> if (!checked[i]) hiddenFolders.remove(path) }
+                songs.forEachIndexed { i, song ->
+                    if (!checked[folders.size + i]) hiddenSongs.remove(song.id.toString())
+                }
+                Prefs.setHiddenFolders(hiddenFolders)
+                Prefs.setHiddenSongs(hiddenSongs)
+                Library.applyHidden()
+                onChanged()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
 
     fun promptText(
         activity: Activity,

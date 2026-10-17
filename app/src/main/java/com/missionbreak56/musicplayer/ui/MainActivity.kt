@@ -9,14 +9,18 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.session.MediaController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.missionbreak56.musicplayer.R
 import com.missionbreak56.musicplayer.data.Group
+import com.missionbreak56.musicplayer.data.Kind
 import com.missionbreak56.musicplayer.data.Library
+import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.data.Song
 import com.missionbreak56.musicplayer.databinding.ActivityMainBinding
 import com.missionbreak56.musicplayer.playback.PlaybackQueue
@@ -29,7 +33,10 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
     private lateinit var actions: SongActions
     private var deniedCount = 0
 
-    private val libraryListener: () -> Unit = { pages.refresh() }
+    private val libraryListener: () -> Unit = {
+        pages.refresh()
+        updateRecentTile()
+    }
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -60,6 +67,9 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
             tab.text = titles[position]
         }.attach()
 
+        binding.tileFav.setOnClickListener { openAuto("fav") }
+        binding.tileRecent.setOnClickListener { openAuto("recent") }
+        binding.tilePlaylists.setOnClickListener { binding.pager.currentItem = 1 }
         binding.btnSearch.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
         }
@@ -80,8 +90,22 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
         maybeRequestNotificationPermission()
     }
 
+    private fun openAuto(key: String) {
+        startActivity(
+            Intent(this, DetailActivity::class.java)
+                .putExtra(DetailActivity.EXTRA_KIND, Kind.AUTO.name)
+                .putExtra(DetailActivity.EXTRA_KEY, key)
+        )
+    }
+
+    private fun updateRecentTile() {
+        val last = Prefs.recent().firstNotNullOfOrNull { Library.song(it) }
+        if (last == null) binding.tileRecentArt.setImageDrawable(null) else ArtLoader.load(binding.tileRecentArt, last, 320)
+    }
+
     override fun onStart() {
         super.onStart()
+        if (Library.loaded) updateRecentTile()
         // Pick up files added while the app was in the background.
         if (hasAudioPermission() && Library.loaded) {
             lifecycleScope.launch { Library.load(this@MainActivity) }
@@ -130,13 +154,15 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
         popup.menu.add(0, 1, 0, R.string.menu_equalizer)
         popup.menu.add(0, 2, 1, R.string.menu_sleep_timer)
         popup.menu.add(0, 3, 2, R.string.menu_themes)
-        popup.menu.add(0, 4, 3, R.string.menu_about)
+        popup.menu.add(0, 5, 3, R.string.menu_hidden)
+        popup.menu.add(0, 4, 4, R.string.menu_about)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 1 -> startActivity(Intent(this, EqualizerActivity::class.java))
                 2 -> Dialogs.sleepTimer(this) {}
                 3 -> startActivity(Intent(this, ThemesActivity::class.java))
                 4 -> startActivity(Intent(this, AboutActivity::class.java))
+                5 -> Dialogs.manageHidden(this) { pages.refresh() }
             }
             true
         }
@@ -159,6 +185,23 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
                 .putExtra(DetailActivity.EXTRA_KIND, group.kind.name)
                 .putExtra(DetailActivity.EXTRA_KEY, group.key)
         )
+    }
+
+    override fun onFolderMenu(anchor: View, group: Group) {
+        val popup = PopupMenu(this, anchor)
+        popup.menu.add(0, 1, 0, R.string.hide_folder)
+        popup.setOnMenuItemClickListener {
+            MaterialAlertDialogBuilder(this)
+                .setMessage(getString(R.string.hide_folder_confirm, group.title))
+                .setPositiveButton(R.string.hide_folder) { _, _ ->
+                    Library.hideFolder(group.key)
+                    Toast.makeText(this, R.string.folder_hidden, Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+            true
+        }
+        popup.show()
     }
 
     override fun onSongMenu(anchor: View, song: Song) {

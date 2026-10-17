@@ -10,6 +10,7 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.missionbreak56.musicplayer.R
+import com.missionbreak56.musicplayer.data.Library
 import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.data.Song
 import com.missionbreak56.musicplayer.playback.PlaybackQueue
@@ -34,7 +35,8 @@ class SongActions(
         )
         menu.add(0, 5, 4, R.string.set_ringtone)
         menu.add(0, 6, 5, R.string.share)
-        if (playlistKey != null) menu.add(0, 7, 6, R.string.remove_from_playlist)
+        menu.add(0, 8, 6, R.string.hide_song)
+        if (playlistKey != null) menu.add(0, 7, 7, R.string.remove_from_playlist)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 1 -> controllerAction { PlaybackQueue.playNext(it, song); toast(R.string.queue_next) }
@@ -43,6 +45,11 @@ class SongActions(
                 4 -> toggleFavorite(song)
                 5 -> setRingtone(song)
                 6 -> share(song)
+                8 -> {
+                    Library.hideSong(song.id)
+                    toast(R.string.song_hidden)
+                    onChanged()
+                }
                 7 -> {
                     if (playlistKey != null) Prefs.removeFromPlaylist(playlistKey, song.id)
                     onChanged()

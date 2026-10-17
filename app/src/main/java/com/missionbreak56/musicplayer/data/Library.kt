@@ -20,12 +20,21 @@ data class Group(
 /** In-memory snapshot of the device library plus the derived collections. */
 object Library {
 
+    /** Every song found on the device, including hidden ones. */
+    @Volatile
+    var allSongs: List<Song> = emptyList()
+        private set
+
+    /** Songs the user can see (hidden songs and folders removed). */
     @Volatile
     var songs: List<Song> = emptyList()
         private set
 
     @Volatile
     private var byId: Map<Long, Song> = emptyMap()
+
+    @Volatile
+    private var allById: Map<Long, Song> = emptyMap()
 
     @Volatile
     private var genreMap: Map<String, List<Long>> = emptyMap()
@@ -44,7 +53,7 @@ object Library {
         listeners.remove(listener)
     }
 
-    fun song(id: Long): Song? = byId[id]
+    fun song(id: Long): Song? = byId[id] ?: allById[id]
 
     suspend fun load(context: Context, force: Boolean = true) {
         if (loaded && !force) return
@@ -52,11 +61,45 @@ object Library {
         val result = withContext(Dispatchers.IO) {
             MusicRepository.loadSongs(app) to MusicRepository.loadGenres(app)
         }
-        songs = result.first
-        byId = result.first.associateBy { it.id }
+        allSongs = result.first
+        allById = result.first.associateBy { it.id }
         genreMap = result.second
+        applyHidden(notify = false)
         loaded = true
         listeners.forEach { it() }
+    }
+
+    fun isFolderHidden(path: String, hidden: Set<String>): Boolean =
+        hidden.any { path == it || path.startsWith("$it/") }
+
+    /** Recomputes the visible songs from the hidden song / folder preferences. */
+    fun applyHidden(notify: Boolean = true) {
+        val hiddenSongs = Prefs.hiddenSongs()
+        val hiddenFolders = Prefs.hiddenFolders()
+        val visible = if (hiddenSongs.isEmpty() && hiddenFolders.isEmpty()) {
+            allSongs
+        } else {
+            allSongs.filter {
+                !hiddenSongs.contains(it.id.toString()) && !isFolderHidden(it.folderPath, hiddenFolders)
+            }
+        }
+        songs = visible
+        byId = visible.associateBy { it.id }
+        if (notify) listeners.forEach { it() }
+    }
+
+    fun hideSong(id: Long) {
+        val set = Prefs.hiddenSongs()
+        set.add(id.toString())
+        Prefs.setHiddenSongs(set)
+        applyHidden()
+    }
+
+    fun hideFolder(path: String) {
+        val set = Prefs.hiddenFolders()
+        set.add(path)
+        Prefs.setHiddenFolders(set)
+        applyHidden()
     }
 
     fun sorted(list: List<Song>, order: Int): List<Song> = when (order) {

@@ -13,8 +13,8 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageArt"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
         android:background="@color/surface_high"
         android:contentDescription="@string/cd_art"
         android:scaleType="centerCrop"
@@ -48,7 +48,20 @@
             android:textSize="13sp" />
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/btnMore"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/cd_more"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_more_vert"
+        android:visibility="gone"
+        app:tint="?attr/colorOnSurfaceVariant" />
+
     <ImageView
+        android:id="@+id/chevron"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:importantForAccessibility="no"
