@@ -27,6 +27,11 @@ object Prefs {
     private const val KEY_FX_BASS = "fx_bass"
     private const val KEY_FX_VIRT = "fx_virtualizer"
     private const val KEY_FX_GAIN = "fx_gain"
+    private const val KEY_SHUFFLE = "play_shuffle"
+    private const val KEY_REPEAT = "play_repeat"
+    private const val KEY_LAST_QUEUE = "last_queue"
+    private const val KEY_LAST_INDEX = "last_index"
+    private const val KEY_LAST_POS = "last_position"
 
     private const val SEP_ENTRY = "\n"
     private const val SEP_FIELD = "|"
@@ -220,6 +225,34 @@ object Prefs {
             .putString(KEY_RECENT, newRecent.joinToString(","))
             .apply()
     }
+
+    // ----- Playback state (shuffle / repeat / last queue) -----
+
+    /** Last chosen shuffle mode. */
+    var shuffleMode: Boolean
+        get() = sp?.getBoolean(KEY_SHUFFLE, false) ?: false
+        set(value) { store().edit().putBoolean(KEY_SHUFFLE, value).apply() }
+
+    /** Last chosen repeat mode (Player.REPEAT_MODE_OFF / ONE / ALL = 0 / 1 / 2). */
+    var repeatMode: Int
+        get() = sp?.getInt(KEY_REPEAT, 0) ?: 0
+        set(value) { store().edit().putInt(KEY_REPEAT, value).apply() }
+
+    /** Song ids of the last queue, comma separated, in queue order. */
+    var lastQueue: String
+        get() = sp?.getString(KEY_LAST_QUEUE, "") ?: ""
+        set(value) { store().edit().putString(KEY_LAST_QUEUE, value).apply() }
+
+    var lastIndex: Int
+        get() = sp?.getInt(KEY_LAST_INDEX, 0) ?: 0
+        set(value) { store().edit().putInt(KEY_LAST_INDEX, value).apply() }
+
+    var lastPosition: Long
+        get() = sp?.getLong(KEY_LAST_POS, 0L) ?: 0L
+        set(value) { store().edit().putLong(KEY_LAST_POS, value).apply() }
+
+    fun lastQueueIds(): List<Long> =
+        lastQueue.split(SEP_ID).mapNotNull { it.trim().toLongOrNull() }
 
     // ----- Equalizer / audio effects -----
 

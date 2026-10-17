@@ -35,9 +35,36 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
     private lateinit var actions: SongActions
     private var deniedCount = 0
 
+    private var queueRestored = false
+
     private val libraryListener: () -> Unit = {
         pages.refresh()
         updateRecentTile()
+        maybeRestoreQueue()
+    }
+
+    /** Puts the last queue back (paused, at the saved position) when the player starts empty. */
+    private fun maybeRestoreQueue() {
+        val c = controller ?: return
+        if (queueRestored || !Library.loaded) return
+        queueRestored = true
+        if (c.mediaItemCount > 0) return
+        val ids = Prefs.lastQueueIds()
+        if (ids.isEmpty()) return
+        val saved = Prefs.lastIndex.coerceIn(0, ids.lastIndex)
+        val songs = ArrayList<Song>()
+        var index = 0
+        var alive = false
+        ids.forEachIndexed { i, id ->
+            val song = Library.song(id)
+            if (i == saved) {
+                index = songs.size
+                alive = song != null
+            }
+            if (song != null) songs.add(song)
+        }
+        if (songs.isEmpty()) return
+        PlaybackQueue.restore(c, songs, index.coerceAtMost(songs.lastIndex), if (alive) Prefs.lastPosition else 0L)
     }
 
     private val permissionLauncher = registerForActivityResult(
@@ -257,5 +284,6 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
 
     override fun onControllerReady(c: MediaController) {
         pages.setPlayingId(c.currentMediaItem?.mediaId?.toLongOrNull() ?: -1L)
+        maybeRestoreQueue()
     }
 }

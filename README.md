@@ -25,6 +25,8 @@ equalizer, sleep timer, lyrics, color themes).
 | Sleep timer | 15 / 30 / 45 / 60 / 90 / 120 minutes, works in the background |
 | Themes | 8 accent colors + system / light / dark mode |
 | Languages | English and Portuguese (Brazil) |
+| Resume | Remembers the last queue, song and position, and the chosen shuffle / repeat mode |
+| Shuffle | Plays every song once before any repeats (current song first), also for songs added to the queue |
 | Playback | Media3 `MediaSessionService`: background play, notification and lock-screen controls |
 
 Not included: ads, analytics, network access, accounts, video player.
