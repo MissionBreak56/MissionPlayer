@@ -11,20 +11,26 @@ android {
         applicationId = "com.missionbreak56.musicplayer"
         minSdk = 23
         targetSdk = 34
-        versionCode = 9
-        versionName = "2.4.1"
+        versionCode = 10
+        versionName = "2.4.2"
 
         // Author metadata -> available in the manifest as ${author}
         manifestPlaceholders["author"] = "MissionBreak56"
     }
 
-    // Release: sign with the debug key when available so `assembleRelease` works
-    // out of the box on a dev machine (and in CI after a keystore is generated).
-    // If the keystore is missing, AGP produces an unsigned release APK.
+    // Release: always signed with the same permanent key, so every version can be installed
+    // over the previous one. The key comes from the SIGNING_* environment variables (set by CI
+    // from GitHub secrets). Without them (e.g. a quick local build) it falls back to the debug key.
     signingConfigs {
         create("release") {
+            val keystorePath = System.getenv("SIGNING_KEYSTORE_FILE")
             val debugKeystore = file("${System.getProperty("user.home")}/.android/debug.keystore")
-            if (debugKeystore.exists()) {
+            if (!keystorePath.isNullOrBlank() && file(keystorePath).exists()) {
+                storeFile = file(keystorePath)
+                storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+                keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+                keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+            } else if (debugKeystore.exists()) {
                 storeFile = debugKeystore
                 storePassword = "android"
                 keyAlias = "androiddebugkey"
