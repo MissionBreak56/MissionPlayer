@@ -1,7 +1,13 @@
 package com.missionbreak56.musicplayer.ui
 
 import android.app.Activity
+import android.view.Gravity
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
@@ -12,6 +18,75 @@ import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.playback.SleepTimer
 
 object Dialogs {
+
+    /** Lets the user drag the library tabs into the order they prefer. */
+    fun reorderTabs(activity: Activity, order: List<Int>, onSave: (List<Int>) -> Unit) {
+        val titles = activity.resources.getStringArray(R.array.tabs)
+        val items = order.toMutableList()
+        val density = activity.resources.displayMetrics.density
+
+        val tabAdapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+            override fun getItemCount(): Int = items.size
+
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+                val tv = TextView(parent.context).apply {
+                    layoutParams = RecyclerView.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, (56 * density).toInt()
+                    )
+                    gravity = Gravity.CENTER_VERTICAL
+                    setPadding((24 * density).toInt(), 0, (24 * density).toInt(), 0)
+                    textSize = 17f
+                    setTextColor(parent.onSurfaceColor())
+                }
+                return object : RecyclerView.ViewHolder(tv) {}
+            }
+
+            override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+                (holder.itemView as TextView).text = "\u2261   " + titles[items[position]]
+            }
+        }
+
+        val list = RecyclerView(activity).apply {
+            layoutManager = LinearLayoutManager(activity)
+            this.adapter = tabAdapter
+        }
+        val touch = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val from = viewHolder.bindingAdapterPosition
+                val to = target.bindingAdapterPosition
+                if (from < 0 || to < 0) return false
+                java.util.Collections.swap(items, from, to)
+                tabAdapter.notifyItemMoved(from, to)
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+        })
+        touch.attachToRecyclerView(list)
+
+        val hint = TextView(activity).apply {
+            setText(R.string.tabs_order_hint)
+            textSize = 14f
+            setPadding((24 * density).toInt(), 0, (24 * density).toInt(), (8 * density).toInt())
+        }
+        val container = LinearLayout(activity).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(hint)
+            addView(list)
+        }
+        MaterialAlertDialogBuilder(activity)
+            .setTitle(R.string.menu_tabs_order)
+            .setView(container)
+            .setPositiveButton(R.string.save) { _, _ -> onSave(items.toList()) }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
 
     /** Lists hidden folders and songs; unchecking an entry shows it again. */
     fun manageHidden(activity: Activity, onChanged: () -> Unit) {

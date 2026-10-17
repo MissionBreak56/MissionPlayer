@@ -106,9 +106,7 @@ class GroupAdapter(
             val count = res.getQuantityString(R.plurals.n_songs, group.songs.size, group.songs.size)
             subtitle.text = if (group.extra.isNotBlank()) "${group.extra} \u00B7 $count" else count
 
-            val customFolder = group.kind == Kind.FOLDER && FolderArt.has(itemView.context, group.key)
             val iconRes = when {
-                customFolder -> 0
                 group.kind == Kind.FOLDER -> R.drawable.ic_folder
                 group.kind == Kind.GENRE -> R.drawable.ic_genre
                 (group.kind == Kind.PLAYLIST || group.kind == Kind.AUTO) && group.songs.isEmpty() ->
@@ -126,11 +124,7 @@ class GroupAdapter(
                 art.scaleType = ImageView.ScaleType.CENTER_CROP
                 art.setPadding(0, 0, 0, 0)
                 art.imageTintList = null
-                if (customFolder) {
-                    ArtLoader.loadFolder(art, group.key, 320)
-                } else {
-                    ArtLoader.load(art, group.songs.firstOrNull(), 320)
-                }
+                ArtLoader.load(art, group.songs.firstOrNull(), 320)
             }
             itemView.setOnClickListener { onClick(group) }
 

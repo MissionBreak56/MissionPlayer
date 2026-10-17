@@ -2,11 +2,9 @@
 <resources>
     <string-array name="tabs">
         <item>@string/tab_songs</item>
-        <item>@string/tab_playlists</item>
         <item>@string/tab_albums</item>
         <item>@string/tab_artists</item>
         <item>@string/tab_folders</item>
-        <item>@string/tab_genres</item>
     </string-array>
     <string-array name="sort_options">
         <item>@string/sort_title</item>

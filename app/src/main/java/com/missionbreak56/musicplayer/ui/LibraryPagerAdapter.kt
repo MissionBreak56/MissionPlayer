@@ -24,13 +24,19 @@ interface LibraryHost {
 }
 
 /**
- * ViewPager2 adapter where every page is a list: 0 songs, 1 playlists,
- * 2 albums (grid), 3 artists, 4 folders, 5 genres.
+ * ViewPager2 adapter where every page is a list. Tab ids: 0 songs, 1 albums (grid),
+ * 2 artists, 3 folders. [order] decides which tabs are shown and in what order.
  */
 class LibraryPagerAdapter(
     private val context: Context,
     private val host: LibraryHost
 ) : RecyclerView.Adapter<LibraryPagerAdapter.PageHolder>() {
+
+    var order: List<Int> = Prefs.tabOrder()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     private val songAdapter = SongAdapter(
         onClick = { list, index -> host.onPlay(list, index) },
@@ -39,15 +45,13 @@ class LibraryPagerAdapter(
 
     private val groupAdapters: Array<GroupAdapter?> = arrayOf(
         null,
-        GroupAdapter(false) { host.onOpenGroup(it) },
         GroupAdapter(true) { host.onOpenGroup(it) },
-        GroupAdapter(false) { host.onOpenGroup(it) },
         GroupAdapter(false) { host.onOpenGroup(it) },
         GroupAdapter(false) { host.onOpenGroup(it) }
     )
 
     init {
-        groupAdapters[4]?.onMore = { view, group -> host.onFolderMenu(view, group) }
+        groupAdapters[3]?.onMore = { view, group -> host.onFolderMenu(view, group) }
     }
 
     fun setPlayingId(id: Long) {
@@ -56,28 +60,26 @@ class LibraryPagerAdapter(
 
     fun refresh() {
         songAdapter.submit(Library.sorted(Library.songs, Prefs.sortOrder))
-        groupAdapters[1]?.submit(Library.playlists(context))
-        groupAdapters[2]?.submit(Library.albums())
-        groupAdapters[3]?.submit(Library.artists())
-        groupAdapters[4]?.submit(Library.folders())
-        groupAdapters[5]?.submit(Library.genres())
+        groupAdapters[1]?.submit(Library.albums())
+        groupAdapters[2]?.submit(Library.artists())
+        groupAdapters[3]?.submit(Library.folders())
         notifyDataSetChanged()
     }
 
-    // One view type per page so a recycled holder never carries another page's layout manager
-    // (this used to turn the songs list into the 2-column album grid).
-    override fun getItemViewType(position: Int): Int = position
+    // One view type per tab so a recycled holder never carries another tab's layout manager
+    // (this used to turn the songs list into the album grid).
+    override fun getItemViewType(position: Int): Int = order[position]
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageHolder {
         val b = PageListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val ctx = parent.context
-        b.list.layoutManager = if (viewType == 2) GridLayoutManager(ctx, 3) else LinearLayoutManager(ctx)
+        b.list.layoutManager = if (viewType == 1) GridLayoutManager(ctx, 3) else LinearLayoutManager(ctx)
         return PageHolder(b)
     }
 
-    override fun onBindViewHolder(holder: PageHolder, position: Int) = holder.bind(position)
+    override fun onBindViewHolder(holder: PageHolder, position: Int) = holder.bind(order[position])
 
-    override fun getItemCount(): Int = groupAdapters.size
+    override fun getItemCount(): Int = order.size
 
     inner class PageHolder(private val b: PageListBinding) : RecyclerView.ViewHolder(b.root) {
 

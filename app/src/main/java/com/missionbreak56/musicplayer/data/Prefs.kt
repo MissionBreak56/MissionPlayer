@@ -18,6 +18,7 @@ object Prefs {
     private const val KEY_THEME = "theme"
     private const val KEY_NIGHT = "night_mode"
     private const val KEY_SORT = "sort_order"
+    private const val KEY_TAB_ORDER = "tab_order"
     private const val KEY_HIDDEN_SONGS = "hidden_songs"
     private const val KEY_HIDDEN_FOLDERS = "hidden_folders"
     private const val KEY_FX_ENABLED = "fx_enabled"
@@ -59,6 +60,19 @@ object Prefs {
     var sortOrder: Int
         get() = sp?.getInt(KEY_SORT, 0) ?: 0
         set(value) { store().edit().putInt(KEY_SORT, value).apply() }
+
+    // ----- Tab order -----
+
+    /** Ids of the library tabs in display order: 0 songs, 1 albums, 2 artists, 3 folders. */
+    fun tabOrder(): List<Int> {
+        val default = listOf(0, 1, 2, 3)
+        val saved = (sp?.getString(KEY_TAB_ORDER, "") ?: "").split(",").mapNotNull { it.toIntOrNull() }
+        return if (saved.size == default.size && saved.toSet() == default.toSet()) saved else default
+    }
+
+    fun setTabOrder(order: List<Int>) {
+        store().edit().putString(KEY_TAB_ORDER, order.joinToString(",")).apply()
+    }
 
     // ----- Hidden songs / folders -----
 
@@ -132,6 +146,14 @@ object Prefs {
 
     private fun safePlaylistName(name: String): String =
         name.replace(SEP_ENTRY, " ").replace(SEP_FIELD, "/").trim()
+
+    fun createPlaylist(name: String) {
+        val safe = safePlaylistName(name)
+        if (safe.isEmpty()) return
+        val map = playlists()
+        map.getOrPut(safe) { mutableListOf() }
+        savePlaylists(map)
+    }
 
     fun addToPlaylist(name: String, songId: Long) {
         val safe = safePlaylistName(name)

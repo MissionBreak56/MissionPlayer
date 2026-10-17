@@ -1,14 +1,12 @@
-## MissionPlayer v2.2.0 — Ajustes de pastas, menus e player
+## MissionPlayer v2.3.0 — Abas personalizáveis
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.2.0-arm64-v8a.apk`.
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.3.0-arm64-v8a.apk`.
 
 ### Novidades
-- **Foto personalizada da pasta**: na aba Pastas, ⋮ → *Alterar foto da pasta* (e *Remover foto da pasta*). A foto também aparece no cabeçalho da pasta.
-- **Link do GitHub** na tela *Sobre*, com botão que abre o repositório.
-- **Menus mais limpos**: menus ⋮ e de ordenação agora têm cantos bem arredondados, fundo sólido e sombra suave.
+- **Abas reorganizáveis**: menu ☰ → *Organizar abas*. Segure uma aba e arraste para a ordem que preferir (Músicas, Álbuns, Artistas, Pastas). A ordem fica salva.
+- **Tela de Playlists**: o atalho *Playlists* da tela inicial agora abre uma tela própria com as playlists automáticas e as suas, com botão **+** para criar uma nova.
 
 ### Mudanças
-- **Playlist** saiu do menu ⋮ do player e ficou apenas no ícone de playlist no topo da tela.
-- **Ocultar pasta** agora oculta só a pasta escolhida: as subpastas continuam visíveis.
-- **Caminho da pasta** não é mais exibido na lista de pastas nem no detalhe.
-- **Temporizador** removido do player e do menu principal.
+- Removida a aba **Playlists** da barra de abas (ela continua no atalho da tela inicial).
+- Removida a aba **Gêneros**.
+- A **foto da pasta** agora aparece apenas dentro da pasta (cabeçalho do detalhe), não mais na lista de pastas.

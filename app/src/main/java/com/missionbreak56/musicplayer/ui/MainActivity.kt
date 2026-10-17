@@ -63,15 +63,12 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
         actions = SongActions(this) { pages.refresh() }
         pages = LibraryPagerAdapter(this, this)
         binding.pager.adapter = pages
-        binding.pager.offscreenPageLimit = 5
-        val titles = resources.getStringArray(R.array.tabs)
-        TabLayoutMediator(binding.tabs, binding.pager) { tab, position ->
-            tab.text = titles[position]
-        }.attach()
+        binding.pager.offscreenPageLimit = 3
+        attachTabs()
 
         binding.tileFav.setOnClickListener { openAuto("fav") }
         binding.tileRecent.setOnClickListener { openAuto("recent") }
-        binding.tilePlaylists.setOnClickListener { binding.pager.currentItem = 1 }
+        binding.tilePlaylists.setOnClickListener { startActivity(Intent(this, PlaylistsActivity::class.java)) }
         binding.btnSearch.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
         }
@@ -90,6 +87,16 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
         Library.addListener(libraryListener)
         if (hasAudioPermission()) onPermissionGranted() else requestAudioPermission()
         maybeRequestNotificationPermission()
+    }
+
+    private var mediator: TabLayoutMediator? = null
+
+    private fun attachTabs() {
+        mediator?.detach()
+        val titles = resources.getStringArray(R.array.tabs)
+        mediator = TabLayoutMediator(binding.tabs, binding.pager) { tab, position ->
+            tab.text = titles[pages.order[position]]
+        }.also { it.attach() }
     }
 
     private fun openAuto(key: String) {
@@ -155,6 +162,7 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
         val popup = PopupMenu(this, anchor)
         popup.menu.add(0, 1, 0, R.string.menu_equalizer)
         popup.menu.add(0, 3, 2, R.string.menu_themes)
+        popup.menu.add(0, 6, 3, R.string.menu_tabs_order)
         popup.menu.add(0, 5, 3, R.string.menu_hidden)
         popup.menu.add(0, 4, 4, R.string.menu_about)
         popup.setOnMenuItemClickListener { item ->
@@ -163,6 +171,11 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
                 3 -> startActivity(Intent(this, ThemesActivity::class.java))
                 4 -> startActivity(Intent(this, AboutActivity::class.java))
                 5 -> Dialogs.manageHidden(this) { pages.refresh() }
+                6 -> Dialogs.reorderTabs(this, pages.order) { order ->
+                    Prefs.setTabOrder(order)
+                    pages.order = order
+                    attachTabs()
+                }
             }
             true
         }

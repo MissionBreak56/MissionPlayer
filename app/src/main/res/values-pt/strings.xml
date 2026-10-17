@@ -130,6 +130,9 @@
     <string name="folder_remove_photo">Remover foto da pasta</string>
     <string name="folder_photo_failed">Não foi possível usar essa imagem</string>
     <string name="about_repo">GitHub: MissionBreak56/MissionPlayer</string>
+    <string name="menu_tabs_order">Organizar abas</string>
+    <string name="tabs_order_hint">Toque e segure uma aba e arraste para reordenar.</string>
+    <string name="no_playlists">Nenhuma playlist ainda</string>
     <plurals name="n_songs">
         <item quantity="one">%d música</item>
         <item quantity="many">%d de músicas</item>
