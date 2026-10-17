@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tabs">
+        <item>@string/tab_songs</item>
+        <item>@string/tab_playlists</item>
+        <item>@string/tab_albums</item>
+        <item>@string/tab_artists</item>
+        <item>@string/tab_folders</item>
+        <item>@string/tab_genres</item>
+    </string-array>
+    <string-array name="sort_options">
+        <item>@string/sort_title</item>
+        <item>@string/sort_artist</item>
+        <item>@string/sort_album</item>
+        <item>@string/sort_date</item>
+        <item>@string/sort_duration</item>
+    </string-array>
+    <string-array name="theme_names">
+        <item>@string/theme_violet</item>
+        <item>@string/theme_blue</item>
+        <item>@string/theme_teal</item>
+        <item>@string/theme_green</item>
+        <item>@string/theme_orange</item>
+        <item>@string/theme_red</item>
+        <item>@string/theme_pink</item>
+        <item>@string/theme_gold</item>
+    </string-array>
+</resources>

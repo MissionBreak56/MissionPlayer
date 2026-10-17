@@ -5,6 +5,9 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,7 +40,24 @@ jobs:
             -dname "CN=Android Debug,O=Android,C=US"
 
       - name: Build release (arm64-v8a)
-        run: gradle clean assembleRelease --no-daemon
+        shell: bash
+        run: |
+          set -o pipefail
+          gradle clean assembleRelease --no-daemon 2>&1 | tee build.log
+
+      - name: Report build errors
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          lines = [l.rstrip() for l in open('build.log', errors='replace')]
+          keys = ('e: ', 'error:', 'error: ', 'What went wrong', 'Execution failed', 'Unresolved', 'AAPT')
+          errs = [l for l in lines if l.startswith('e: ') or any(k in l for k in keys[1:])]
+          errs = [l for l in errs if 'warning' not in l.lower()][:60]
+          for i in range(0, len(errs), 12):
+              chunk = errs[i:i + 12]
+              msg = '%0A'.join(c.replace('%', '%25').replace('\r', '')[:700] for c in chunk)
+              print('::error title=Build error::' + msg)
+          PY
 
       - name: List APKs
         run: find app/build/outputs/apk -name "*.apk" 2>/dev/null
@@ -48,3 +68,18 @@ jobs:
           name: app-arm64-v8a-release
           path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error
+
+      - name: Publish GitHub Release
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(grep -m1 'versionName' app/build.gradle.kts | sed 's/.*"\(.*\)".*/\1/')
+          TAG="v$VERSION"
+          APK=$(ls app/build/outputs/apk/release/*.apk | head -1)
+          cp "$APK" "MissionPlayer-$TAG-arm64-v8a.apk"
+          gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
+          gh release create "$TAG" "MissionPlayer-$TAG-arm64-v8a.apk" \
+            --target "$GITHUB_SHA" \
+            --title "MissionPlayer $TAG" \
+            --notes "Novo visual do MissionPlayer. APK release (arm64-v8a) já compilado."

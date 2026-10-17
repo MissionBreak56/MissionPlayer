@@ -2,18 +2,27 @@ package com.missionbreak56.musicplayer.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatDelegate
 
 /**
- * Tiny SharedPreferences wrapper: premium flag, favorites and simple playlists.
- * Everything is stored on-device; nothing is synced or verified remotely.
+ * Tiny SharedPreferences wrapper: favorites, playlists, play statistics,
+ * appearance and equalizer settings. Everything is stored on-device.
  */
 object Prefs {
 
     private const val FILE = "mission_player_prefs"
-    private const val KEY_PREMIUM = "premium"
-    private const val KEY_PREMIUM_INIT = "premium_initialised"
     private const val KEY_FAVORITES = "favorites"
     private const val KEY_PLAYLISTS = "playlists"
+    private const val KEY_COUNTS = "play_counts"
+    private const val KEY_RECENT = "recent"
+    private const val KEY_THEME = "theme"
+    private const val KEY_NIGHT = "night_mode"
+    private const val KEY_SORT = "sort_order"
+    private const val KEY_FX_ENABLED = "fx_enabled"
+    private const val KEY_FX_PRESET = "fx_preset"
+    private const val KEY_FX_LEVELS = "fx_levels"
+    private const val KEY_FX_BASS = "fx_bass"
+    private const val KEY_FX_VIRT = "fx_virtualizer"
 
     private const val SEP_ENTRY = "\n"
     private const val SEP_FIELD = "|"
@@ -30,19 +39,24 @@ object Prefs {
 
     private fun store(): SharedPreferences = sp ?: error("Prefs.init() was not called")
 
-    /** Always true unless explicitly changed. There is no server to ask. */
-    fun isPremium(): Boolean = sp?.getBoolean(KEY_PREMIUM, true) ?: true
-
-    var premium: Boolean
-        get() = isPremium()
-        set(value) { store().edit().putBoolean(KEY_PREMIUM, value).apply() }
-
-    val premiumInitialised: Boolean
-        get() = sp?.getBoolean(KEY_PREMIUM_INIT, false) ?: false
-
-    fun markPremiumInitialised() {
-        store().edit().putBoolean(KEY_PREMIUM_INIT, true).apply()
+    fun registerListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        store().registerOnSharedPreferenceChangeListener(listener)
     }
+
+    // ----- Appearance / list options -----
+
+    var theme: Int
+        get() = sp?.getInt(KEY_THEME, 0) ?: 0
+        set(value) { store().edit().putInt(KEY_THEME, value).apply() }
+
+    var nightMode: Int
+        get() = sp?.getInt(KEY_NIGHT, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            ?: AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        set(value) { store().edit().putInt(KEY_NIGHT, value).apply() }
+
+    var sortOrder: Int
+        get() = sp?.getInt(KEY_SORT, 0) ?: 0
+        set(value) { store().edit().putInt(KEY_SORT, value).apply() }
 
     // ----- Favorites -----
 
@@ -92,5 +106,102 @@ object Prefs {
             safeName + SEP_FIELD + ids.joinToString(SEP_ID)
         }
         store().edit().putString(KEY_PLAYLISTS, raw).apply()
+    }
+
+    private fun safePlaylistName(name: String): String =
+        name.replace(SEP_ENTRY, " ").replace(SEP_FIELD, "/").trim()
+
+    fun addToPlaylist(name: String, songId: Long) {
+        val safe = safePlaylistName(name)
+        if (safe.isEmpty()) return
+        val map = playlists()
+        val list = map.getOrPut(safe) { mutableListOf() }
+        if (!list.contains(songId)) list.add(songId)
+        savePlaylists(map)
+    }
+
+    fun removeFromPlaylist(name: String, songId: Long) {
+        val map = playlists()
+        map[name]?.remove(songId)
+        savePlaylists(map)
+    }
+
+    fun deletePlaylist(name: String) {
+        val map = playlists()
+        map.remove(name)
+        savePlaylists(map)
+    }
+
+    /** Returns the final name used, or null when the new name is empty. */
+    fun renamePlaylist(old: String, new: String): String? {
+        val safe = safePlaylistName(new)
+        if (safe.isEmpty()) return null
+        val map = playlists()
+        val ids = map.remove(old) ?: return null
+        val target = map.getOrPut(safe) { mutableListOf() }
+        ids.forEach { if (!target.contains(it)) target.add(it) }
+        savePlaylists(map)
+        return safe
+    }
+
+    // ----- Play statistics -----
+
+    fun playCounts(): Map<Long, Int> {
+        val raw = sp?.getString(KEY_COUNTS, "") ?: ""
+        if (raw.isBlank()) return emptyMap()
+        val map = HashMap<Long, Int>()
+        raw.split(",").forEach { entry ->
+            val parts = entry.split(":")
+            val id = parts.getOrNull(0)?.toLongOrNull()
+            val count = parts.getOrNull(1)?.toIntOrNull()
+            if (id != null && count != null) map[id] = count
+        }
+        return map
+    }
+
+    fun recent(): List<Long> {
+        val raw = sp?.getString(KEY_RECENT, "") ?: ""
+        if (raw.isBlank()) return emptyList()
+        return raw.split(",").mapNotNull { it.toLongOrNull() }
+    }
+
+    fun recordPlay(songId: Long) {
+        val counts = playCounts().toMutableMap()
+        counts[songId] = (counts[songId] ?: 0) + 1
+        val rawCounts = counts.entries.joinToString(",") { "${it.key}:${it.value}" }
+        val newRecent = (listOf(songId) + recent().filter { it != songId }).take(100)
+        store().edit()
+            .putString(KEY_COUNTS, rawCounts)
+            .putString(KEY_RECENT, newRecent.joinToString(","))
+            .apply()
+    }
+
+    // ----- Equalizer / audio effects -----
+
+    var fxEnabled: Boolean
+        get() = sp?.getBoolean(KEY_FX_ENABLED, false) ?: false
+        set(value) { store().edit().putBoolean(KEY_FX_ENABLED, value).apply() }
+
+    /** Index of the selected preset, or -1 for custom. */
+    var fxPreset: Int
+        get() = sp?.getInt(KEY_FX_PRESET, -1) ?: -1
+        set(value) { store().edit().putInt(KEY_FX_PRESET, value).apply() }
+
+    var fxBass: Int
+        get() = sp?.getInt(KEY_FX_BASS, 0) ?: 0
+        set(value) { store().edit().putInt(KEY_FX_BASS, value).apply() }
+
+    var fxVirtualizer: Int
+        get() = sp?.getInt(KEY_FX_VIRT, 0) ?: 0
+        set(value) { store().edit().putInt(KEY_FX_VIRT, value).apply() }
+
+    fun fxLevels(): IntArray {
+        val raw = sp?.getString(KEY_FX_LEVELS, "") ?: ""
+        if (raw.isBlank()) return IntArray(0)
+        return raw.split(",").mapNotNull { it.toIntOrNull() }.toIntArray()
+    }
+
+    fun setFxLevels(levels: IntArray) {
+        store().edit().putString(KEY_FX_LEVELS, levels.joinToString(",")).apply()
     }
 }

@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#1F6FEB</color>
-    <color name="on_primary">#FFFFFF</color>
-    <color name="primary_container">#D6E2FF</color>
-    <color name="on_primary_container">#001B3F</color>
-    <color name="secondary">#565E71</color>
-    <color name="on_secondary">#FFFFFF</color>
-    <color name="background">#FFFFFF</color>
+    <color name="bg">#F6F6FA</color>
     <color name="surface">#FFFFFF</color>
-    <color name="surface_variant">#E1E2EC</color>
-    <color name="on_surface">#1A1B20</color>
-    <color name="on_surface_variant">#44474F</color>
-    <color name="mini_player_bg">#EEF1F6</color>
+    <color name="surface_high">#E9E9F1</color>
+    <color name="on_surface">#16161C</color>
+    <color name="on_surface_variant">#6A6A78</color>
+    <color name="placeholder_fg">#9A9AA8</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="t0_primary">#7C4DFF</color>
+    <color name="t0_container">#E7DFFF</color>
+    <color name="t0_on_container">#25174D</color>
+    <color name="t1_primary">#1F6FEB</color>
+    <color name="t1_container">#D7E5FB</color>
+    <color name="t1_on_container">#092147</color>
+    <color name="t2_primary">#00897B</color>
+    <color name="t2_container">#D1EAE7</color>
+    <color name="t2_on_container">#002925</color>
+    <color name="t3_primary">#2E9E5B</color>
+    <color name="t3_container">#D9EEE1</color>
+    <color name="t3_on_container">#0E2F1B</color>
+    <color name="t4_primary">#F57C00</color>
+    <color name="t4_container">#FDE7D1</color>
+    <color name="t4_on_container">#4A2500</color>
+    <color name="t5_primary">#E53935</color>
+    <color name="t5_container">#FADBDB</color>
+    <color name="t5_on_container">#451110</color>
+    <color name="t6_primary">#D81B60</color>
+    <color name="t6_container">#F8D6E2</color>
+    <color name="t6_on_container">#41081D</color>
+    <color name="t7_primary">#B7860B</color>
+    <color name="t7_container">#F2E9D3</color>
+    <color name="t7_on_container">#372803</color>
 </resources>

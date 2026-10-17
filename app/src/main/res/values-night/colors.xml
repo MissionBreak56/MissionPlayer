@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#0E0E12</color>
+    <color name="surface">#17171D</color>
+    <color name="surface_high">#25252D</color>
+    <color name="on_surface">#F2F2F7</color>
+    <color name="on_surface_variant">#A3A3B2</color>
+    <color name="placeholder_fg">#5E5E6C</color>
+    <color name="on_primary">#101014</color>
+    <color name="t0_primary">#B69DFF</color>
+    <color name="t0_container">#3A3252</color>
+    <color name="t0_on_container">#E9E2FF</color>
+    <color name="t1_primary">#8AB4FF</color>
+    <color name="t1_container">#2C3A52</color>
+    <color name="t1_on_container">#DCE8FF</color>
+    <color name="t2_primary">#4DD0C1</color>
+    <color name="t2_container">#19433E</color>
+    <color name="t2_on_container">#CAF1EC</color>
+    <color name="t3_primary">#6FD79A</color>
+    <color name="t3_container">#244531</color>
+    <color name="t3_on_container">#D4F3E1</color>
+    <color name="t4_primary">#FFB65C</color>
+    <color name="t4_container">#523A1D</color>
+    <color name="t4_on_container">#FFE9CE</color>
+    <color name="t5_primary">#FF8A80</color>
+    <color name="t5_container">#522C29</color>
+    <color name="t5_on_container">#FFDCD9</color>
+    <color name="t6_primary">#FF80AB</color>
+    <color name="t6_container">#522937</color>
+    <color name="t6_on_container">#FFD9E6</color>
+    <color name="t7_primary">#FFD54F</color>
+    <color name="t7_container">#524419</color>
+    <color name="t7_on_container">#FFF2CA</color>
+</resources>

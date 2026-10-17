@@ -2,33 +2,119 @@
 <resources>
     <string name="app_name">MissionPlayer</string>
     <string name="developer_name">MissionBreak56</string>
-
-    <!-- About -->
-    <string name="about">About</string>
-    <string name="version_format">Version %1$s</string>
-    <string name="developer_format">Developed by %1$s</string>
-    <string name="about_body">MissionPlayer is an offline, ad-free local music player.\n\nFeatures:\n• Scans music on your device\n• Background playback with lock-screen controls\n• Search, favorites and playlists\n• No internet permission, no ads, no trackers\n\nPremium is unlocked locally for testing.</string>
-
-    <!-- Main -->
-    <string name="search_hint">Search songs or artists</string>
+    <string name="tab_songs">Songs</string>
+    <string name="tab_playlists">Playlists</string>
+    <string name="tab_albums">Albums</string>
+    <string name="tab_artists">Artists</string>
+    <string name="tab_folders">Folders</string>
+    <string name="tab_genres">Genres</string>
+    <string name="search_hint">Search songs, artists or albums</string>
+    <string name="shuffle_all">Shuffle all</string>
+    <string name="play_all">Play</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="sort_by">Sort by</string>
+    <string name="sort_title">Title</string>
+    <string name="sort_artist">Artist</string>
+    <string name="sort_album">Album</string>
+    <string name="sort_date">Date added</string>
+    <string name="sort_duration">Duration</string>
     <string name="no_songs">No music found on this device</string>
-    <string name="no_results">No matching songs</string>
-    <string name="no_favorites">No favorites yet</string>
-    <string name="permission_required">Music permission is required to scan your library</string>
+    <string name="no_results">No results</string>
+    <string name="empty_list">Nothing here yet</string>
+    <string name="permission_required">Allow access to your music to build your library</string>
+    <string name="grant_permission">Allow access</string>
     <string name="pick_a_song">Pick a song first</string>
     <string name="unknown_title">Unknown title</string>
     <string name="unknown_artist">Unknown artist</string>
-
-    <!-- Player -->
-    <string name="now_playing">Now Playing</string>
+    <string name="unknown_album">Unknown album</string>
+    <string name="menu_equalizer">Equalizer</string>
+    <string name="menu_sleep_timer">Sleep timer</string>
+    <string name="menu_themes">Themes</string>
+    <string name="menu_about">About</string>
+    <string name="now_playing">Now playing</string>
     <string name="added_to_favorites">Added to favorites</string>
     <string name="removed_from_favorites">Removed from favorites</string>
-
-    <!-- Menu -->
-    <string name="menu_about">About</string>
-    <string name="menu_favorites">Favorites</string>
-
-    <!-- Content descriptions -->
+    <string name="play_next">Play next</string>
+    <string name="add_to_queue">Add to queue</string>
+    <string name="add_to_playlist">Add to playlist</string>
+    <string name="remove_from_playlist">Remove from playlist</string>
+    <string name="add_favorite">Add to favorites</string>
+    <string name="remove_favorite">Remove from favorites</string>
+    <string name="set_ringtone">Set as ringtone</string>
+    <string name="share">Share</string>
+    <string name="queue_title">Playing queue</string>
+    <string name="queue_added">Added to queue</string>
+    <string name="queue_next">Will play next</string>
+    <string name="new_playlist">New playlist</string>
+    <string name="playlist_name">Playlist name</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="added_to_playlist">Added to %1$s</string>
+    <string name="playlist_deleted">Playlist deleted</string>
+    <string name="delete_playlist_confirm">Delete the playlist %1$s?</string>
+    <string name="pl_favorites">Favorites</string>
+    <string name="pl_recently_added">Recently added</string>
+    <string name="pl_most_played">Most played</string>
+    <string name="pl_recently_played">Recently played</string>
+    <string name="sleep_off">Turn off timer</string>
+    <string name="sleep_option">%1$d min</string>
+    <string name="sleep_set">Music will stop in %1$d min</string>
+    <string name="sleep_cancelled">Sleep timer is off</string>
+    <string name="eq_enable">Enable equalizer</string>
+    <string name="eq_preset">Preset</string>
+    <string name="eq_custom">Custom</string>
+    <string name="eq_bass">Bass boost</string>
+    <string name="eq_surround">Surround</string>
+    <string name="eq_reset">Reset</string>
+    <string name="eq_unavailable">The equalizer is not available on this device</string>
+    <string name="eq_note">Effects are applied while music is playing</string>
+    <string name="themes_title">Themes</string>
+    <string name="theme_color">Accent color</string>
+    <string name="appearance">Appearance</string>
+    <string name="mode_system">System default</string>
+    <string name="mode_light">Light</string>
+    <string name="mode_dark">Dark</string>
+    <string name="theme_violet">Violet</string>
+    <string name="theme_blue">Blue</string>
+    <string name="theme_teal">Teal</string>
+    <string name="theme_green">Green</string>
+    <string name="theme_orange">Orange</string>
+    <string name="theme_red">Red</string>
+    <string name="theme_pink">Pink</string>
+    <string name="theme_gold">Gold</string>
+    <string name="lyrics">Lyrics</string>
+    <string name="no_lyrics">No lyrics for this song</string>
+    <string name="add_lyrics">Add lyrics file (.lrc or .txt)</string>
+    <string name="remove_lyrics">Remove lyrics</string>
+    <string name="lyrics_saved">Lyrics added</string>
+    <string name="lyrics_failed">Could not read that file</string>
+    <string name="ringtone_permission">Allow \"Modify system settings\" for this app, then try again</string>
+    <string name="ringtone_set">Ringtone set</string>
+    <string name="ringtone_failed">Could not set the ringtone</string>
+    <string name="about">About</string>
+    <string name="version_format">Version %1$s</string>
+    <string name="developer_format">Developed by %1$s</string>
+    <string name="about_body">MissionPlayer is an offline, ad-free music player.\n\nFeatures:\n• Songs, playlists, albums, artists, folders and genres\n• Mini player and full Now Playing screen\n• Equalizer, bass boost and surround\n• Sleep timer\n• Synced lyrics (.lrc files)\n• 8 color themes, light and dark mode\n• Favorites, recently played and most played\n• No internet permission, no ads, no trackers</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_more">More options</string>
+    <string name="cd_search">Search</string>
     <string name="cd_play_pause">Play or pause</string>
-    <string name="cd_favorite">Toggle favorite</string>
+    <string name="cd_next">Next</string>
+    <string name="cd_previous">Previous</string>
+    <string name="cd_shuffle">Shuffle</string>
+    <string name="cd_repeat">Repeat</string>
+    <string name="cd_favorite">Favorite</string>
+    <string name="cd_queue">Queue</string>
+    <string name="cd_sort">Sort</string>
+    <string name="cd_art">Album art</string>
+    <string name="cd_timer">Sleep timer</string>
+    <string name="cd_equalizer">Equalizer</string>
+    <string name="cd_lyrics">Lyrics</string>
+    <plurals name="n_songs">
+        <item quantity="one">%d song</item>
+        <item quantity="other">%d songs</item>
+    </plurals>
 </resources>

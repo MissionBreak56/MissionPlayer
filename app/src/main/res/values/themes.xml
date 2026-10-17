@@ -1,12 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.MissionPlayer" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/primary</item>
+        <item name="android:colorBackground">@color/bg</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorOnBackground">@color/on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+        <item name="colorSurfaceVariant">@color/surface_high</item>
+        <item name="colorSurfaceContainerLowest">@color/bg</item>
+        <item name="colorSurfaceContainerLow">@color/surface</item>
+        <item name="colorSurfaceContainer">@color/surface_high</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_high</item>
+        <item name="colorSurfaceContainerHighest">@color/surface_high</item>
         <item name="colorOnPrimary">@color/on_primary</item>
-        <item name="colorPrimaryContainer">@color/primary_container</item>
-        <item name="colorOnPrimaryContainer">@color/on_primary_container</item>
-        <item name="colorSecondary">@color/secondary</item>
-        <item name="colorOnSecondary">@color/on_secondary</item>
-        <item name="android:statusBarColor">@color/primary</item>
+        <item name="android:statusBarColor">@color/bg</item>
+        <item name="android:windowBackground">@color/bg</item>
+    </style>
+
+    <style name="Shape.Rounded8" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+    <style name="Shape.Rounded12" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+    <style name="Shape.Rounded24" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
+    </style>
+    <style name="Shape.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="Theme.MissionPlayer.T0" parent="Theme.MissionPlayer">
+        <item name="colorPrimary">@color/t0_primary</item>
+        <item name="colorPrimaryContainer">@color/t0_container</item>
+        <item name="colorOnPrimaryContainer">@color/t0_on_container</item>
+        <item name="colorSecondary">@color/t0_primary</item>
+        <item name="colorSecondaryContainer">@color/t0_container</item>
+        <item name="colorOnSecondaryContainer">@color/t0_on_container</item>
+    </style>
+    <style name="Theme.MissionPlayer.T1" parent="Theme.MissionPlayer">
+        <item name="colorPrimary">@color/t1_primary</item>
+        <item name="colorPrimaryContainer">@color/t1_container</item>
+        <item name="colorOnPrimaryContainer">@color/t1_on_container</item>
+        <item name="colorSecondary">@color/t1_primary</item>
+        <item name="colorSecondaryContainer">@color/t1_container</item>
+        <item name="colorOnSecondaryContainer">@color/t1_on_container</item>
+    </style>
+    <style name="Theme.MissionPlayer.T2" parent="Theme.MissionPlayer">
+        <item name="colorPrimary">@color/t2_primary</item>
+        <item name="colorPrimaryContainer">@color/t2_container</item>
+        <item name="colorOnPrimaryContainer">@color/t2_on_container</item>
+        <item name="colorSecondary">@color/t2_primary</item>
+        <item name="colorSecondaryContainer">@color/t2_container</item>
+        <item name="colorOnSecondaryContainer">@color/t2_on_container</item>
+    </style>
+    <style name="Theme.MissionPlayer.T3" parent="Theme.MissionPlayer">
+        <item name="colorPrimary">@color/t3_primary</item>
+        <item name="colorPrimaryContainer">@color/t3_container</item>
+        <item name="colorOnPrimaryContainer">@color/t3_on_container</item>
+        <item name="colorSecondary">@color/t3_primary</item>
+        <item name="colorSecondaryContainer">@color/t3_container</item>
+        <item name="colorOnSecondaryContainer">@color/t3_on_container</item>
+    </style>
+    <style name="Theme.MissionPlayer.T4" parent="Theme.MissionPlayer">
+        <item name="colorPrimary">@color/t4_primary</item>
+        <item name="colorPrimaryContainer">@color/t4_container</item>
+        <item name="colorOnPrimaryContainer">@color/t4_on_container</item>
+        <item name="colorSecondary">@color/t4_primary</item>
+        <item name="colorSecondaryContainer">@color/t4_container</item>
+        <item name="colorOnSecondaryContainer">@color/t4_on_container</item>
+    </style>
+    <style name="Theme.MissionPlayer.T5" parent="Theme.MissionPlayer">
+        <item name="colorPrimary">@color/t5_primary</item>
+        <item name="colorPrimaryContainer">@color/t5_container</item>
+        <item name="colorOnPrimaryContainer">@color/t5_on_container</item>
+        <item name="colorSecondary">@color/t5_primary</item>
+        <item name="colorSecondaryContainer">@color/t5_container</item>
+        <item name="colorOnSecondaryContainer">@color/t5_on_container</item>
+    </style>
+    <style name="Theme.MissionPlayer.T6" parent="Theme.MissionPlayer">
+        <item name="colorPrimary">@color/t6_primary</item>
+        <item name="colorPrimaryContainer">@color/t6_container</item>
+        <item name="colorOnPrimaryContainer">@color/t6_on_container</item>
+        <item name="colorSecondary">@color/t6_primary</item>
+        <item name="colorSecondaryContainer">@color/t6_container</item>
+        <item name="colorOnSecondaryContainer">@color/t6_on_container</item>
+    </style>
+    <style name="Theme.MissionPlayer.T7" parent="Theme.MissionPlayer">
+        <item name="colorPrimary">@color/t7_primary</item>
+        <item name="colorPrimaryContainer">@color/t7_container</item>
+        <item name="colorOnPrimaryContainer">@color/t7_on_container</item>
+        <item name="colorSecondary">@color/t7_primary</item>
+        <item name="colorSecondaryContainer">@color/t7_container</item>
+        <item name="colorOnSecondaryContainer">@color/t7_on_container</item>
     </style>
 </resources>

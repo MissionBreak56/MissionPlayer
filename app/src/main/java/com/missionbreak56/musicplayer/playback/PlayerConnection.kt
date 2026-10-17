@@ -9,7 +9,7 @@ import com.google.common.util.concurrent.ListenableFuture
 
 /**
  * Small helper that connects a UI component to the [PlaybackService] via a
- * MediaController. Call [release] from the owning Activity's onDestroy.
+ * MediaController. Call [release] when the component stops.
  */
 class PlayerConnection(
     private val context: Context,
@@ -25,8 +25,15 @@ class PlayerConnection(
         future = f
         f.addListener(
             {
-                controller = f.get()
-                onConnected(controller!!)
+                if (!f.isCancelled) {
+                    try {
+                        val c = f.get()
+                        controller = c
+                        onConnected(c)
+                    } catch (_: Exception) {
+                        // connection failed or was released meanwhile
+                    }
+                }
             },
             ContextCompat.getMainExecutor(context)
         )

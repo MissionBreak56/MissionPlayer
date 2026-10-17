@@ -1,130 +1,48 @@
 # MissionPlayer
 
-An **original**, offline, ad-free local music player for Android — a fresh
-implementation inspired (at the feature level only) by the audio-player feature
-set found in the `Lark Player` package you provided for analysis.
+An **original**, offline, ad-free local music player for Android, with a layout and
+feature set in the spirit of popular offline players (tabs for songs / playlists /
+albums / artists / folders / genres, mini player, full "Now playing" screen,
+equalizer, sleep timer, lyrics, color themes).
 
-> No code, resources, strings, icons or branding were copied from that package.
+> No code, resources, strings, icons or branding were copied from any other app.
 > Everything here is new. Package name: `com.missionbreak56.musicplayer`.
 
----
+## Features
 
-## 1. What was analyzed (behaviour only)
+| Area | What it does |
+|---|---|
+| Library | Scans the device with MediaStore. Tabs: **Songs, Playlists, Albums, Artists, Folders, Genres**, swipeable |
+| Songs | Shuffle-all button, sort by title / artist / album / date added / duration, search screen |
+| Smart playlists | Favorites, Recently added, Most played, Recently played |
+| Playlists | Create, rename, delete, add / remove songs from the song menu |
+| Song menu | Play next, add to queue, add to playlist, favorite, set as ringtone, share |
+| Mini player | Art, title, progress, play/pause, next, queue sheet — shown on every list screen |
+| Now playing | Large art with color tint taken from the cover, seek bar, shuffle, repeat (off / all / one), favorite, queue |
+| Lyrics | Attach a `.lrc` (synced, tap a line to seek) or `.txt` file per song |
+| Equalizer | Device equalizer with presets and band sliders, bass boost, surround |
+| Sleep timer | 15 / 30 / 45 / 60 / 90 / 120 minutes, works in the background |
+| Themes | 8 accent colors + system / light / dark mode |
+| Languages | English and Portuguese (Brazil) |
+| Playback | Media3 `MediaSessionService`: background play, notification and lock-screen controls |
 
-From `AndroidManifest.decoded.xml` (`com.dywx.larkplayer`), the relevant feature
-surface was identified and re-implemented from scratch:
+Not included: ads, analytics, network access, accounts, video player.
 
-| Original capability | Evidence | Implemented here |
-|---|---|---|
-| Local audio library | `READ_MEDIA_AUDIO`, `READ_EXTERNAL_STORAGE` | `MusicRepository` (MediaStore scan) |
-| Background playback | `foregroundServiceType="mediaPlayback"`, `MEDIA_BUTTON` | `PlaybackService` (Media3 `MediaSessionService`) |
-| System media controls | `MediaSessionService` intent-filter | Media3 `MediaSession` + notification |
-| Search / browse | `android.app.searchable` | Search field in `MainActivity` |
-| Favorites / playlists | (app data) | `Prefs` (SharedPreferences) |
-| About screen | (app) | `AboutActivity` (author = MissionBreak56) |
-
-Explicitly **not** carried over: ads, analytics, network, Google Drive,
-accounts/login, feedback, video player, widgets, deeplinks, equalizer.
-
----
-
-## 2. Project structure
+## Project structure
 
 ```
-MissionPlayer/
-├── settings.gradle.kts
-├── build.gradle.kts                      # root: plugin versions
-├── gradle.properties
-├── gradle/wrapper/gradle-wrapper.properties
-├── .gitignore
-├── .github/workflows/build-apk.yml       # CI that produces the ARM64 APK
-├── README.md
-└── app/
-    ├── build.gradle.kts                  # app module + ABI splits (arm64-v8a)
-    ├── proguard-rules.pro
-    └── src/main/
-        ├── AndroidManifest.xml
-        ├── java/com/missionbreak56/musicplayer/
-        │   ├── App.kt                    # first-run premium=true
-        │   ├── data/
-        │   │   ├── Prefs.kt              # premium, favorites, playlists
-        │   │   ├── Song.kt
-        │   │   └── MusicRepository.kt    # MediaStore (offline)
-        │   ├── playback/
-        │   │   ├── PlaybackService.kt    # Media3 session service
-        │   │   └── PlayerConnection.kt    # MediaController helper
-        │   └── ui/
-        │       ├── MainActivity.kt        # library, search, mini-player
-        │       ├── SongAdapter.kt
-        │       ├── PlayerActivity.kt      # now playing + favorite
-        │       └── AboutActivity.kt       # "Developed by MissionBreak56"
-        └── res/
-            ├── layout/ (activity_main, item_song, activity_player, activity_about)
-            ├── menu/menu_main.xml
-            ├── drawable/ (ic_play, ic_pause, ic_music_note, ic_favorite, ic_favorite_border, ic_launcher)
-            └── values/ (strings, colors, themes)
+app/src/main/java/com/missionbreak56/musicplayer/
+├── App.kt
+├── data/       Song, MusicRepository (MediaStore), Library (albums/artists/folders/genres/playlists),
+│               Prefs (favorites, playlists, stats, theme, equalizer), Lyrics (.lrc parser + store)
+├── playback/   PlaybackService, PlayerConnection, PlaybackQueue, AudioFx (equalizer), SleepTimer
+└── ui/         MainActivity (tabs), DetailActivity, SearchActivity, PlayerActivity,
+                EqualizerActivity, ThemesActivity, AboutActivity, adapters and helpers
 ```
 
----
+## Build
 
-## 3. Change summary vs. requested tasks
+CI (`.github/workflows/build-apk.yml`) builds an ARM64 release APK on every push to `main`
+and uploads it as the `app-arm64-v8a-release` artifact (Actions tab → run → Artifacts).
 
-| # | Task | Result |
-|---|---|---|
-| 2 | Remove internet | **No `INTERNET` / `ACCESS_NETWORK_STATE` in manifest.** No Retrofit/OkHttp/Ktor anywhere. |
-| 3 | Remove ads | **No ad SDKs, no `AdView`/`InterstitialAd`, no ad unit IDs.** |
-| 4 | Premium permanently on | `Prefs.isPremium()` returns `true`; `App.onCreate()` persists `premium=true` on first run. No license check. |
-| 5 | Creator name | `strings.xml` → `developer_name = MissionBreak56`, About screen, manifest meta-data `${author}`. `applicationId` untouched by branding. |
-| 6 | Remove Google Drive | No Drive/Backup/Restore deps or classes. `android:allowBackup="false"`. |
-| 7 | Remove account | No login/signup/profile screens, no auth deps (no Firebase). |
-| 8 | Remove feedback | No feedback screens/buttons/deps. |
-| 9 | ARM64 APK | `splits { abi { include("arm64-v8a") } }` in `app/build.gradle.kts`. |
-
----
-
-## 4. Build
-
-### Option A — Android Studio (easiest)
-1. `File ▸ Open` → select the `MissionPlayer` folder.
-2. Let it sync (it downloads Gradle 8.7 + AGP 8.5.2 + Android SDK 34).
-3. `Build ▸ Build Bundle(s)/APK(s) ▸ Build APK(s)` (debug), or:
-   `Build ▸ Generate Signed Bundle/APK` for release.
-
-### Option B — Command line
-Requires JDK 17 + Android SDK (`ANDROID_HOME`).
-```bash
-./gradlew clean assembleRelease
-```
-On Windows:
-```powershell
-.\gradlew.bat clean assembleRelease
-```
-
-If `gradlew`/`gradle-wrapper.jar` is not present yet, generate it once with a
-machine that has Gradle:
-```bash
-gradle wrapper --gradle-version 8.7
-```
-
-### Option C — GitHub Actions (no local toolchain)
-Push the project to a repo; the workflow `.github/workflows/build-apk.yml`
-builds the signed ARM64 APK and uploads it as an artifact.
-
-### Output
-```
-app/build/outputs/apk/release/app-arm64-v8a-release.apk
-```
-
-Verify the APK contains only arm64 native libs (this app is pure Kotlin/Java, so
-there may be no `lib/` at all — that also satisfies "arm64 only"):
-```bash
-unzip -l app/build/outputs/apk/release/app-arm64-v8a-release.apk | grep lib/
-```
-
----
-
-## 5. Notes on this machine
-
-This environment has **no JDK, Gradle, Android SDK or Android Studio**
-installed, so the APK could not be compiled here. The project is complete and
-buildable via any of the three options above.
+Locally: `gradle assembleRelease` (JDK 17, Android SDK 34).
