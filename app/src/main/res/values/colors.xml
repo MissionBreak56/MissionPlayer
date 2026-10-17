@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#1F6FEB</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="primary_container">#D6E2FF</color>
+    <color name="on_primary_container">#001B3F</color>
+    <color name="secondary">#565E71</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="background">#FFFFFF</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#E1E2EC</color>
+    <color name="on_surface">#1A1B20</color>
+    <color name="on_surface_variant">#44474F</color>
+    <color name="mini_player_bg">#EEF1F6</color>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MissionPlayer</string>
+    <string name="developer_name">MissionBreak56</string>
+
+    <!-- About -->
+    <string name="about">About</string>
+    <string name="version_format">Version %1$s</string>
+    <string name="developer_format">Developed by %1$s</string>
+    <string name="about_body">MissionPlayer is an offline, ad-free local music player.\n\nFeatures:\n• Scans music on your device\n• Background playback with lock-screen controls\n• Search, favorites and playlists\n• No internet permission, no ads, no trackers\n\nPremium is unlocked locally for testing.</string>
+
+    <!-- Main -->
+    <string name="search_hint">Search songs or artists</string>
+    <string name="no_songs">No music found on this device</string>
+    <string name="no_results">No matching songs</string>
+    <string name="no_favorites">No favorites yet</string>
+    <string name="permission_required">Music permission is required to scan your library</string>
+    <string name="pick_a_song">Pick a song first</string>
+    <string name="unknown_title">Unknown title</string>
+    <string name="unknown_artist">Unknown artist</string>
+
+    <!-- Player -->
+    <string name="now_playing">Now Playing</string>
+    <string name="added_to_favorites">Added to favorites</string>
+    <string name="removed_from_favorites">Removed from favorites</string>
+
+    <!-- Menu -->
+    <string name="menu_about">About</string>
+    <string name="menu_favorites">Favorites</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_play_pause">Play or pause</string>
+    <string name="cd_favorite">Toggle favorite</string>
+</resources>
