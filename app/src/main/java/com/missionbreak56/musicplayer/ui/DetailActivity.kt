@@ -83,7 +83,11 @@ class DetailActivity : PlayerBoundActivity() {
         binding.textEmpty.visibility = if (group.songs.isEmpty()) View.VISIBLE else View.GONE
         binding.btnPlay.isEnabled = group.songs.isNotEmpty()
         binding.btnShuffle.isEnabled = group.songs.isNotEmpty()
-        ArtLoader.load(binding.imageArt, group.songs.firstOrNull(), 400)
+        if (kind == Kind.FOLDER && FolderArt.has(this, key)) {
+            ArtLoader.loadFolder(binding.imageArt, key, 400)
+        } else {
+            ArtLoader.load(binding.imageArt, group.songs.firstOrNull(), 400)
+        }
     }
 
     private fun showPlaylistMenu(anchor: View) {

@@ -126,6 +126,11 @@
     <string name="hide_folder_confirm">Hide %1$s and all its songs? You can show it again in Hidden items.</string>
     <string name="indexing_lyrics">Indexing lyrics for search…</string>
     <string name="search_lyrics_hint">Lyrics match</string>
+    <string name="folder_change_photo">Change folder photo</string>
+    <string name="folder_remove_photo">Remove folder photo</string>
+    <string name="folder_photo_failed">Could not use that image</string>
+    <string name="about_repo">GitHub: MissionBreak56/MissionPlayer</string>
+    <string name="repo_url" translatable="false">https://github.com/MissionBreak56/MissionPlayer</string>
     <plurals name="n_songs">
         <item quantity="one">%d song</item>
         <item quantity="other">%d songs</item>

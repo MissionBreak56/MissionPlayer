@@ -126,6 +126,10 @@
     <string name="hide_folder_confirm">Ocultar %1$s e todas as suas músicas? Você pode mostrar de novo em Itens ocultos.</string>
     <string name="indexing_lyrics">Indexando letras para a busca…</string>
     <string name="search_lyrics_hint">Encontrado na letra</string>
+    <string name="folder_change_photo">Alterar foto da pasta</string>
+    <string name="folder_remove_photo">Remover foto da pasta</string>
+    <string name="folder_photo_failed">Não foi possível usar essa imagem</string>
+    <string name="about_repo">GitHub: MissionBreak56/MissionPlayer</string>
     <plurals name="n_songs">
         <item quantity="one">%d música</item>
         <item quantity="many">%d de músicas</item>

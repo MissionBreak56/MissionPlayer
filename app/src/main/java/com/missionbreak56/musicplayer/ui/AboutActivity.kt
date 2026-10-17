@@ -1,5 +1,7 @@
 package com.missionbreak56.musicplayer.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import com.missionbreak56.musicplayer.BuildConfig
 import com.missionbreak56.musicplayer.R
@@ -18,5 +20,12 @@ class AboutActivity : BaseActivity() {
         binding.textDeveloper.text =
             getString(R.string.developer_format, getString(R.string.developer_name))
         binding.textAboutBody.text = getString(R.string.about_body)
+        binding.textRepo.setOnClickListener {
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.repo_url))))
+            } catch (_: Exception) {
+                // no browser installed
+            }
+        }
     }
 }

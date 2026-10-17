@@ -42,6 +42,17 @@
             android:layout_weight="1" />
 
         <ImageButton
+                android:id="@+id/btnPlaylistAdd"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/add_to_playlist"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_playlist_add"
+                app:tint="?attr/colorOnSurface" />
+
+        <ImageButton
                 android:id="@+id/btnThemes"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
@@ -365,29 +376,6 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_repeat"
                 app:tint="?attr/colorOnSurfaceVariant" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-                <ImageButton
-                android:id="@+id/btnTimer"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/cd_timer"
-                android:padding="12dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_timer"
-                app:tint="?attr/colorOnSurface" />
-                <TextView
-                    android:id="@+id/textTimer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="11sp" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"

@@ -15,6 +15,17 @@
         <item name="colorOnPrimary">@color/on_primary</item>
         <item name="android:statusBarColor">@color/bg</item>
         <item name="android:windowBackground">@color/bg</item>
+        <item name="android:popupMenuStyle">@style/Widget.App.PopupMenu</item>
+        <item name="popupMenuStyle">@style/Widget.App.PopupMenu.Compat</item>
+    </style>
+
+    <style name="Widget.App.PopupMenu" parent="android:Widget.Material.PopupMenu">
+        <item name="android:popupBackground">@drawable/bg_popup</item>
+        <item name="android:popupElevation">10dp</item>
+    </style>
+    <style name="Widget.App.PopupMenu.Compat" parent="Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">@drawable/bg_popup</item>
+        <item name="android:popupElevation">10dp</item>
     </style>
 
     <style name="TabText" parent="TextAppearance.Material3.TitleSmall">

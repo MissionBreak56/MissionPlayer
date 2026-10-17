@@ -70,7 +70,7 @@ object Library {
     }
 
     fun isFolderHidden(path: String, hidden: Set<String>): Boolean =
-        hidden.any { path == it || path.startsWith("$it/") }
+        hidden.contains(path)
 
     /** Recomputes the visible songs from the hidden song / folder preferences. */
     fun applyHidden(notify: Boolean = true) {
@@ -125,7 +125,7 @@ object Library {
     }.sortedBy { it.title.lowercase() }
 
     fun folders(): List<Group> = songs.groupBy { it.folderPath }.map { (path, list) ->
-        Group(Kind.FOLDER, path, list.first().folderName, path, list.sortedBy { it.displayTitle.lowercase() })
+        Group(Kind.FOLDER, path, list.first().folderName, "", list.sortedBy { it.displayTitle.lowercase() })
     }.sortedBy { it.title.lowercase() }
 
     fun genres(): List<Group> = genreMap.mapNotNull { (name, ids) ->

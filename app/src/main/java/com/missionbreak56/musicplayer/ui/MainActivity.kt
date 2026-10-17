@@ -24,7 +24,9 @@ import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.data.Song
 import com.missionbreak56.musicplayer.databinding.ActivityMainBinding
 import com.missionbreak56.musicplayer.playback.PlaybackQueue
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : PlayerBoundActivity(), LibraryHost {
 
@@ -152,14 +154,12 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
     private fun showMainMenu(anchor: View) {
         val popup = PopupMenu(this, anchor)
         popup.menu.add(0, 1, 0, R.string.menu_equalizer)
-        popup.menu.add(0, 2, 1, R.string.menu_sleep_timer)
         popup.menu.add(0, 3, 2, R.string.menu_themes)
         popup.menu.add(0, 5, 3, R.string.menu_hidden)
         popup.menu.add(0, 4, 4, R.string.menu_about)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 1 -> startActivity(Intent(this, EqualizerActivity::class.java))
-                2 -> Dialogs.sleepTimer(this) {}
                 3 -> startActivity(Intent(this, ThemesActivity::class.java))
                 4 -> startActivity(Intent(this, AboutActivity::class.java))
                 5 -> Dialogs.manageHidden(this) { pages.refresh() }
@@ -187,18 +187,43 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
         )
     }
 
+    private var pendingFolder: String? = null
+
+    private val pickFolderArt = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        val path = pendingFolder
+        pendingFolder = null
+        if (uri != null && path != null) {
+            lifecycleScope.launch {
+                val ok = withContext(Dispatchers.IO) { FolderArt.save(applicationContext, path, uri) }
+                if (ok) pages.refresh() else Toast.makeText(this@MainActivity, R.string.folder_photo_failed, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     override fun onFolderMenu(anchor: View, group: Group) {
         val popup = PopupMenu(this, anchor)
-        popup.menu.add(0, 1, 0, R.string.hide_folder)
-        popup.setOnMenuItemClickListener {
-            MaterialAlertDialogBuilder(this)
-                .setMessage(getString(R.string.hide_folder_confirm, group.title))
-                .setPositiveButton(R.string.hide_folder) { _, _ ->
-                    Library.hideFolder(group.key)
-                    Toast.makeText(this, R.string.folder_hidden, Toast.LENGTH_SHORT).show()
+        popup.menu.add(0, 1, 0, R.string.folder_change_photo)
+        if (FolderArt.has(this, group.key)) popup.menu.add(0, 2, 1, R.string.folder_remove_photo)
+        popup.menu.add(0, 3, 2, R.string.hide_folder)
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                1 -> {
+                    pendingFolder = group.key
+                    pickFolderArt.launch(arrayOf("image/*"))
                 }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
+                2 -> {
+                    FolderArt.remove(this, group.key)
+                    pages.refresh()
+                }
+                3 -> MaterialAlertDialogBuilder(this)
+                    .setMessage(getString(R.string.hide_folder_confirm, group.title))
+                    .setPositiveButton(R.string.hide_folder) { _, _ ->
+                        Library.hideFolder(group.key)
+                        Toast.makeText(this, R.string.folder_hidden, Toast.LENGTH_SHORT).show()
+                    }
+                    .setNegativeButton(R.string.cancel, null)
+                    .show()
+            }
             true
         }
         popup.show()

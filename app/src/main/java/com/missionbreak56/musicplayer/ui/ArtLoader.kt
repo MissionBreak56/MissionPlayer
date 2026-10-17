@@ -77,6 +77,36 @@ object ArtLoader {
         return bmp
     }
 
+    /** Loads the custom picture of a folder (see [FolderArt]). */
+    fun loadFolder(view: ImageView, path: String, size: Int) {
+        val file = FolderArt.file(view.context, path)
+        val k = "f${path}_${file.lastModified()}_$size"
+        view.setTag(R.id.tag_art, k)
+        val cached = cache.get(k)
+        if (cached != null) {
+            view.setImageBitmap(cached)
+            return
+        }
+        view.setImageResource(R.drawable.art_placeholder)
+        scope.launch {
+            val bmp = withContext(Dispatchers.IO) {
+                try {
+                    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                    BitmapFactory.decodeFile(file.path, bounds)
+                    var sample = 1
+                    while (bounds.outWidth / (sample * 2) >= size && bounds.outHeight / (sample * 2) >= size) sample *= 2
+                    BitmapFactory.decodeFile(file.path, BitmapFactory.Options().apply { inSampleSize = sample })
+                } catch (_: Throwable) {
+                    null
+                }
+            }
+            if (bmp != null) {
+                cache.put(k, bmp)
+                if (view.getTag(R.id.tag_art) == k) view.setImageBitmap(bmp)
+            }
+        }
+    }
+
     fun load(view: ImageView, song: Song?, size: Int) {
         if (song == null) {
             view.setTag(R.id.tag_art, null)

@@ -26,7 +26,6 @@ import com.missionbreak56.musicplayer.data.LyricsIndex
 import com.missionbreak56.musicplayer.data.LyricsStore
 import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.databinding.ActivityPlayerBinding
-import com.missionbreak56.musicplayer.playback.SleepTimer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -80,7 +79,7 @@ class PlayerActivity : PlayerBoundActivity() {
         binding.btnFavorite.setOnClickListener {
             currentSong()?.let { song -> actions.toggleFavorite(song) }
         }
-        binding.btnTimer.setOnClickListener { Dialogs.sleepTimer(this) { updateTimerLabel() } }
+        binding.btnPlaylistAdd.setOnClickListener { currentSong()?.let { song -> actions.addToPlaylist(song) } }
         binding.btnEqualizer.setOnClickListener {
             startActivity(Intent(this, EqualizerActivity::class.java))
         }
@@ -196,12 +195,7 @@ class PlayerActivity : PlayerBoundActivity() {
             binding.textPos.text = Format.time(position)
             binding.textDur.text = Format.time(duration)
         }
-        updateTimerLabel()
         syncLyrics(position)
-    }
-
-    private fun updateTimerLabel() {
-        binding.textTimer.text = if (SleepTimer.isActive) Format.time(SleepTimer.remainingMs()) else ""
     }
 
     // ----- Lyrics -----
@@ -286,14 +280,12 @@ class PlayerActivity : PlayerBoundActivity() {
     private fun showMoreMenu(anchor: View) {
         val song = currentSong() ?: return
         val popup = PopupMenu(this, anchor)
-        popup.menu.add(0, 1, 0, R.string.add_to_playlist)
         popup.menu.add(0, 2, 1, R.string.set_ringtone)
         popup.menu.add(0, 3, 2, R.string.share)
         popup.menu.add(0, 4, 3, R.string.add_lyrics)
         if (LyricsStore.has(this, song.id)) popup.menu.add(0, 5, 4, R.string.remove_lyrics)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                1 -> actions.addToPlaylist(song)
                 2 -> actions.setRingtone(song)
                 3 -> actions.share(song)
                 4 -> pickLyrics.launch(arrayOf("*/*"))
