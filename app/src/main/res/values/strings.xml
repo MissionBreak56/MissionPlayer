@@ -13,10 +13,10 @@
     <string name="play_all">Play</string>
     <string name="shuffle">Shuffle</string>
     <string name="sort_by">Sort by</string>
-    <string name="sort_title">Title</string>
+    <string name="sort_title">A to Z</string>
     <string name="sort_artist">Artist</string>
     <string name="sort_album">Album</string>
-    <string name="sort_date">Date added</string>
+    <string name="sort_date">Most recent</string>
     <string name="sort_duration">Duration</string>
     <string name="no_songs">No music found on this device</string>
     <string name="no_results">No results</string>
@@ -139,6 +139,8 @@
     <string name="menu_tabs_order">Arrange tabs</string>
     <string name="tabs_order_hint">Press and hold a tab, then drag to reorder.</string>
     <string name="no_playlists">No playlists yet</string>
+    <string name="sort_played">Most played</string>
+    <string name="sort_title_desc">Z to A</string>
     <plurals name="n_songs">
         <item quantity="one">%d song</item>
         <item quantity="other">%d songs</item>

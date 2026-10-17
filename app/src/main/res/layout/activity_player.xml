@@ -304,11 +304,11 @@
                 android:orientation="vertical">
                 <ImageButton
                 android:id="@+id/btnPrev"
-                android:layout_width="48dp"
-                android:layout_height="56dp"
+                android:layout_width="68dp"
+                android:layout_height="68dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/cd_previous"
-                android:padding="12dp"
+                android:padding="8dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_previous"
                 app:tint="?attr/colorOnSurface" />
@@ -332,11 +332,11 @@
                 android:orientation="vertical">
                 <ImageButton
                 android:id="@+id/btnNext"
-                android:layout_width="48dp"
-                android:layout_height="56dp"
+                android:layout_width="68dp"
+                android:layout_height="68dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/cd_next"
-                android:padding="12dp"
+                android:padding="8dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_next"
                 app:tint="?attr/colorOnSurface" />

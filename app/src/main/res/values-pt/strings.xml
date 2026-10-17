@@ -13,10 +13,10 @@
     <string name="play_all">Reproduzir</string>
     <string name="shuffle">Aleatório</string>
     <string name="sort_by">Ordenar por</string>
-    <string name="sort_title">Título</string>
+    <string name="sort_title">A a Z</string>
     <string name="sort_artist">Artista</string>
     <string name="sort_album">Álbum</string>
-    <string name="sort_date">Data de adição</string>
+    <string name="sort_date">Mais recentes</string>
     <string name="sort_duration">Duração</string>
     <string name="no_songs">Nenhuma música encontrada neste dispositivo</string>
     <string name="no_results">Nenhum resultado</string>
@@ -138,6 +138,8 @@
     <string name="menu_tabs_order">Organizar abas</string>
     <string name="tabs_order_hint">Toque e segure uma aba e arraste para reordenar.</string>
     <string name="no_playlists">Nenhuma playlist ainda</string>
+    <string name="sort_played">Mais tocadas</string>
+    <string name="sort_title_desc">Z a A</string>
     <plurals name="n_songs">
         <item quantity="one">%d música</item>
         <item quantity="many">%d de músicas</item>

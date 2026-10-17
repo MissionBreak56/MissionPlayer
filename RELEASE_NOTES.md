@@ -1,8 +1,11 @@
-## MissionPlayer v2.5.1 — Mini player "liquid glass"
+## MissionPlayer v2.6.0 — Barra alfabética e novas ordenações
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.5.1-arm64-v8a.apk`.
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.6.0-arm64-v8a.apk`.
 
 ### Novidades
-- **Mini player estilo "liquid glass"**: o fundo agora mistura as cores da capa da música (gradiente suave com brilho de vidro no topo e borda translúcida), com transição animada ao trocar de faixa.
-- Texto, ícones, botão de play e barra de progresso ajustam o contraste (claro/escuro) automaticamente conforme as cores da capa.
-- Sem capa, o mini player usa as cores do tema escolhido.
+- **Barra alfabética (# A–Z)** na lateral direita das listas: toque ou arraste para pular direto para uma letra, com a letra em destaque no centro da tela. Na lista de **Músicas** ela só aparece quando a ordem é **A a Z**; ao escolher outra ordem, a barra some.
+- **Mais opções de ordem das músicas** (botão de ordenar): **A a Z**, **Z a A**, **Mais recentes**, **Mais tocadas**, Artista, Álbum e Duração. A opção atual vem marcada.
+- A ordenação alfabética agora ignora acentos (Á fica junto do A).
+
+### Ajustes
+- **Botões de voltar e avançar** do player maiores.

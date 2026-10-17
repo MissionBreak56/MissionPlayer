@@ -102,12 +102,35 @@ object Library {
         applyHidden()
     }
 
+    /** Lower-case text without accents, so "Álbum" sorts next to "Album". */
+    fun sortKey(text: String): String =
+        java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFD)
+            .replace(Regex("\\p{M}+"), "")
+            .lowercase()
+
+    /** Index-bar letter of a title: "A".."Z", or "#" for digits and symbols. */
+    fun letterOf(text: String): String {
+        val c = sortKey(text.trim()).firstOrNull() ?: return "#"
+        return if (c in 'a'..'z') c.uppercaseChar().toString() else "#"
+    }
+
+    /**
+     * Sort orders: 0 A-Z, 1 artist, 2 album, 3 most recent, 4 longest,
+     * 5 most played, 6 Z-A.
+     */
     fun sorted(list: List<Song>, order: Int): List<Song> = when (order) {
-        1 -> list.sortedBy { it.displayArtist.lowercase() }
-        2 -> list.sortedBy { it.displayAlbum.lowercase() }
+        1 -> list.sortedBy { sortKey(it.displayArtist) }
+        2 -> list.sortedBy { sortKey(it.displayAlbum) }
         3 -> list.sortedByDescending { it.dateAdded }
         4 -> list.sortedByDescending { it.durationMs }
-        else -> list.sortedBy { it.displayTitle.lowercase() }
+        5 -> {
+            val counts = Prefs.playCounts()
+            list.sortedWith(
+                compareByDescending<Song> { counts[it.id] ?: 0 }.thenBy { sortKey(it.displayTitle) }
+            )
+        }
+        6 -> list.sortedByDescending { sortKey(it.displayTitle) }
+        else -> list.sortedBy { sortKey(it.displayTitle) }
     }
 
     fun albums(): List<Group> = songs.groupBy { it.albumId }.map { (albumId, list) ->
@@ -118,21 +141,21 @@ object Library {
             if (artists.size == 1) artists[0] else "",
             list.sortedWith(compareBy({ it.track }, { it.displayTitle.lowercase() }))
         )
-    }.sortedBy { it.title.lowercase() }
+    }.sortedBy { sortKey(it.title) }
 
     fun artists(): List<Group> = songs.groupBy { it.displayArtist }.map { (name, list) ->
         Group(Kind.ARTIST, name, name, "", list.sortedBy { it.displayTitle.lowercase() })
-    }.sortedBy { it.title.lowercase() }
+    }.sortedBy { sortKey(it.title) }
 
     fun folders(): List<Group> = songs.groupBy { it.folderPath }.map { (path, list) ->
         Group(Kind.FOLDER, path, list.first().folderName, "", list.sortedBy { it.displayTitle.lowercase() })
-    }.sortedBy { it.title.lowercase() }
+    }.sortedBy { sortKey(it.title) }
 
     fun genres(): List<Group> = genreMap.mapNotNull { (name, ids) ->
         val list = ids.mapNotNull { byId[it] }.distinctBy { it.id }
         if (list.isEmpty()) null
         else Group(Kind.GENRE, name, name, "", list.sortedBy { it.displayTitle.lowercase() })
-    }.sortedBy { it.title.lowercase() }
+    }.sortedBy { sortKey(it.title) }
 
     fun playlists(context: Context): List<Group> {
         val favIds = Prefs.favorites()

@@ -92,6 +92,8 @@ class LibraryPagerAdapter(
             b.textEmpty.visibility = if (adapter.itemCount == 0) View.VISIBLE else View.GONE
             b.textEmpty.setText(if (page == 0) R.string.no_songs else R.string.empty_list)
 
+            setupIndexBar(page)
+
             if (page == 0) {
                 b.header.visibility = View.VISIBLE
                 val count = songAdapter.current().size
@@ -103,10 +105,52 @@ class LibraryPagerAdapter(
             }
         }
 
+        /** Letters of the visible list, in display order ("#" for digits/symbols). */
+        private fun letters(page: Int): List<String> = when (page) {
+            0 -> songAdapter.current().map { Library.letterOf(it.displayTitle) }
+            else -> groupAdapters[page]?.current().orEmpty().map { Library.letterOf(it.title) }
+        }
+
+        private fun setupIndexBar(page: Int) {
+            val density = b.root.resources.displayMetrics.density
+            val list = letters(page)
+            // The songs list only follows the alphabet when sorted A-Z.
+            val alphabetical = page != 0 || Prefs.sortOrder == 0
+            val show = alphabetical && list.size > 12
+            b.alphaBar.visibility = if (show) View.VISIBLE else View.GONE
+            b.textBubble.visibility = View.GONE
+            b.list.setPadding(0, 0, if (show) (22 * density).toInt() else 0, (8 * density).toInt())
+            if (!show) return
+            b.alphaBar.available = list.toSet()
+            b.alphaBar.onLetter = { letter ->
+                if (letter == null) {
+                    b.textBubble.visibility = View.GONE
+                } else {
+                    b.textBubble.text = letter
+                    b.textBubble.visibility = View.VISIBLE
+                    // first item whose letter is the chosen one, else the next letter that exists
+                    var pos = list.indexOfFirst { it == letter }
+                    if (pos < 0) {
+                        val all = listOf("#") + ('A'..'Z').map { it.toString() }
+                        val from = all.indexOf(letter)
+                        pos = list.indexOfFirst { all.indexOf(it) > from }
+                        if (pos < 0) pos = list.lastIndex
+                    }
+                    (b.list.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(pos, 0)
+                }
+            }
+        }
+
         private fun showSortMenu(anchor: View) {
             val options = anchor.resources.getStringArray(R.array.sort_options)
             val popup = PopupMenu(anchor.context, anchor)
-            options.forEachIndexed { index, label -> popup.menu.add(0, index, index, label) }
+            options.forEachIndexed { index, label ->
+                popup.menu.add(0, index, index, label).apply {
+                    isCheckable = true
+                    isChecked = index == Prefs.sortOrder
+                }
+            }
+            popup.menu.setGroupCheckable(0, true, true)
             popup.setOnMenuItemClickListener { item ->
                 Prefs.sortOrder = item.itemId
                 refresh()

@@ -12,6 +12,8 @@
         <item>@string/sort_album</item>
         <item>@string/sort_date</item>
         <item>@string/sort_duration</item>
+        <item>@string/sort_played</item>
+        <item>@string/sort_title_desc</item>
     </string-array>
     <string-array name="theme_names">
         <item>@string/theme_violet</item>

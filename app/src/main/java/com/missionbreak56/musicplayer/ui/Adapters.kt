@@ -78,6 +78,8 @@ class GroupAdapter(
 
     private var items: List<Group> = emptyList()
 
+    fun current(): List<Group> = items
+
     /** Overflow button shown on folder rows (hide folder). */
     var onMore: ((View, Group) -> Unit)? = null
 
