@@ -97,7 +97,7 @@
     <string name="about">About</string>
     <string name="version_format">Version %1$s</string>
     <string name="developer_format">Developed by %1$s</string>
-    <string name="about_body">MissionPlayer is an offline, ad-free music player.\n\nFeatures:\n• Songs, playlists, albums, artists, folders and genres\n• Mini player and full Now Playing screen\n• Equalizer, bass boost and surround\n• Sleep timer\n• Synced lyrics (.lrc files)\n• 8 color themes, light and dark mode\n• Favorites, recently played and most played\n• No internet permission, no ads, no trackers</string>
+    <string name="about_body">MissionPlayer is an offline, ad-free music player.\n\nFeatures:\n• Songs, albums, artists and folders, with custom folder photos\n• Liquid glass mini player and Now Playing screen\n• Equalizer, bass boost, surround and volume boost\n• Synced lyrics (.lrc files) and search inside lyrics\n• Shuffle without repeats; remembers the last song, shuffle and repeat\n• 8 color themes, light and dark mode\n• Favorites, recently played and most played\n• No internet permission, no ads, no trackers</string>
     <string name="cd_back">Back</string>
     <string name="cd_more">More options</string>
     <string name="cd_search">Search</string>

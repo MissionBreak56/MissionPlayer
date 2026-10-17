@@ -1,16 +1,11 @@
-## MissionPlayer v2.6.5 — Tela cheia, player que não fecha e ícone de lista
+## MissionPlayer v2.6.6 — README completo e tela Sobre atualizada
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.6.5-arm64-v8a.apk`.
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.6.6-arm64-v8a.apk`.
 
-### Mudanças
-- **Tela cheia**: o app agora ocupa a tela toda, inclusive atrás do entalhe/câmera e da barra de status, sem a faixa preta no topo. O fundo preenche tudo e o conteúdo continua longe da câmera e das barras. No player, a cor da capa também preenche o topo.
-- **Ícone da lista de reprodução/fila**: agora só com linhas, sem a nota musical (fila no player e no mini player, e lista de reprodução).
-
-### Correções
-- **Player fechando ao voltar de outra aba**: quando o sistema parava o serviço de música (por exemplo com a música pausada) e você voltava ao app, a fila ficava vazia e a tela do player fechava na hora. Agora o player recoloca a última fila (música e posição, pausada) e só fecha se continuar vazia depois de alguns segundos.
+### Novidades
+- **README reescrito** com tudo sobre o app: instalação, requisitos, todas as funções, permissões, tecnologia, estrutura do projeto, como compilar e publicar com a chave de assinatura fixa, e o histórico de todas as versões (2.0.0 a 2.6.6).
+- **Tela Sobre atualizada**: a lista de recursos não cita mais itens que saíram do app (Playlists como aba, Gêneros e Temporizador) e passa a mencionar o liquid glass, o volume extra, a busca nas letras, a foto da pasta e o aleatório sem repetir.
 
 ### Alterações técnicas
-- `PlaybackState.restoreIfEmpty()`: restaura a última fila salva quando o player está vazio; usado pela `PlayerActivity`, que não chama mais `finish()` na hora com a fila vazia (espera 4 s).
-- `BaseActivity`: `setDecorFitsSystemWindows(false)`, `layoutInDisplayCutoutMode=shortEdges`, tratamento de insets (barras, entalhe e teclado); barras de status e navegação transparentes no tema.
-- `ic_queue.xml` e `ic_playlist.xml` redesenhados só com linhas.
-- Versão: 2.6.4 → 2.6.5 (versionCode 18).
+- `README.md`, `values/strings.xml` e `values-pt/strings.xml` (`about_body`).
+- Versão: 2.6.5 → 2.6.6 (versionCode 19).

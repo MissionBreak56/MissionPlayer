@@ -97,7 +97,7 @@
     <string name="about">Sobre</string>
     <string name="version_format">Versão %1$s</string>
     <string name="developer_format">Desenvolvido por %1$s</string>
-    <string name="about_body">O MissionPlayer é um player de músicas offline e sem anúncios.\n\nRecursos:\n• Músicas, playlists, álbuns, artistas, pastas e gêneros\n• Mini player e tela completa Tocando agora\n• Equalizador, reforço de graves e surround\n• Temporizador de desligamento\n• Letras sincronizadas (arquivos .lrc)\n• 8 temas de cor, modo claro e escuro\n• Favoritas, tocadas recentemente e mais tocadas\n• Sem permissão de internet, sem anúncios, sem rastreadores</string>
+    <string name="about_body">O MissionPlayer é um player de músicas offline e sem anúncios.\n\nRecursos:\n• Músicas, álbuns, artistas e pastas, com foto personalizada da pasta\n• Mini player e tela Tocando agora em liquid glass\n• Equalizador, reforço de graves, surround e aumento de volume\n• Letras sincronizadas (arquivos .lrc) e busca dentro das letras\n• Aleatório sem repetir; lembra a última música, o aleatório e o repetir\n• 8 temas de cor, modo claro e escuro\n• Favoritas, tocadas recentemente e mais tocadas\n• Sem permissão de internet, sem anúncios, sem rastreadores</string>
     <string name="cd_back">Voltar</string>
     <string name="cd_more">Mais opções</string>
     <string name="cd_search">Buscar</string>
