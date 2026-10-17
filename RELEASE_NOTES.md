@@ -1,11 +1,8 @@
-## MissionPlayer v2.6.0 — Barra alfabética e novas ordenações
+## MissionPlayer v2.6.1 — "Liquid glass" no player em tela cheia
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.6.0-arm64-v8a.apk`.
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.6.1-arm64-v8a.apk`.
 
 ### Novidades
-- **Barra alfabética (# A–Z)** na lateral direita das listas: toque ou arraste para pular direto para uma letra, com a letra em destaque no centro da tela. Na lista de **Músicas** ela só aparece quando a ordem é **A a Z**; ao escolher outra ordem, a barra some.
-- **Mais opções de ordem das músicas** (botão de ordenar): **A a Z**, **Z a A**, **Mais recentes**, **Mais tocadas**, Artista, Álbum e Duração. A opção atual vem marcada.
-- A ordenação alfabética agora ignora acentos (Á fica junto do A).
-
-### Ajustes
-- **Botões de voltar e avançar** do player maiores.
+- **Efeito liquid glass também na tela "Tocando agora"**: o fundo agora mistura as cores da capa em um gradiente com manchas de luz translúcidas e brilho de vidro, com transição suave ao trocar de música.
+- Título, artista, tempo, barra de progresso, ícones e letras passam a ser brancos sobre o fundo colorido, para manter a leitura em qualquer capa.
+- Sem capa, o fundo usa as cores do tema escolhido.

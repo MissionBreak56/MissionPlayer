@@ -191,6 +191,10 @@ class LyricsAdapter(
     private var lines: List<LyricLine> = emptyList()
     private var current = -1
 
+    /** Optional colours (used by the full-screen player's coloured background). */
+    var colorActive: Int? = null
+    var colorIdle: Int? = null
+
     fun submit(list: List<LyricLine>) {
         lines = list
         current = -1
@@ -216,7 +220,9 @@ class LyricsAdapter(
             val tv = b.root
             tv.text = line.text.ifBlank { "\u266A" }
             val active = position == current
-            tv.setTextColor(if (active) tv.primaryColor() else tv.onSurfaceVariantColor())
+            tv.setTextColor(
+                if (active) colorActive ?: tv.primaryColor() else colorIdle ?: tv.onSurfaceVariantColor()
+            )
             tv.textSize = if (active) 24f else 20f
             tv.setOnClickListener { onLineClick(line) }
         }

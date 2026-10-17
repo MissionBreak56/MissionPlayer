@@ -3,7 +3,12 @@ package com.missionbreak56.musicplayer.ui
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.LayerDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.MotionEvent
@@ -14,6 +19,7 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -110,7 +116,8 @@ class PlayerActivity : PlayerBoundActivity() {
             }
         })
 
-        applyTint(null)
+        applySkinForeground()
+        animateSkin(fallbackSkin())
         lifecycleScope.launch {
             if (!Library.loaded) {
                 Library.load(this@PlayerActivity, force = false)
@@ -215,8 +222,8 @@ class PlayerActivity : PlayerBoundActivity() {
 
         binding.btnPlayPause.setImageResource(if (c.isPlaying) R.drawable.ic_pause else R.drawable.ic_play)
 
-        val active = binding.root.primaryColor()
-        val idle = binding.root.onSurfaceVariantColor()
+        val active = fgActive
+        val idle = fgIdle
         binding.btnShuffle.imageTintList = ColorStateList.valueOf(if (c.shuffleModeEnabled) active else idle)
         binding.btnRepeat.setImageResource(
             if (c.repeatMode == Player.REPEAT_MODE_ONE) R.drawable.ic_repeat_one else R.drawable.ic_repeat
@@ -228,7 +235,7 @@ class PlayerActivity : PlayerBoundActivity() {
             if (id > 0 && Prefs.isFavorite(id)) R.drawable.ic_star else R.drawable.ic_star_border
         )
         binding.btnLyrics.imageTintList = ColorStateList.valueOf(
-            if (showLyrics) active else binding.root.onSurfaceColor()
+            if (showLyrics) active else fgIdle
         )
     }
 
@@ -239,27 +246,115 @@ class PlayerActivity : PlayerBoundActivity() {
 
         val song = Library.song(id)
         ArtLoader.load(binding.imageArt, song, 900)
-        applyTint(null)
-        if (song != null) {
-            lifecycleScope.launch {
-                val bitmap = ArtLoader.bitmap(applicationContext, song, 900)
-                if (bitmap != null && shownId == id) {
-                    val color = withContext(Dispatchers.Default) {
-                        Palette.from(bitmap).generate().getDominantColor(0)
-                    }
-                    if (color != 0 && shownId == id) applyTint(color)
-                }
+        lifecycleScope.launch {
+            val bitmap = if (song != null) ArtLoader.bitmap(applicationContext, song, 200) else null
+            if (shownId != id) return@launch
+            val picked = if (bitmap != null) {
+                withContext(Dispatchers.Default) { skinFromBitmap(bitmap) }
+            } else {
+                null
             }
+            if (shownId == id) animateSkin(picked ?: fallbackSkin())
         }
         loadLyrics(id)
     }
 
-    private fun applyTint(color: Int?) {
-        val bg = MaterialColors.getColor(binding.root, android.R.attr.colorBackground)
-        val top = if (color == null) bg else ColorUtils.blendARGB(bg, color, 0.45f)
-        binding.bgTint.background = GradientDrawable(
-            GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(top, bg)
+    // ----- "Liquid glass" background made from the cover colours -----
+
+    private var skinColors: IntArray? = null
+    private var skinAnimator: ValueAnimator? = null
+    private val fgActive = Color.WHITE
+    private val fgIdle = Color.argb(120, 255, 255, 255)
+
+    private fun skinFromBitmap(bitmap: Bitmap): IntArray? = try {
+        val p = Palette.from(bitmap).maximumColorCount(16).generate()
+        val dominant = p.getDominantColor(0xFF303040.toInt())
+        val vibrant = p.getVibrantColor(p.getLightVibrantColor(dominant))
+        val deep = p.getDarkVibrantColor(p.getDarkMutedColor(dominant))
+        intArrayOf(
+            ColorUtils.blendARGB(dominant, Color.BLACK, 0.40f),
+            ColorUtils.blendARGB(vibrant, Color.BLACK, 0.38f),
+            ColorUtils.blendARGB(deep, Color.BLACK, 0.62f)
         )
+    } catch (_: Throwable) {
+        null
+    }
+
+    private fun fallbackSkin(): IntArray {
+        val primary = binding.root.primaryColor()
+        return intArrayOf(
+            ColorUtils.blendARGB(primary, Color.BLACK, 0.55f),
+            ColorUtils.blendARGB(primary, Color.BLACK, 0.62f),
+            ColorUtils.blendARGB(primary, Color.BLACK, 0.82f)
+        )
+    }
+
+    private fun animateSkin(target: IntArray) {
+        val from = skinColors
+        skinAnimator?.cancel()
+        if (from == null) {
+            styleSkin(target)
+            return
+        }
+        val eval = ArgbEvaluator()
+        skinAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 600L
+            addUpdateListener { a ->
+                val f = a.animatedFraction
+                styleSkin(IntArray(3) { i -> eval.evaluate(f, from[i], target[i]) as Int })
+            }
+            start()
+        }
+    }
+
+    private fun styleSkin(c: IntArray) {
+        skinColors = c
+        val w = resources.displayMetrics.widthPixels.toFloat()
+        val base = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(c[0], c[1], c[2]))
+        fun blob(color: Int, cx: Float, cy: Float, radius: Float) = GradientDrawable().apply {
+            gradientType = GradientDrawable.RADIAL_GRADIENT
+            gradientRadius = radius
+            setGradientCenter(cx, cy)
+            setColors(
+                intArrayOf(
+                    ColorUtils.setAlphaComponent(ColorUtils.blendARGB(color, Color.WHITE, 0.22f), 150),
+                    Color.TRANSPARENT
+                )
+            )
+        }
+        val sheen = GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM,
+            intArrayOf(
+                Color.argb(55, 255, 255, 255), Color.argb(0, 255, 255, 255),
+                Color.argb(0, 255, 255, 255), Color.argb(70, 0, 0, 0)
+            )
+        )
+        binding.bgTint.background = LayerDrawable(
+            arrayOf(base, blob(c[1], 0.12f, 0.16f, w * 1.1f), blob(c[0], 0.95f, 0.72f, w * 1.0f), sheen)
+        )
+    }
+
+    /** The glass background is always dark, so every control is drawn in white. */
+    private fun applySkinForeground() {
+        val white = ColorStateList.valueOf(fgActive)
+        listOf(
+            binding.btnBack, binding.btnPlaylistAdd, binding.btnThemes, binding.btnMore,
+            binding.btnFavorite, binding.btnPrev, binding.btnNext, binding.btnQueue,
+            binding.btnEqualizer, binding.btnPlayPause
+        ).forEach { it.imageTintList = white }
+        binding.textTitle.setTextColor(fgActive)
+        val soft = Color.argb(190, 255, 255, 255)
+        binding.textArtist.setTextColor(soft)
+        binding.textPos.setTextColor(soft)
+        binding.textDur.setTextColor(soft)
+        binding.textLyricsHint.setTextColor(soft)
+        binding.textLyricsEmpty.setTextColor(soft)
+        binding.seekBar.progressTintList = white
+        binding.seekBar.thumbTintList = white
+        binding.seekBar.progressBackgroundTintList = ColorStateList.valueOf(Color.argb(70, 255, 255, 255))
+        lyricsAdapter.colorActive = fgActive
+        lyricsAdapter.colorIdle = Color.argb(150, 255, 255, 255)
+        WindowCompat.getInsetsController(window, binding.root).isAppearanceLightStatusBars = false
     }
 
     override fun onTick() {
