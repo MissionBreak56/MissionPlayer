@@ -1,11 +1,14 @@
 package com.missionbreak56.musicplayer.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.widget.PopupMenu
 import android.widget.SeekBar
 import android.widget.Toast
@@ -29,6 +32,7 @@ import com.missionbreak56.musicplayer.databinding.ActivityPlayerBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.abs
 
 /** Full "Now playing" screen: art, seek bar, play modes, lyrics, sleep timer, equalizer, queue. */
 class PlayerActivity : PlayerBoundActivity() {
@@ -85,6 +89,7 @@ class PlayerActivity : PlayerBoundActivity() {
         }
         binding.btnLyrics.setOnClickListener { toggleLyrics() }
         binding.imageArt.setOnClickListener { toggleLyrics() }
+        setupArtSwipe()
         binding.btnQueue.setOnClickListener { showQueue() }
         binding.btnAddLyrics.setOnClickListener { pickLyrics.launch(arrayOf("*/*")) }
         binding.btnAddLyricsPanel.setOnClickListener { pickLyrics.launch(arrayOf("*/*")) }
@@ -111,6 +116,80 @@ class PlayerActivity : PlayerBoundActivity() {
                 Library.load(this@PlayerActivity, force = false)
                 shownId = Long.MIN_VALUE
                 onPlayerChanged()
+            }
+        }
+    }
+
+    /**
+     * Swipe the cover left for the next song and right for the previous one.
+     * A plain tap still opens the lyrics.
+     */
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupArtSwipe() {
+        val art = binding.imageArt
+        val slop = ViewConfiguration.get(this).scaledTouchSlop
+        val density = resources.displayMetrics.density
+        var downX = 0f
+        var downY = 0f
+        var dragging = false
+
+        fun settle() {
+            art.animate().translationX(0f).alpha(1f).setDuration(150).start()
+        }
+
+        art.setOnTouchListener { v, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    downX = event.rawX
+                    downY = event.rawY
+                    dragging = false
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val dx = event.rawX - downX
+                    val dy = event.rawY - downY
+                    if (!dragging && abs(dx) > slop && abs(dx) > abs(dy)) {
+                        dragging = true
+                        v.parent?.requestDisallowInterceptTouchEvent(true)
+                    }
+                    if (dragging) {
+                        art.animate().cancel()
+                        art.translationX = dx * 0.6f
+                        art.alpha = 1f - (abs(dx) / (v.width * 1.5f)).coerceIn(0f, 0.5f)
+                    }
+                    true
+                }
+                MotionEvent.ACTION_UP -> {
+                    val dx = event.rawX - downX
+                    if (!dragging) {
+                        v.performClick()
+                    } else {
+                        val c = controller
+                        val threshold = maxOf(v.width * 0.2f, 72 * density)
+                        val goNext = dx < -threshold && c?.hasNextMediaItem() == true
+                        val goPrev = dx > threshold && c?.hasPreviousMediaItem() == true
+                        if (goNext || goPrev) {
+                            val dir = if (goNext) -1f else 1f
+                            art.animate().translationX(dir * v.width * 0.4f).alpha(0f).setDuration(120)
+                                .withEndAction {
+                                    if (goNext) c?.seekToNextMediaItem() else c?.seekToPreviousMediaItem()
+                                    art.translationX = -dir * v.width * 0.3f
+                                    art.animate().translationX(0f).alpha(1f).setDuration(180).start()
+                                }
+                                .start()
+                        } else {
+                            settle()
+                        }
+                    }
+                    dragging = false
+                    true
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    if (dragging) settle()
+                    dragging = false
+                    true
+                }
+                else -> true
             }
         }
     }
