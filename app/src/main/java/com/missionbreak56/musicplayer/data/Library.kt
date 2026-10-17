@@ -61,12 +61,15 @@ object Library {
         val result = withContext(Dispatchers.IO) {
             MusicRepository.loadSongs(app) to MusicRepository.loadGenres(app)
         }
+        val changed = !loaded || result.first != allSongs || result.second != genreMap
         allSongs = result.first
         allById = result.first.associateBy { it.id }
         genreMap = result.second
         applyHidden(notify = false)
         loaded = true
-        listeners.forEach { it() }
+        // Reloading on every return to the app must not rebuild the lists when nothing changed,
+        // otherwise a tap right after coming back is swallowed by the refresh.
+        if (changed) listeners.forEach { it() }
     }
 
     fun isFolderHidden(path: String, hidden: Set<String>): Boolean =

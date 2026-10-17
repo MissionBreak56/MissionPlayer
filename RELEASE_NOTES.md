@@ -1,8 +1,6 @@
-## MissionPlayer v2.6.1 — "Liquid glass" no player em tela cheia
+## MissionPlayer v2.6.2 — Correção do toque que não respondia
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.6.1-arm64-v8a.apk`.
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.6.2-arm64-v8a.apk`.
 
-### Novidades
-- **Efeito liquid glass também na tela "Tocando agora"**: o fundo agora mistura as cores da capa em um gradiente com manchas de luz translúcidas e brilho de vidro, com transição suave ao trocar de música.
-- Título, artista, tempo, barra de progresso, ícones e letras passam a ser brancos sobre o fundo colorido, para manter a leitura em qualquer capa.
-- Sem capa, o fundo usa as cores do tema escolhido.
+### Correções
+- **Toque ignorado ao voltar de outra tela** (ex.: sair do player e tocar em uma pasta): ao retornar, o app recarregava a biblioteca e reconstruía todas as listas mesmo sem nenhuma mudança, o que "engolia" o primeiro toque. Agora a biblioteca só atualiza as listas quando algo realmente mudou, e as listas não são redesenhadas se o conteúdo é o mesmo.

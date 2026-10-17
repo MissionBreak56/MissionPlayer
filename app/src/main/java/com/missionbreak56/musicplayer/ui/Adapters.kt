@@ -37,6 +37,7 @@ class SongAdapter(
         }
 
     fun submit(list: List<Song>) {
+        if (list == items) return
         items = list
         notifyDataSetChanged()
     }
@@ -84,6 +85,7 @@ class GroupAdapter(
     var onMore: ((View, Group) -> Unit)? = null
 
     fun submit(list: List<Group>) {
+        if (list == items) return
         items = list
         notifyDataSetChanged()
     }
