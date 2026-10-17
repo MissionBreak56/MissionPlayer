@@ -13,7 +13,8 @@
         <item name="colorSurfaceContainerHigh">@color/surface_high</item>
         <item name="colorSurfaceContainerHighest">@color/surface_high</item>
         <item name="colorOnPrimary">@color/on_primary</item>
-        <item name="android:statusBarColor">@color/bg</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowBackground">@color/bg</item>
         <item name="android:popupMenuStyle">@style/Widget.App.PopupMenu</item>
         <item name="popupMenuStyle">@style/Widget.App.PopupMenu.Compat</item>

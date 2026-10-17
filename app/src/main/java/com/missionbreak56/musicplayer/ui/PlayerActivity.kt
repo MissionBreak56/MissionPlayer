@@ -13,6 +13,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewConfiguration
 import android.widget.PopupMenu
 import android.widget.SeekBar
@@ -22,6 +23,7 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
+import androidx.core.graphics.Insets
 import androidx.media3.common.Player
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,6 +37,7 @@ import com.missionbreak56.musicplayer.data.LyricsIndex
 import com.missionbreak56.musicplayer.data.LyricsStore
 import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.databinding.ActivityPlayerBinding
+import com.missionbreak56.musicplayer.playback.PlaybackState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -52,6 +55,14 @@ class PlayerActivity : PlayerBoundActivity() {
     private var seeking = false
     private var lyricsLines: List<LyricLine> = emptyList()
     private var lyricIndex = -1
+
+    private var closePending = false
+    private var restoreTried = false
+    private val closeIfEmpty = Runnable {
+        closePending = false
+        val c = controller
+        if (c != null && c.mediaItemCount == 0 && !isFinishing) finish()
+    }
 
     private val pickLyrics = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) importLyrics(uri)
@@ -201,6 +212,20 @@ class PlayerActivity : PlayerBoundActivity() {
         }
     }
 
+    override fun onStop() {
+        uiHandler.removeCallbacks(closeIfEmpty)
+        closePending = false
+        restoreTried = false
+        super.onStop()
+    }
+
+    /** Lets the album tint fill the area behind the status bar and the notch too. */
+    override fun onWindowInsets(bars: Insets) {
+        val lp = binding.bgTint.layoutParams as ViewGroup.MarginLayoutParams
+        lp.setMargins(-bars.left, -bars.top, -bars.right, -bars.bottom)
+        binding.bgTint.layoutParams = lp
+    }
+
     private fun currentSong() =
         Library.song(controller?.currentMediaItem?.mediaId?.toLongOrNull() ?: -1L)
 
@@ -210,8 +235,21 @@ class PlayerActivity : PlayerBoundActivity() {
         super.onPlayerChanged()
         val c = controller ?: return
         if (c.mediaItemCount == 0) {
-            finish()
+            // The queue can be empty for a moment (service restarted, queue not restored yet):
+            // try to put the last queue back, and only close if it is still empty a few seconds later.
+            if (!restoreTried && Library.loaded) {
+                restoreTried = true
+                PlaybackState.restoreIfEmpty(c)
+            }
+            if (!closePending) {
+                closePending = true
+                uiHandler.postDelayed(closeIfEmpty, 4000L)
+            }
             return
+        }
+        if (closePending) {
+            closePending = false
+            uiHandler.removeCallbacks(closeIfEmpty)
         }
         val item = c.currentMediaItem
         val id = item?.mediaId?.toLongOrNull() ?: -1L
