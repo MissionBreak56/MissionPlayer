@@ -51,7 +51,7 @@
                 android:layout_width="88dp"
                 android:layout_height="88dp"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_launcher"
+                android:src="@drawable/ic_launcher_art"
                 app:shapeAppearanceOverlay="@style/Shape.Rounded24" />
 
             <TextView

@@ -144,6 +144,8 @@
         android:id="@+id/infoPanel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:orientation="vertical"
         android:paddingStart="22dp"
         android:paddingEnd="22dp"
@@ -169,7 +171,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:fadingEdgeLength="18dp"
                     android:marqueeRepeatLimit="marquee_forever"
+                    android:requiresFadingEdge="horizontal"
                     android:singleLine="true"
                     android:textColor="?attr/colorOnSurface"
                     android:textSize="28sp"
@@ -236,9 +241,11 @@
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
             android:layout_marginTop="14dp"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp" />
+            android:layout_marginEnd="-12dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
