@@ -1,0 +1,1954 @@
+diff --git a/README.md b/README.md
+index c9b6661..a1e0b64 100644
+--- a/README.md
++++ b/README.md
+@@ -54,14 +54,13 @@ MissionPlayer/
+         │   │   ├── PlaybackService.kt    # Media3 session service
+         │   │   └── PlayerConnection.kt    # MediaController helper
+         │   └── ui/
+-        │       ├── MainActivity.kt        # library, search, mini-player
++        │       ├── MainActivity.kt        # tabs, search pill, mini-player
+         │       ├── SongAdapter.kt
+         │       ├── PlayerActivity.kt      # now playing + favorite
+         │       └── AboutActivity.kt       # "Developed by MissionBreak56"
+         └── res/
+             ├── layout/ (activity_main, item_song, activity_player, activity_about)
+-            ├── menu/menu_main.xml
+-            ├── drawable/ (ic_play, ic_pause, ic_music_note, ic_favorite, ic_favorite_border, ic_launcher)
++            ├── drawable/ (vector icons, rounded shapes, placeholder covers, ic_launcher)
+             └── values/ (strings, colors, themes)
+ ```
+ 
+@@ -82,6 +81,25 @@ MissionPlayer/
+ 
+ ---
+ 
++## 3b. UI design (Lark-inspired)
++
++The interface follows the visual language of the Lark Player package — dark-green
++theme, 56dp header with logo + actions, pill tabs, 80dp song rows with rounded
++covers, rounded mini-player card and a large-cover "now playing" screen.
++Palette and proportions were taken as a reference only; every layout, drawable and
++icon in this repo is original (no Lark logo, bitmap, string or code was copied).
++
++| Screen | What changed |
++|---|---|
++| Main | Header (logo, title, search, about), pill tabs **Songs / Favorites**, 80dp rows (64dp rounded cover, bold title, caption, duration, equalizer overlay + green title on the playing row), search pill that replaces the header |
++| Mini player | Rounded card with cover, title/artist, previous / play (green circle) / next |
++| Now playing | Chevron-down header, large rounded cover, title + artist + favorite, seek bar with times, shuffle / previous / play / next / repeat (off → all → one) |
++| About | Same dark-green style, back arrow, info card |
++
++Theme and palette live in `res/values/colors.xml` and `res/values/themes.xml`.
++
++---
++
+ ## 4. Build
+ 
+ ### Option A — Android Studio (easiest)
+diff --git a/app/src/main/java/com/missionbreak56/musicplayer/ui/AboutActivity.kt b/app/src/main/java/com/missionbreak56/musicplayer/ui/AboutActivity.kt
+index 421b657..4272148 100644
+--- a/app/src/main/java/com/missionbreak56/musicplayer/ui/AboutActivity.kt
++++ b/app/src/main/java/com/missionbreak56/musicplayer/ui/AboutActivity.kt
+@@ -1,7 +1,6 @@
+ package com.missionbreak56.musicplayer.ui
+ 
+ import android.os.Bundle
+-import android.view.MenuItem
+ import androidx.appcompat.app.AppCompatActivity
+ import com.missionbreak56.musicplayer.BuildConfig
+ import com.missionbreak56.musicplayer.R
+@@ -13,9 +12,8 @@ class AboutActivity : AppCompatActivity() {
+         super.onCreate(savedInstanceState)
+         val binding = ActivityAboutBinding.inflate(layoutInflater)
+         setContentView(binding.root)
+-        setSupportActionBar(binding.toolbar)
+-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+-        setTitle(R.string.about)
++
++        binding.btnBack.setOnClickListener { finish() }
+ 
+         binding.textAppName.text = getString(R.string.app_name)
+         binding.textVersion.text = getString(R.string.version_format, BuildConfig.VERSION_NAME)
+@@ -23,12 +21,4 @@ class AboutActivity : AppCompatActivity() {
+             getString(R.string.developer_format, getString(R.string.developer_name))
+         binding.textAboutBody.text = getString(R.string.about_body)
+     }
+-
+-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+-        if (item.itemId == android.R.id.home) {
+-            finish()
+-            return true
+-        }
+-        return super.onOptionsItemSelected(item)
+-    }
+ }
+diff --git a/app/src/main/java/com/missionbreak56/musicplayer/ui/Format.kt b/app/src/main/java/com/missionbreak56/musicplayer/ui/Format.kt
+new file mode 100644
+index 0000000..63c1d44
+--- /dev/null
++++ b/app/src/main/java/com/missionbreak56/musicplayer/ui/Format.kt
+@@ -0,0 +1,16 @@
++package com.missionbreak56.musicplayer.ui
++
++import java.util.Locale
++
++/** Formats a duration in milliseconds as m:ss (or h:mm:ss for long tracks). */
++internal fun formatDuration(ms: Long): String {
++    val totalSeconds = ms.coerceAtLeast(0L) / 1000L
++    val hours = totalSeconds / 3600L
++    val minutes = (totalSeconds % 3600L) / 60L
++    val seconds = totalSeconds % 60L
++    return if (hours > 0L) {
++        String.format(Locale.US, "%d:%02d:%02d", hours, minutes, seconds)
++    } else {
++        String.format(Locale.US, "%d:%02d", minutes, seconds)
++    }
++}
+diff --git a/app/src/main/java/com/missionbreak56/musicplayer/ui/MainActivity.kt b/app/src/main/java/com/missionbreak56/musicplayer/ui/MainActivity.kt
+index 51d84be..dcb108c 100644
+--- a/app/src/main/java/com/missionbreak56/musicplayer/ui/MainActivity.kt
++++ b/app/src/main/java/com/missionbreak56/musicplayer/ui/MainActivity.kt
+@@ -1,16 +1,17 @@
+ package com.missionbreak56.musicplayer.ui
+ 
+ import android.Manifest
++import android.content.Context
+ import android.content.Intent
+ import android.content.pm.PackageManager
+ import android.os.Build
+ import android.os.Bundle
+ import android.text.Editable
+ import android.text.TextWatcher
+-import android.view.Menu
+-import android.view.MenuItem
+ import android.view.View
++import android.view.inputmethod.InputMethodManager
+ import android.widget.Toast
++import androidx.activity.OnBackPressedCallback
+ import androidx.activity.result.contract.ActivityResultContracts
+ import androidx.appcompat.app.AppCompatActivity
+ import androidx.core.content.ContextCompat
+@@ -19,8 +20,10 @@ import androidx.media3.common.MediaItem
+ import androidx.media3.common.MediaMetadata
+ import androidx.media3.common.Player
+ import androidx.media3.session.MediaController
++import com.google.android.material.tabs.TabLayout
+ import com.missionbreak56.musicplayer.R
+ import com.missionbreak56.musicplayer.data.MusicRepository
++import com.missionbreak56.musicplayer.data.Prefs
+ import com.missionbreak56.musicplayer.data.Song
+ import com.missionbreak56.musicplayer.databinding.ActivityMainBinding
+ import com.missionbreak56.musicplayer.playback.PlayerConnection
+@@ -35,6 +38,11 @@ class MainActivity : AppCompatActivity() {
+     private lateinit var connection: PlayerConnection
+     private var controller: MediaController? = null
+     private var allSongs: List<Song> = emptyList()
++    private var showFavoritesOnly = false
++
++    private val closeSearchOnBack = object : OnBackPressedCallback(false) {
++        override fun handleOnBackPressed() = setSearchMode(false)
++    }
+ 
+     private val playerListener = object : Player.Listener {
+         override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) = updateMiniPlayer()
+@@ -57,15 +65,23 @@ class MainActivity : AppCompatActivity() {
+         super.onCreate(savedInstanceState)
+         binding = ActivityMainBinding.inflate(layoutInflater)
+         setContentView(binding.root)
+-        setSupportActionBar(binding.toolbar)
+ 
+         adapter = SongAdapter { position -> onSongClicked(position) }
+         binding.recyclerSongs.adapter = adapter
+ 
++        setupTabs()
++        onBackPressedDispatcher.addCallback(this, closeSearchOnBack)
++
++        binding.btnSearch.setOnClickListener { setSearchMode(true) }
++        binding.btnCloseSearch.setOnClickListener { setSearchMode(false) }
++        binding.btnAbout.setOnClickListener {
++            startActivity(Intent(this, AboutActivity::class.java))
++        }
++
+         binding.editSearch.addTextChangedListener(object : TextWatcher {
+             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+-                filter(s?.toString().orEmpty())
++                applyFilter()
+             }
+             override fun afterTextChanged(s: Editable?) {}
+         })
+@@ -74,6 +90,8 @@ class MainActivity : AppCompatActivity() {
+             currentSongId()?.let { openPlayer(it) }
+         }
+         binding.btnMiniPlayPause.setOnClickListener { togglePlayPause() }
++        binding.btnMiniPrev.setOnClickListener { controller?.seekToPreviousMediaItem() }
++        binding.btnMiniNext.setOnClickListener { controller?.seekToNextMediaItem() }
+ 
+         connection = PlayerConnection(this) { c ->
+             controller = c
+@@ -84,24 +102,12 @@ class MainActivity : AppCompatActivity() {
+ 
+         ensurePermissionAndLoad()
+         maybeRequestNotificationPermission()
+-        setTitle(R.string.app_name)
+     }
+ 
+-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+-        menuInflater.inflate(R.menu.menu_main, menu)
+-        return true
+-    }
+-
+-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+-        return when (item.itemId) {
+-            R.id.action_about -> {
+-                startActivity(Intent(this, AboutActivity::class.java)); true
+-            }
+-            R.id.action_favorites -> {
+-                showFavorites(); true
+-            }
+-            else -> super.onOptionsItemSelected(item)
+-        }
++    override fun onResume() {
++        super.onResume()
++        // Favorites may have changed in the player screen.
++        if (allSongs.isNotEmpty()) applyFilter()
+     }
+ 
+     override fun onDestroy() {
+@@ -151,21 +157,59 @@ class MainActivity : AppCompatActivity() {
+             val songs = withContext(Dispatchers.IO) { MusicRepository.loadSongs(this@MainActivity) }
+             allSongs = songs
+             binding.editSearch.setText("")
+-            if (songs.isEmpty()) showEmpty(R.string.no_songs) else showList(songs)
++            applyFilter()
+         }
+     }
+ 
+-    private fun filter(query: String) {
+-        val q = query.trim().lowercase()
+-        val filtered = if (q.isEmpty()) allSongs else allSongs.filter {
++    private fun setupTabs() {
++        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.tab_songs))
++        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.tab_favorites))
++        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
++            override fun onTabSelected(tab: TabLayout.Tab) {
++                showFavoritesOnly = tab.position == 1
++                applyFilter()
++            }
++            override fun onTabUnselected(tab: TabLayout.Tab) {}
++            override fun onTabReselected(tab: TabLayout.Tab) {}
++        })
++    }
++
++    /** Applies the selected tab and the search query to the full song list. */
++    private fun applyFilter() {
++        if (allSongs.isEmpty()) {
++            showEmpty(R.string.no_songs)
++            return
++        }
++        val base = if (showFavoritesOnly) allSongs.filter { Prefs.isFavorite(it.id) } else allSongs
++        val q = binding.editSearch.text?.toString().orEmpty().trim().lowercase()
++        val result = if (q.isEmpty()) base else base.filter {
+             it.displayTitle.lowercase().contains(q) || it.displayArtist.lowercase().contains(q)
+         }
+-        if (filtered.isEmpty()) showEmpty(R.string.no_results) else showList(filtered)
++        when {
++            result.isNotEmpty() -> showList(result)
++            q.isNotEmpty() -> showEmpty(R.string.no_results)
++            showFavoritesOnly -> showEmpty(R.string.no_favorites)
++            else -> showEmpty(R.string.no_songs)
++        }
+     }
+ 
+-    private fun showFavorites() {
+-        val favs = allSongs.filter { com.missionbreak56.musicplayer.data.Prefs.isFavorite(it.id) }
+-        if (favs.isEmpty()) showEmpty(R.string.no_favorites) else showList(favs)
++    private fun setSearchMode(on: Boolean) {
++        closeSearchOnBack.isEnabled = on
++        val inputMethod = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
++        binding.searchBar.visibility = if (on) View.VISIBLE else View.GONE
++        val headerVisibility = if (on) View.GONE else View.VISIBLE
++        binding.imgLogo.visibility = headerVisibility
++        binding.textAppTitle.visibility = headerVisibility
++        binding.btnSearch.visibility = headerVisibility
++        binding.btnAbout.visibility = headerVisibility
++        if (on) {
++            binding.editSearch.requestFocus()
++            inputMethod.showSoftInput(binding.editSearch, InputMethodManager.SHOW_IMPLICIT)
++        } else {
++            binding.editSearch.setText("")
++            binding.editSearch.clearFocus()
++            inputMethod.hideSoftInputFromWindow(binding.editSearch.windowToken, 0)
++        }
+     }
+ 
+     private fun showList(list: List<Song>) {
+@@ -212,6 +256,7 @@ class MainActivity : AppCompatActivity() {
+     private fun updateMiniPlayer() {
+         val c = controller
+         val item = c?.currentMediaItem
++        adapter.setPlayingId(item?.mediaId?.toLongOrNull())
+         if (c == null || item == null) {
+             binding.miniPlayer.visibility = View.GONE
+             return
+diff --git a/app/src/main/java/com/missionbreak56/musicplayer/ui/PlayerActivity.kt b/app/src/main/java/com/missionbreak56/musicplayer/ui/PlayerActivity.kt
+index f88d640..527fd10 100644
+--- a/app/src/main/java/com/missionbreak56/musicplayer/ui/PlayerActivity.kt
++++ b/app/src/main/java/com/missionbreak56/musicplayer/ui/PlayerActivity.kt
+@@ -1,9 +1,13 @@
+ package com.missionbreak56.musicplayer.ui
+ 
+ import android.os.Bundle
+-import android.view.MenuItem
++import android.os.Handler
++import android.os.Looper
++import android.widget.ImageButton
++import android.widget.SeekBar
+ import android.widget.Toast
+ import androidx.appcompat.app.AppCompatActivity
++import androidx.core.content.ContextCompat
+ import androidx.lifecycle.lifecycleScope
+ import androidx.media3.common.MediaItem
+ import androidx.media3.common.MediaMetadata
+@@ -24,18 +28,29 @@ class PlayerActivity : AppCompatActivity() {
+     private lateinit var connection: PlayerConnection
+     private var controller: MediaController? = null
+ 
++    private val handler = Handler(Looper.getMainLooper())
++    private var userSeeking = false
++
++    private val progressTicker = object : Runnable {
++        override fun run() {
++            updateProgress()
++            handler.postDelayed(this, PROGRESS_INTERVAL_MS)
++        }
++    }
++
+     private val listener = object : Player.Listener {
+         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) = refreshUi()
++        override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) = refreshUi()
+         override fun onIsPlayingChanged(isPlaying: Boolean) = refreshUi()
++        override fun onPlaybackStateChanged(playbackState: Int) = refreshUi()
++        override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) = refreshUi()
++        override fun onRepeatModeChanged(repeatMode: Int) = refreshUi()
+     }
+ 
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         binding = ActivityPlayerBinding.inflate(layoutInflater)
+         setContentView(binding.root)
+-        setSupportActionBar(binding.toolbar)
+-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+-        setTitle(R.string.now_playing)
+ 
+         val songId = intent.getLongExtra(EXTRA_SONG_ID, -1L)
+         if (songId <= 0L) {
+@@ -43,6 +58,33 @@ class PlayerActivity : AppCompatActivity() {
+             return
+         }
+ 
++        binding.btnBack.setOnClickListener { finish() }
++        setupControls()
++
++        connection = PlayerConnection(this) { c ->
++            controller = c
++            c.addListener(listener)
++            if (c.mediaItemCount > 0 && c.currentMediaItem?.mediaId == songId.toString()) {
++                // Same song is already loaded (e.g. opened from the mini player): keep playing.
++                refreshUi()
++            } else {
++                startQueue(c, songId)
++            }
++        }
++        connection.connect()
++    }
++
++    override fun onStart() {
++        super.onStart()
++        handler.post(progressTicker)
++    }
++
++    override fun onStop() {
++        handler.removeCallbacks(progressTicker)
++        super.onStop()
++    }
++
++    private fun setupControls() {
+         binding.btnFavorite.setOnClickListener {
+             val id = controller?.currentMediaItem?.mediaId?.toLongOrNull()
+                 ?: return@setOnClickListener
+@@ -55,13 +97,40 @@ class PlayerActivity : AppCompatActivity() {
+             ).show()
+         }
+ 
+-        connection = PlayerConnection(this) { c ->
+-            controller = c
+-            binding.playerView.player = c
+-            c.addListener(listener)
+-            startQueue(c, songId)
++        binding.btnPlayPause.setOnClickListener {
++            val c = controller ?: return@setOnClickListener
++            if (c.isPlaying) c.pause() else c.play()
+         }
+-        connection.connect()
++        binding.btnPrev.setOnClickListener { controller?.seekToPreviousMediaItem() }
++        binding.btnNext.setOnClickListener { controller?.seekToNextMediaItem() }
++
++        binding.btnShuffle.setOnClickListener {
++            val c = controller ?: return@setOnClickListener
++            c.shuffleModeEnabled = !c.shuffleModeEnabled
++        }
++        binding.btnRepeat.setOnClickListener {
++            val c = controller ?: return@setOnClickListener
++            c.repeatMode = when (c.repeatMode) {
++                Player.REPEAT_MODE_OFF -> Player.REPEAT_MODE_ALL
++                Player.REPEAT_MODE_ALL -> Player.REPEAT_MODE_ONE
++                else -> Player.REPEAT_MODE_OFF
++            }
++        }
++
++        binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
++            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
++                if (fromUser) binding.textPosition.text = formatDuration(progress.toLong())
++            }
++
++            override fun onStartTrackingTouch(seekBar: SeekBar) {
++                userSeeking = true
++            }
++
++            override fun onStopTrackingTouch(seekBar: SeekBar) {
++                userSeeking = false
++                controller?.seekTo(seekBar.progress.toLong())
++            }
++        })
+     }
+ 
+     private fun startQueue(c: MediaController, songId: Long) {
+@@ -99,29 +168,59 @@ class PlayerActivity : AppCompatActivity() {
+         val item = c.currentMediaItem
+         binding.textTitle.text = item?.mediaMetadata?.title ?: getString(R.string.unknown_title)
+         binding.textArtist.text = item?.mediaMetadata?.artist ?: getString(R.string.unknown_artist)
++
+         val id = item?.mediaId?.toLongOrNull()
+         binding.btnFavorite.setImageResource(
+             if (id != null && Prefs.isFavorite(id)) R.drawable.ic_favorite
+             else R.drawable.ic_favorite_border
+         )
++        binding.btnPlayPause.setImageResource(
++            if (c.isPlaying) R.drawable.ic_pause else R.drawable.ic_play
++        )
++
++        setToggleState(binding.btnShuffle, c.shuffleModeEnabled)
++        binding.btnRepeat.setImageResource(
++            if (c.repeatMode == Player.REPEAT_MODE_ONE) R.drawable.ic_repeat_one
++            else R.drawable.ic_repeat
++        )
++        setToggleState(binding.btnRepeat, c.repeatMode != Player.REPEAT_MODE_OFF)
++
++        updateProgress()
+     }
+ 
+-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+-        if (item.itemId == android.R.id.home) {
+-            finish()
+-            return true
++    /** Active toggles are tinted with the brand color; inactive ones are dimmed. */
++    private fun setToggleState(button: ImageButton, active: Boolean) {
++        if (active) {
++            button.setColorFilter(ContextCompat.getColor(this, R.color.brand_main))
++            button.alpha = 1f
++        } else {
++            button.clearColorFilter()
++            button.alpha = 0.5f
+         }
+-        return super.onOptionsItemSelected(item)
++    }
++
++    private fun updateProgress() {
++        val c = controller ?: return
++        if (userSeeking) return
++        // C.TIME_UNSET is negative, so coerceAtLeast also covers "duration not known yet".
++        val duration = c.duration.coerceAtLeast(0L)
++        val position = c.currentPosition.coerceIn(0L, duration)
++        binding.seekBar.max = duration.toInt().coerceAtLeast(1)
++        binding.seekBar.progress = position.toInt()
++        binding.textPosition.text = formatDuration(position)
++        binding.textDuration.text = formatDuration(duration)
+     }
+ 
+     override fun onDestroy() {
++        handler.removeCallbacks(progressTicker)
+         controller?.removeListener(listener)
+-        connection.release()
++        if (::connection.isInitialized) connection.release()
+         controller = null
+         super.onDestroy()
+     }
+ 
+     companion object {
+         const val EXTRA_SONG_ID = "extra_song_id"
++        private const val PROGRESS_INTERVAL_MS = 500L
+     }
+ }
+diff --git a/app/src/main/java/com/missionbreak56/musicplayer/ui/SongAdapter.kt b/app/src/main/java/com/missionbreak56/musicplayer/ui/SongAdapter.kt
+index 176603d..ccf4296 100644
+--- a/app/src/main/java/com/missionbreak56/musicplayer/ui/SongAdapter.kt
++++ b/app/src/main/java/com/missionbreak56/musicplayer/ui/SongAdapter.kt
+@@ -1,8 +1,11 @@
+ package com.missionbreak56.musicplayer.ui
+ 
+ import android.view.LayoutInflater
++import android.view.View
+ import android.view.ViewGroup
++import androidx.core.content.ContextCompat
+ import androidx.recyclerview.widget.RecyclerView
++import com.missionbreak56.musicplayer.R
+ import com.missionbreak56.musicplayer.data.Song
+ import com.missionbreak56.musicplayer.databinding.ItemSongBinding
+ 
+@@ -11,6 +14,7 @@ class SongAdapter(
+ ) : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
+ 
+     private val items = ArrayList<Song>()
++    private var playingId: Long? = null
+ 
+     fun submit(list: List<Song>) {
+         items.clear()
+@@ -18,6 +22,14 @@ class SongAdapter(
+         notifyDataSetChanged()
+     }
+ 
++    /** Highlights the row of the song that is currently loaded in the player. */
++    fun setPlayingId(id: Long?) {
++        if (playingId != id) {
++            playingId = id
++            notifyDataSetChanged()
++        }
++    }
++
+     fun songAt(position: Int): Song? = items.getOrNull(position)
+ 
+     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
+@@ -35,8 +47,14 @@ class SongAdapter(
+         RecyclerView.ViewHolder(binding.root) {
+ 
+         fun bind(song: Song) {
++            val isPlaying = song.id == playingId
++            val titleColor = if (isPlaying) R.color.brand_content else R.color.content_main
++
+             binding.textTitle.text = song.displayTitle
++            binding.textTitle.setTextColor(ContextCompat.getColor(binding.root.context, titleColor))
+             binding.textSubtitle.text = "${song.displayArtist} • ${song.displayAlbum}"
++            binding.textDuration.text = formatDuration(song.durationMs)
++            binding.iconPlaying.visibility = if (isPlaying) View.VISIBLE else View.GONE
+             binding.root.setOnClickListener {
+                 val pos = bindingAdapterPosition
+                 if (pos != RecyclerView.NO_POSITION) onSongClick(pos)
+diff --git a/app/src/main/res/drawable/bg_cover_playing.xml b/app/src/main/res/drawable/bg_cover_playing.xml
+new file mode 100644
+index 0000000..de0dad4
+--- /dev/null
++++ b/app/src/main/res/drawable/bg_cover_playing.xml
+@@ -0,0 +1,4 @@
++<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
++    <solid android:color="@color/playing_dim" />
++    <corners android:radius="16dp" />
++</shape>
+diff --git a/app/src/main/res/drawable/bg_mini_player.xml b/app/src/main/res/drawable/bg_mini_player.xml
+new file mode 100644
+index 0000000..86378cc
+--- /dev/null
++++ b/app/src/main/res/drawable/bg_mini_player.xml
+@@ -0,0 +1,4 @@
++<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
++    <solid android:color="@color/bg_overlay" />
++    <corners android:radius="20dp" />
++</shape>
+diff --git a/app/src/main/res/drawable/bg_play_circle.xml b/app/src/main/res/drawable/bg_play_circle.xml
+new file mode 100644
+index 0000000..89ce740
+--- /dev/null
++++ b/app/src/main/res/drawable/bg_play_circle.xml
+@@ -0,0 +1,3 @@
++<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
++    <solid android:color="@color/brand_main" />
++</shape>
+diff --git a/app/src/main/res/drawable/bg_search.xml b/app/src/main/res/drawable/bg_search.xml
+new file mode 100644
+index 0000000..86378cc
+--- /dev/null
++++ b/app/src/main/res/drawable/bg_search.xml
+@@ -0,0 +1,4 @@
++<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
++    <solid android:color="@color/bg_overlay" />
++    <corners android:radius="20dp" />
++</shape>
+diff --git a/app/src/main/res/drawable/ic_app_logo.xml b/app/src/main/res/drawable/ic_app_logo.xml
+new file mode 100644
+index 0000000..cab6db0
+--- /dev/null
++++ b/app/src/main/res/drawable/ic_app_logo.xml
+@@ -0,0 +1,12 @@
++<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
++    <item>
++        <shape android:shape="oval">
++            <solid android:color="@color/brand_main" />
++        </shape>
++    </item>
++    <item
++        android:width="18dp"
++        android:height="18dp"
++        android:gravity="center"
++        android:drawable="@drawable/ic_music_note_dark" />
++</layer-list>
+diff --git a/app/src/main/res/drawable/ic_back.xml b/app/src/main/res/drawable/ic_back.xml
+new file mode 100644
+index 0000000..ab91077
+--- /dev/null
++++ b/app/src/main/res/drawable/ic_back.xml
+@@ -0,0 +1,9 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++    <path
++        android:fillColor="@color/content_main"
++        android:pathData="M20,11H7.83l5.59,-5.59L12,4l-8,8 8,8 1.41,-1.41L7.83,13H20v-2z" />
++</vector>
+diff --git a/app/src/main/res/drawable/ic_chevron_down.xml b/app/src/main/res/drawable/ic_chevron_down.xml
+new file mode 100644
+index 0000000..2c60120
+--- /dev/null
++++ b/app/src/main/res/drawable/ic_chevron_down.xml
+@@ -0,0 +1,9 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++    <path
++        android:fillColor="@color/content_main"
++        android:pathData="M7.41,8.59L12,13.17l4.59,-4.58L18,10l-6,6 -6,-6 1.41,-1.41z" />
++</vector>
+diff --git a/app/src/main/res/drawable/ic_close.xml b/app/src/main/res/drawable/ic_close.xml
+new file mode 100644
+index 0000000..3d1fb5e
+--- /dev/null
++++ b/app/src/main/res/drawable/ic_close.xml
+@@ -0,0 +1,9 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++    <path
++        android:fillColor="@color/content_main"
++        android:pathData="M19,6.41L17.59,5 12,10.59 6.41,5 5,6.41 10.59,12 5,17.59 6.41,19 12,13.41 17.59,19 19,17.59 13.41,12z" />
++</vector>
+diff --git a/app/src/main/res/drawable/ic_equalizer.xml b/app/src/main/res/drawable/ic_equalizer.xml
+new file mode 100644
+index 0000000..2efd905
+--- /dev/null
++++ b/app/src/main/res/drawable/ic_equalizer.xml
+@@ -0,0 +1,9 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++    <path
++        android:fillColor="@color/brand_content"
++        android:pathData="M10,20h4V4h-4v16zM4,20h4v-8H4v8zM16,9v11h4V9h-4z" />
++</vector>
+diff --git a/app/src/main/res/drawable/ic_favorite.xml b/app/src/main/res/drawable/ic_favorite.xml
+index 2695995..bfc8c17 100644
+--- a/app/src/main/res/drawable/ic_favorite.xml
++++ b/app/src/main/res/drawable/ic_favorite.xml
+@@ -2,9 +2,8 @@
+     android:width="24dp"
+     android:height="24dp"
+     android:viewportWidth="24"
+-    android:viewportHeight="24"
+-    android:tint="?attr/colorPrimary">
++    android:viewportHeight="24">
+     <path
+-        android:fillColor="#FF000000"
++        android:fillColor="@color/brand_main"
+         android:pathData="M12,21.35l-1.45,-1.32C5.4,15.36 2,12.28 2,8.5 2,5.42 4.42,3 7.5,3c1.74,0 3.41,0.81 4.5,2.09C13.09,3.81 14.76,3 16.5,3 19.58,3 22,5.42 22,8.5c0,3.78 -3.4,6.86 -8.55,11.54L12,21.35z" />
+ </vector>
+diff --git a/app/src/main/res/drawable/ic_favorite_border.xml b/app/src/main/res/drawable/ic_favorite_border.xml
+index 93f2b29..aa36372 100644
+--- a/app/src/main/res/drawable/ic_favorite_border.xml
++++ b/app/src/main/res/drawable/ic_favorite_border.xml
+@@ -2,9 +2,8 @@
+     android:width="24dp"
+     android:height="24dp"
+     android:viewportWidth="24"
+-    android:viewportHeight="24"
+-    android:tint="?attr/colorPrimary">
++    android:viewportHeight="24">
+     <path
+-        android:fillColor="#FF000000"
++        android:fillColor="@color/content_main"
+         android:pathData="M16.5,3c-1.74,0 -3.41,0.81 -4.5,2.09C10.91,3.81 9.24,3 7.5,3 4.42,3 2,5.42 2,8.5c0,3.78 3.4,6.86 8.55,11.54L12,21.35l1.45,-1.32C18.6,15.36 22,12.28 22,8.5 22,5.42 19.58,3 16.5,3zM12.1,18.55l-0.1,0.1 -0.1,-0.1C7.14,14.24 4,11.39 4,8.5 4,6.5 5.5,5 7.5,5c1.54,0 3.04,0.99 3.57,2.36h1.87C13.46,5.99 14.96,5 16.5,5c2,0 3.5,1.5 3.5,3.5 0,2.89 -3.14,5.74 -7.9,10.05z" />
+ </vector>
+diff --git a/app/src/main/res/drawable/ic_info.xml b/app/src/main/res/drawable/ic_info.xml
+new file mode 100644
+index 0000000..43a498b
+--- /dev/null
++++ b/app/src/main/res/drawable/ic_info.xml
+@@ -0,0 +1,9 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++    <path
++        android:fillColor="@color/content_main"
++        android:pathData="M11,7h2v2h-2zM11,11h2v6h-2zM12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM12,20c-4.41,0 -8,-3.59 -8,-8s3.59,-8 8,-8 8,3.59 8,8 -3.59,8 -8,8z" />
++</vector>
+diff --git a/app/src/main/res/drawable/ic_launcher.xml b/app/src/main/res/drawable/ic_launcher.xml
+index d3407dd..edac737 100644
+--- a/app/src/main/res/drawable/ic_launcher.xml
++++ b/app/src/main/res/drawable/ic_launcher.xml
+@@ -4,15 +4,18 @@
+     android:viewportWidth="108"
+     android:viewportHeight="108">
+     <path
+-        android:fillColor="#1F6FEB"
++        android:fillColor="#16271F"
+         android:pathData="M0,0h108v108h-108z" />
++    <path
++        android:fillColor="#12C371"
++        android:pathData="M54,54m-32,0a32,32 0 1,1 64,0a32,32 0 1,1 -64,0" />
+     <group
+-        android:scaleX="2.2"
+-        android:scaleY="2.2"
+-        android:translateX="27.6"
+-        android:translateY="27.6">
++        android:scaleX="1.5"
++        android:scaleY="1.5"
++        android:translateX="36"
++        android:translateY="36">
+         <path
+-            android:fillColor="#FFFFFF"
++            android:fillColor="#04140C"
+             android:pathData="M12,3v10.55c-0.59,-0.34 -1.27,-0.55 -2,-0.55 -2.21,0 -4,1.79 -4,4s1.79,4 4,4 4,-1.79 4,-4V7h4V3h-6z" />
+     </group>
+ </vector>
+diff --git a/app/src/main/res/drawable/ic_music_note.xml b/app/src/main/res/drawable/ic_music_note.xml
+index bfb8928..01dd815 100644
+--- a/app/src/main/res/drawable/ic_music_note.xml
++++ b/app/src/main/res/drawable/ic_music_note.xml
+@@ -4,6 +4,6 @@
+     android:viewportWidth="24"
+     android:viewportHeight="24">
+     <path
+-        android:fillColor="#1F6FEB"
++        android:fillColor="@color/brand_main"
+         android:pathData="M12,3v10.55c-0.59,-0.34 -1.27,-0.55 -2,-0.55 -2.21,0 -4,1.79 -4,4s1.79,4 4,4 4,-1.79 4,-4V7h4V3h-6z" />
+ </vector>
+diff --git a/app/src/main/res/drawable/ic_music_note_dark.xml b/app/src/main/res/drawable/ic_music_note_dark.xml
+new file mode 100644
+index 0000000..ea05250
+--- /dev/null
++++ b/app/src/main/res/drawable/ic_music_note_dark.xml
+@@ -0,0 +1,9 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++    <path
++        android:fillColor="@color/on_brand"
++        android:pathData="M12,3v10.55c-0.59,-0.34 -1.27,-0.55 -2,-0.55 -2.21,0 -4,1.79 -4,4s1.79,4 4,4 4,-1.79 4,-4V7h4V3h-6z" />
++</vector>
+diff --git a/app/src/main/res/drawable/ic_pause.xml b/app/src/main/res/drawable/ic_pause.xml
+index af42084..c9c80ca 100644
+--- a/app/src/main/res/drawable/ic_pause.xml
++++ b/app/src/main/res/drawable/ic_pause.xml
+@@ -2,9 +2,8 @@
+     android:width="24dp"
+     android:height="24dp"
+     android:viewportWidth="24"
+-    android:viewportHeight="24"
+-    android:tint="?attr/colorPrimary">
++    android:viewportHeight="24">
+     <path
+-        android:fillColor="#FF000000"
++        android:fillColor="@color/on_brand"
+         android:pathData="M6,19h4V5H6v14zM14,5v14h4V5h-4z" />
+ </vector>
+diff --git a/app/src/main/res/drawable/ic_play.xml b/app/src/main/res/drawable/ic_play.xml
+index 7887e3d..fab805a 100644
+--- a/app/src/main/res/drawable/ic_play.xml
++++ b/app/src/main/res/drawable/ic_play.xml
+@@ -2,9 +2,8 @@
+     android:width="24dp"
+     android:height="24dp"
+     android:viewportWidth="24"
+-    android:viewportHeight="24"
+-    android:tint="?attr/colorPrimary">
++    android:viewportHeight="24">
+     <path
+-        android:fillColor="#FF000000"
++        android:fillColor="@color/on_brand"
+         android:pathData="M8,5v14l11,-7z" />
+ </vector>
+diff --git a/app/src/main/res/drawable/ic_repeat.xml b/app/src/main/res/drawable/ic_repeat.xml
+new file mode 100644
+index 0000000..2bc3d16
+--- /dev/null
++++ b/app/src/main/res/drawable/ic_repeat.xml
+@@ -0,0 +1,9 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++    <path
++        android:fillColor="@color/content_main"
++        android:pathData="M7,7h10v3l4,-4 -4,-4v3H5v6h2V7zM17,17H7v-3l-4,4 4,4v-3h12v-6h-2v4z" />
++</vector>
+diff --git a/app/src/main/res/drawable/ic_repeat_one.xml b/app/src/main/res/drawable/ic_repeat_one.xml
+new file mode 100644
+index 0000000..68b087e
+--- /dev/null
++++ b/app/src/main/res/drawable/ic_repeat_one.xml
+@@ -0,0 +1,9 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++    <path
++        android:fillColor="@color/content_main"
++        android:pathData="M7,7h10v3l4,-4 -4,-4v3H5v6h2V7zM17,17H7v-3l-4,4 4,4v-3h12v-6h-2v4zM13,15V9h-1l-2,1v1h1.5v4H13z" />
++</vector>
+diff --git a/app/src/main/res/drawable/ic_search.xml b/app/src/main/res/drawable/ic_search.xml
+new file mode 100644
+index 0000000..ff6f151
+--- /dev/null
++++ b/app/src/main/res/drawable/ic_search.xml
+@@ -0,0 +1,9 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++    <path
++        android:fillColor="@color/content_main"
++        android:pathData="M15.5,14h-0.79l-0.28,-0.27C15.41,12.59 16,11.11 16,9.5 16,5.91 13.09,3 9.5,3S3,5.91 3,9.5 5.91,16 9.5,16c1.61,0 3.09,-0.59 4.23,-1.57l0.27,0.28v0.79l5,4.99L20.49,19l-4.99,-5zM9.5,14C7.01,14 5,11.99 5,9.5S7.01,5 9.5,5 14,7.01 14,9.5 11.99,14 9.5,14z" />
++</vector>
+diff --git a/app/src/main/res/drawable/ic_shuffle.xml b/app/src/main/res/drawable/ic_shuffle.xml
+new file mode 100644
+index 0000000..63c2fe5
+--- /dev/null
++++ b/app/src/main/res/drawable/ic_shuffle.xml
+@@ -0,0 +1,9 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++    <path
++        android:fillColor="@color/content_main"
++        android:pathData="M10.59,9.17L5.41,4 4,5.41l5.17,5.17 1.42,-1.41zM14.5,4l2.04,2.04L4,18.59 5.41,20 17.96,7.46 20,9.5V4h-5.5zM14.83,13.41l-1.41,1.41 3.13,3.13L14.5,20H20v-5.5l-2.04,2.04 -3.13,-3.13z" />
++</vector>
+diff --git a/app/src/main/res/drawable/ic_skip_next.xml b/app/src/main/res/drawable/ic_skip_next.xml
+new file mode 100644
+index 0000000..b8b31c9
+--- /dev/null
++++ b/app/src/main/res/drawable/ic_skip_next.xml
+@@ -0,0 +1,9 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++    <path
++        android:fillColor="@color/content_main"
++        android:pathData="M6,18l8.5,-6L6,6v12zM16,6v12h2V6h-2z" />
++</vector>
+diff --git a/app/src/main/res/drawable/ic_skip_previous.xml b/app/src/main/res/drawable/ic_skip_previous.xml
+new file mode 100644
+index 0000000..6293ffd
+--- /dev/null
++++ b/app/src/main/res/drawable/ic_skip_previous.xml
+@@ -0,0 +1,9 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24">
++    <path
++        android:fillColor="@color/content_main"
++        android:pathData="M6,6h2v12H6zM9.5,12l8.5,6V6z" />
++</vector>
+diff --git a/app/src/main/res/drawable/ph_cover_large.xml b/app/src/main/res/drawable/ph_cover_large.xml
+new file mode 100644
+index 0000000..b7a90c0
+--- /dev/null
++++ b/app/src/main/res/drawable/ph_cover_large.xml
+@@ -0,0 +1,16 @@
++<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
++    <item>
++        <shape android:shape="rectangle">
++            <gradient
++                android:angle="315"
++                android:endColor="@color/bg_overlay"
++                android:startColor="@color/bg_overlay_top" />
++            <corners android:radius="28dp" />
++        </shape>
++    </item>
++    <item
++        android:width="96dp"
++        android:height="96dp"
++        android:gravity="center"
++        android:drawable="@drawable/ic_music_note" />
++</layer-list>
+diff --git a/app/src/main/res/drawable/ph_cover_logo.xml b/app/src/main/res/drawable/ph_cover_logo.xml
+new file mode 100644
+index 0000000..0aac687
+--- /dev/null
++++ b/app/src/main/res/drawable/ph_cover_logo.xml
+@@ -0,0 +1,16 @@
++<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
++    <item>
++        <shape android:shape="rectangle">
++            <gradient
++                android:angle="315"
++                android:endColor="@color/bg_overlay"
++                android:startColor="@color/bg_overlay_top" />
++            <corners android:radius="28dp" />
++        </shape>
++    </item>
++    <item
++        android:width="48dp"
++        android:height="48dp"
++        android:gravity="center"
++        android:drawable="@drawable/ic_music_note" />
++</layer-list>
+diff --git a/app/src/main/res/drawable/ph_cover_mini.xml b/app/src/main/res/drawable/ph_cover_mini.xml
+new file mode 100644
+index 0000000..d13caad
+--- /dev/null
++++ b/app/src/main/res/drawable/ph_cover_mini.xml
+@@ -0,0 +1,16 @@
++<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
++    <item>
++        <shape android:shape="rectangle">
++            <gradient
++                android:angle="315"
++                android:endColor="@color/bg_overlay"
++                android:startColor="@color/bg_overlay_top" />
++            <corners android:radius="14dp" />
++        </shape>
++    </item>
++    <item
++        android:width="24dp"
++        android:height="24dp"
++        android:gravity="center"
++        android:drawable="@drawable/ic_music_note" />
++</layer-list>
+diff --git a/app/src/main/res/drawable/ph_cover_small.xml b/app/src/main/res/drawable/ph_cover_small.xml
+new file mode 100644
+index 0000000..3233aa5
+--- /dev/null
++++ b/app/src/main/res/drawable/ph_cover_small.xml
+@@ -0,0 +1,16 @@
++<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
++    <item>
++        <shape android:shape="rectangle">
++            <gradient
++                android:angle="315"
++                android:endColor="@color/bg_overlay"
++                android:startColor="@color/bg_overlay_top" />
++            <corners android:radius="16dp" />
++        </shape>
++    </item>
++    <item
++        android:width="28dp"
++        android:height="28dp"
++        android:gravity="center"
++        android:drawable="@drawable/ic_music_note" />
++</layer-list>
+diff --git a/app/src/main/res/drawable/tab_indicator.xml b/app/src/main/res/drawable/tab_indicator.xml
+new file mode 100644
+index 0000000..d84e55e
+--- /dev/null
++++ b/app/src/main/res/drawable/tab_indicator.xml
+@@ -0,0 +1,4 @@
++<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
++    <solid android:color="@color/brand_bg" />
++    <corners android:radius="18dp" />
++</shape>
+diff --git a/app/src/main/res/layout/activity_about.xml b/app/src/main/res/layout/activity_about.xml
+index 0200fe7..742cdab 100644
+--- a/app/src/main/res/layout/activity_about.xml
++++ b/app/src/main/res/layout/activity_about.xml
+@@ -4,23 +4,43 @@
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+-    android:background="@color/background">
++    android:background="@color/bg_main">
+ 
+-    <com.google.android.material.appbar.MaterialToolbar
+-        android:id="@+id/toolbar"
+-        android:layout_width="0dp"
+-        android:layout_height="?attr/actionBarSize"
+-        android:background="@color/primary"
+-        app:titleTextColor="@color/on_primary"
++    <ImageButton
++        android:id="@+id/btnBack"
++        android:layout_width="48dp"
++        android:layout_height="48dp"
++        android:layout_marginStart="8dp"
++        android:layout_marginTop="4dp"
++        android:background="?attr/selectableItemBackgroundBorderless"
++        android:contentDescription="@string/cd_back"
++        android:padding="12dp"
++        android:scaleType="fitCenter"
++        android:src="@drawable/ic_back"
+         app:layout_constraintTop_toTopOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintStart_toStartOf="parent" />
++
++    <TextView
++        android:id="@+id/textHeader"
++        android:layout_width="0dp"
++        android:layout_height="wrap_content"
++        android:layout_marginStart="4dp"
++        android:fontFamily="sans-serif-medium"
++        android:text="@string/about"
++        android:textColor="@color/content_main"
++        android:textSize="20sp"
++        android:textStyle="bold"
++        app:layout_constraintTop_toTopOf="@id/btnBack"
++        app:layout_constraintBottom_toBottomOf="@id/btnBack"
++        app:layout_constraintStart_toEndOf="@id/btnBack"
+         app:layout_constraintEnd_toEndOf="parent" />
+ 
+     <ScrollView
+         android:layout_width="0dp"
+         android:layout_height="0dp"
+-        android:padding="24dp"
+-        app:layout_constraintTop_toBottomOf="@id/toolbar"
++        android:overScrollMode="never"
++        android:padding="16dp"
++        app:layout_constraintTop_toBottomOf="@id/btnBack"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintBottom_toBottomOf="parent">
+@@ -31,22 +51,24 @@
+             android:orientation="vertical">
+ 
+             <ImageView
+-                android:layout_width="72dp"
+-                android:layout_height="72dp"
++                android:layout_width="88dp"
++                android:layout_height="88dp"
+                 android:layout_gravity="center_horizontal"
++                android:layout_marginTop="8dp"
+                 android:contentDescription="@string/app_name"
+-                android:src="@drawable/ic_music_note"
+-                app:tint="@color/primary" />
++                android:scaleType="fitXY"
++                android:src="@drawable/ph_cover_logo" />
+ 
+             <TextView
+                 android:id="@+id/textAppName"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+-                android:layout_marginTop="12dp"
++                android:layout_marginTop="16dp"
++                android:fontFamily="sans-serif-medium"
+                 android:gravity="center"
+                 android:text="@string/app_name"
+-                android:textColor="@color/on_surface"
+-                android:textSize="22sp"
++                android:textColor="@color/content_main"
++                android:textSize="24sp"
+                 android:textStyle="bold" />
+ 
+             <TextView
+@@ -55,23 +77,28 @@
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="4dp"
+                 android:gravity="center"
+-                android:textColor="@color/on_surface_variant" />
++                android:textColor="@color/content_soft"
++                android:textSize="13sp" />
+ 
+             <TextView
+                 android:id="@+id/textDeveloper"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+-                android:layout_marginTop="4dp"
++                android:layout_marginTop="2dp"
+                 android:gravity="center"
+-                android:textColor="@color/on_surface_variant" />
++                android:textColor="@color/brand_content"
++                android:textSize="13sp" />
+ 
+             <TextView
+                 android:id="@+id/textAboutBody"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="24dp"
++                android:background="@drawable/bg_mini_player"
+                 android:lineSpacingMultiplier="1.2"
+-                android:textColor="@color/on_surface" />
++                android:padding="20dp"
++                android:textColor="@color/content_main"
++                android:textSize="15sp" />
+         </LinearLayout>
+     </ScrollView>
+ 
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+index df68f29..b801367 100644
+--- a/app/src/main/res/layout/activity_main.xml
++++ b/app/src/main/res/layout/activity_main.xml
+@@ -4,31 +4,147 @@
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+-    android:background="@color/background">
++    android:background="@color/bg_main">
+ 
+-    <com.google.android.material.appbar.MaterialToolbar
+-        android:id="@+id/toolbar"
++    <!-- Header: logo + title + actions (56dp), swaps to the search pill while searching -->
++    <androidx.constraintlayout.widget.ConstraintLayout
++        android:id="@+id/header"
+         android:layout_width="0dp"
+-        android:layout_height="?attr/actionBarSize"
+-        android:background="@color/primary"
+-        app:titleTextColor="@color/on_primary"
++        android:layout_height="56dp"
+         app:layout_constraintTop_toTopOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent" />
++        app:layout_constraintEnd_toEndOf="parent">
++
++        <ImageView
++            android:id="@+id/imgLogo"
++            android:layout_width="32dp"
++            android:layout_height="32dp"
++            android:layout_marginStart="16dp"
++            android:contentDescription="@string/app_name"
++            android:src="@drawable/ic_app_logo"
++            app:layout_constraintTop_toTopOf="parent"
++            app:layout_constraintBottom_toBottomOf="parent"
++            app:layout_constraintStart_toStartOf="parent" />
++
++        <TextView
++            android:id="@+id/textAppTitle"
++            android:layout_width="0dp"
++            android:layout_height="wrap_content"
++            android:layout_marginStart="8dp"
++            android:layout_marginEnd="8dp"
++            android:ellipsize="end"
++            android:fontFamily="sans-serif-medium"
++            android:maxLines="1"
++            android:text="@string/app_name"
++            android:textColor="@color/content_main"
++            android:textSize="22sp"
++            android:textStyle="bold"
++            app:layout_constraintTop_toTopOf="parent"
++            app:layout_constraintBottom_toBottomOf="parent"
++            app:layout_constraintStart_toEndOf="@id/imgLogo"
++            app:layout_constraintEnd_toStartOf="@id/btnSearch" />
++
++        <ImageButton
++            android:id="@+id/btnAbout"
++            android:layout_width="40dp"
++            android:layout_height="40dp"
++            android:layout_marginEnd="8dp"
++            android:background="?attr/selectableItemBackgroundBorderless"
++            android:contentDescription="@string/cd_about"
++            android:padding="8dp"
++            android:scaleType="fitCenter"
++            android:src="@drawable/ic_info"
++            app:layout_constraintTop_toTopOf="parent"
++            app:layout_constraintBottom_toBottomOf="parent"
++            app:layout_constraintEnd_toEndOf="parent" />
++
++        <ImageButton
++            android:id="@+id/btnSearch"
++            android:layout_width="40dp"
++            android:layout_height="40dp"
++            android:layout_marginEnd="8dp"
++            android:background="?attr/selectableItemBackgroundBorderless"
++            android:contentDescription="@string/cd_search"
++            android:padding="8dp"
++            android:scaleType="fitCenter"
++            android:src="@drawable/ic_search"
++            app:layout_constraintTop_toTopOf="parent"
++            app:layout_constraintBottom_toBottomOf="parent"
++            app:layout_constraintEnd_toStartOf="@id/btnAbout" />
++
++        <LinearLayout
++            android:id="@+id/searchBar"
++            android:layout_width="0dp"
++            android:layout_height="40dp"
++            android:layout_marginStart="16dp"
++            android:layout_marginEnd="16dp"
++            android:background="@drawable/bg_search"
++            android:gravity="center_vertical"
++            android:orientation="horizontal"
++            android:visibility="gone"
++            app:layout_constraintTop_toTopOf="parent"
++            app:layout_constraintBottom_toBottomOf="parent"
++            app:layout_constraintStart_toStartOf="parent"
++            app:layout_constraintEnd_toEndOf="parent">
++
++            <ImageView
++                android:layout_width="20dp"
++                android:layout_height="20dp"
++                android:layout_marginStart="14dp"
++                android:alpha="0.6"
++                android:importantForAccessibility="no"
++                android:src="@drawable/ic_search" />
++
++            <EditText
++                android:id="@+id/editSearch"
++                android:layout_width="0dp"
++                android:layout_height="match_parent"
++                android:layout_marginStart="10dp"
++                android:layout_weight="1"
++                android:background="@null"
++                android:hint="@string/search_hint"
++                android:imeOptions="actionSearch"
++                android:importantForAutofill="no"
++                android:inputType="text"
++                android:maxLines="1"
++                android:singleLine="true"
++                android:textColor="@color/content_main"
++                android:textColorHint="@color/content_weak"
++                android:textSize="15sp" />
+ 
+-    <EditText
+-        android:id="@+id/editSearch"
++            <ImageButton
++                android:id="@+id/btnCloseSearch"
++                android:layout_width="40dp"
++                android:layout_height="40dp"
++                android:background="?attr/selectableItemBackgroundBorderless"
++                android:contentDescription="@string/cd_close_search"
++                android:padding="10dp"
++                android:scaleType="fitCenter"
++                android:src="@drawable/ic_close" />
++        </LinearLayout>
++    </androidx.constraintlayout.widget.ConstraintLayout>
++
++    <!-- Pill tabs (36dp) -->
++    <com.google.android.material.tabs.TabLayout
++        android:id="@+id/tabLayout"
+         android:layout_width="0dp"
+-        android:layout_height="wrap_content"
+-        android:layout_marginHorizontal="12dp"
+-        android:layout_marginTop="8dp"
+-        android:hint="@string/search_hint"
+-        android:imeOptions="actionSearch"
+-        android:inputType="text"
+-        android:maxLines="1"
+-        android:singleLine="true"
+-        android:autofillHints=""
+-        app:layout_constraintTop_toBottomOf="@id/toolbar"
++        android:layout_height="36dp"
++        android:layout_marginStart="8dp"
++        android:layout_marginTop="4dp"
++        android:background="@android:color/transparent"
++        app:tabIndicator="@drawable/tab_indicator"
++        app:tabIndicatorAnimationMode="elastic"
++        app:tabIndicatorColor="@color/brand_bg"
++        app:tabIndicatorFullWidth="true"
++        app:tabIndicatorGravity="stretch"
++        app:tabMode="scrollable"
++        app:tabPaddingEnd="16dp"
++        app:tabPaddingStart="16dp"
++        app:tabRippleColor="@android:color/transparent"
++        app:tabSelectedTextColor="@color/brand_content"
++        app:tabTextAppearance="@style/TextAppearance.Mission.Tab"
++        app:tabTextColor="@color/content_soft"
++        app:layout_constraintTop_toBottomOf="@id/header"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintEnd_toEndOf="parent" />
+ 
+@@ -36,10 +152,12 @@
+         android:id="@+id/recyclerSongs"
+         android:layout_width="0dp"
+         android:layout_height="0dp"
++        android:layout_marginTop="8dp"
+         android:clipToPadding="false"
++        android:overScrollMode="never"
+         android:paddingBottom="8dp"
+         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+-        app:layout_constraintTop_toBottomOf="@id/editSearch"
++        app:layout_constraintTop_toBottomOf="@id/tabLayout"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintBottom_toTopOf="@id/miniPlayer" />
+@@ -48,69 +166,119 @@
+         android:id="@+id/textEmpty"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
++        android:gravity="center"
++        android:paddingHorizontal="32dp"
+         android:text="@string/no_songs"
+-        android:textColor="@color/on_surface_variant"
++        android:textColor="@color/content_soft"
+         android:textSize="16sp"
+         android:visibility="gone"
+-        app:layout_constraintTop_toBottomOf="@id/editSearch"
++        app:layout_constraintTop_toBottomOf="@id/tabLayout"
+         app:layout_constraintBottom_toTopOf="@id/miniPlayer"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintEnd_toEndOf="parent" />
+ 
+-    <LinearLayout
++    <!-- Mini player: rounded card (72dp) -->
++    <androidx.constraintlayout.widget.ConstraintLayout
+         android:id="@+id/miniPlayer"
+         android:layout_width="0dp"
+-        android:layout_height="wrap_content"
+-        android:background="@color/mini_player_bg"
+-        android:gravity="center_vertical"
+-        android:orientation="horizontal"
+-        android:padding="12dp"
++        android:layout_height="72dp"
++        android:layout_marginStart="8dp"
++        android:layout_marginEnd="8dp"
++        android:layout_marginBottom="8dp"
++        android:background="@drawable/bg_mini_player"
+         android:visibility="gone"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintEnd_toEndOf="parent">
+ 
+         <ImageView
+-            android:layout_width="40dp"
+-            android:layout_height="40dp"
+-            android:contentDescription="@string/app_name"
+-            android:src="@drawable/ic_music_note"
+-            app:tint="@color/primary" />
++            android:id="@+id/miniCover"
++            android:layout_width="48dp"
++            android:layout_height="48dp"
++            android:layout_marginStart="12dp"
++            android:contentDescription="@string/cd_cover"
++            android:scaleType="fitXY"
++            android:src="@drawable/ph_cover_mini"
++            app:layout_constraintTop_toTopOf="parent"
++            app:layout_constraintBottom_toBottomOf="parent"
++            app:layout_constraintStart_toStartOf="parent" />
+ 
+         <LinearLayout
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_marginStart="12dp"
+-            android:layout_weight="1"
+-            android:orientation="vertical">
++            android:layout_marginEnd="4dp"
++            android:orientation="vertical"
++            app:layout_constraintTop_toTopOf="parent"
++            app:layout_constraintBottom_toBottomOf="parent"
++            app:layout_constraintStart_toEndOf="@id/miniCover"
++            app:layout_constraintEnd_toStartOf="@id/btnMiniPrev">
+ 
+             <TextView
+                 android:id="@+id/miniTitle"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:ellipsize="end"
++                android:fontFamily="sans-serif-medium"
+                 android:maxLines="1"
+                 android:text="@string/unknown_title"
+-                android:textColor="@color/on_surface"
++                android:textColor="@color/content_main"
++                android:textSize="15sp"
+                 android:textStyle="bold" />
+ 
+             <TextView
+                 android:id="@+id/miniSubtitle"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
++                android:layout_marginTop="2dp"
+                 android:ellipsize="end"
+                 android:maxLines="1"
+                 android:text="@string/unknown_artist"
+-                android:textColor="@color/on_surface_variant" />
++                android:textColor="@color/content_soft"
++                android:textSize="12sp" />
+         </LinearLayout>
+ 
+         <ImageButton
+-            android:id="@+id/btnMiniPlayPause"
+-            android:layout_width="48dp"
+-            android:layout_height="48dp"
++            android:id="@+id/btnMiniPrev"
++            android:layout_width="40dp"
++            android:layout_height="40dp"
+             android:background="?attr/selectableItemBackgroundBorderless"
++            android:contentDescription="@string/cd_previous"
++            android:padding="8dp"
++            android:scaleType="fitCenter"
++            android:src="@drawable/ic_skip_previous"
++            app:layout_constraintTop_toTopOf="parent"
++            app:layout_constraintBottom_toBottomOf="parent"
++            app:layout_constraintEnd_toStartOf="@id/btnMiniPlayPause" />
++
++        <ImageButton
++            android:id="@+id/btnMiniPlayPause"
++            android:layout_width="44dp"
++            android:layout_height="44dp"
++            android:layout_marginStart="2dp"
++            android:layout_marginEnd="2dp"
++            android:background="@drawable/bg_play_circle"
+             android:contentDescription="@string/cd_play_pause"
+-            android:src="@drawable/ic_play" />
+-    </LinearLayout>
++            android:padding="10dp"
++            android:scaleType="fitCenter"
++            android:src="@drawable/ic_play"
++            app:layout_constraintTop_toTopOf="parent"
++            app:layout_constraintBottom_toBottomOf="parent"
++            app:layout_constraintEnd_toStartOf="@id/btnMiniNext" />
++
++        <ImageButton
++            android:id="@+id/btnMiniNext"
++            android:layout_width="40dp"
++            android:layout_height="40dp"
++            android:layout_marginEnd="8dp"
++            android:background="?attr/selectableItemBackgroundBorderless"
++            android:contentDescription="@string/cd_next"
++            android:padding="8dp"
++            android:scaleType="fitCenter"
++            android:src="@drawable/ic_skip_next"
++            app:layout_constraintTop_toTopOf="parent"
++            app:layout_constraintBottom_toBottomOf="parent"
++            app:layout_constraintEnd_toEndOf="parent" />
++    </androidx.constraintlayout.widget.ConstraintLayout>
+ 
+ </androidx.constraintlayout.widget.ConstraintLayout>
+diff --git a/app/src/main/res/layout/activity_player.xml b/app/src/main/res/layout/activity_player.xml
+index 2e57945..f70fea0 100644
+--- a/app/src/main/res/layout/activity_player.xml
++++ b/app/src/main/res/layout/activity_player.xml
+@@ -4,70 +4,213 @@
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+-    android:background="@color/background">
++    android:background="@color/bg_main">
+ 
+-    <com.google.android.material.appbar.MaterialToolbar
+-        android:id="@+id/toolbar"
+-        android:layout_width="0dp"
+-        android:layout_height="?attr/actionBarSize"
+-        android:background="@color/primary"
+-        app:titleTextColor="@color/on_primary"
++    <ImageButton
++        android:id="@+id/btnBack"
++        android:layout_width="48dp"
++        android:layout_height="48dp"
++        android:layout_marginStart="8dp"
++        android:layout_marginTop="4dp"
++        android:background="?attr/selectableItemBackgroundBorderless"
++        android:contentDescription="@string/cd_back"
++        android:padding="10dp"
++        android:scaleType="fitCenter"
++        android:src="@drawable/ic_chevron_down"
+         app:layout_constraintTop_toTopOf="parent"
++        app:layout_constraintStart_toStartOf="parent" />
++
++    <TextView
++        android:id="@+id/textHeader"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:fontFamily="sans-serif-medium"
++        android:text="@string/now_playing"
++        android:textColor="@color/content_soft"
++        android:textSize="13sp"
++        app:layout_constraintTop_toTopOf="@id/btnBack"
++        app:layout_constraintBottom_toBottomOf="@id/btnBack"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintEnd_toEndOf="parent" />
+ 
+-    <androidx.media3.ui.PlayerView
+-        android:id="@+id/playerView"
++    <!-- Cover: fills the free space as a rounded square -->
++    <ImageView
++        android:id="@+id/imageCover"
+         android:layout_width="0dp"
+         android:layout_height="0dp"
+-        android:background="@android:color/black"
+-        app:layout_constraintTop_toBottomOf="@id/toolbar"
++        android:layout_marginStart="32dp"
++        android:layout_marginTop="8dp"
++        android:layout_marginEnd="32dp"
++        android:layout_marginBottom="24dp"
++        android:contentDescription="@string/cd_cover"
++        android:scaleType="fitXY"
++        android:src="@drawable/ph_cover_large"
++        app:layout_constraintDimensionRatio="1:1"
++        app:layout_constraintTop_toBottomOf="@id/btnBack"
++        app:layout_constraintBottom_toTopOf="@id/bottomPanel"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintBottom_toTopOf="@id/textTitle"
+-        app:use_controller="true" />
++        app:layout_constraintEnd_toEndOf="parent" />
+ 
+-    <TextView
+-        android:id="@+id/textTitle"
++    <LinearLayout
++        android:id="@+id/bottomPanel"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+-        android:layout_marginHorizontal="16dp"
+-        android:layout_marginTop="12dp"
+-        android:ellipsize="end"
+-        android:maxLines="1"
+-        android:text="@string/unknown_title"
+-        android:textColor="@color/on_surface"
+-        android:textSize="18sp"
+-        android:textStyle="bold"
+-        app:layout_constraintTop_toBottomOf="@id/playerView"
++        android:orientation="vertical"
++        android:paddingBottom="24dp"
++        app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintEnd_toStartOf="@id/btnFavorite" />
++        app:layout_constraintEnd_toEndOf="parent">
+ 
+-    <TextView
+-        android:id="@+id/textArtist"
+-        android:layout_width="0dp"
+-        android:layout_height="wrap_content"
+-        android:layout_marginHorizontal="16dp"
+-        android:layout_marginBottom="16dp"
+-        android:ellipsize="end"
+-        android:maxLines="1"
+-        android:text="@string/unknown_artist"
+-        android:textColor="@color/on_surface_variant"
+-        app:layout_constraintTop_toBottomOf="@id/textTitle"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintEnd_toStartOf="@id/btnFavorite"
+-        app:layout_constraintBottom_toBottomOf="parent" />
++        <!-- Title / artist / favorite -->
++        <LinearLayout
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:gravity="center_vertical"
++            android:orientation="horizontal"
++            android:paddingStart="24dp"
++            android:paddingEnd="16dp">
+ 
+-    <ImageButton
+-        android:id="@+id/btnFavorite"
+-        android:layout_width="48dp"
+-        android:layout_height="48dp"
+-        android:layout_marginEnd="8dp"
+-        android:background="?attr/selectableItemBackgroundBorderless"
+-        android:contentDescription="@string/cd_favorite"
+-        android:src="@drawable/ic_favorite_border"
+-        app:layout_constraintTop_toBottomOf="@id/playerView"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintBottom_toBottomOf="parent" />
++            <LinearLayout
++                android:layout_width="0dp"
++                android:layout_height="wrap_content"
++                android:layout_weight="1"
++                android:orientation="vertical">
++
++                <TextView
++                    android:id="@+id/textTitle"
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:ellipsize="end"
++                    android:fontFamily="sans-serif-medium"
++                    android:maxLines="1"
++                    android:text="@string/unknown_title"
++                    android:textColor="@color/content_main"
++                    android:textSize="22sp"
++                    android:textStyle="bold" />
++
++                <TextView
++                    android:id="@+id/textArtist"
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:layout_marginTop="2dp"
++                    android:ellipsize="end"
++                    android:maxLines="1"
++                    android:text="@string/unknown_artist"
++                    android:textColor="@color/content_soft"
++                    android:textSize="15sp" />
++            </LinearLayout>
++
++            <ImageButton
++                android:id="@+id/btnFavorite"
++                android:layout_width="48dp"
++                android:layout_height="48dp"
++                android:layout_marginStart="8dp"
++                android:background="?attr/selectableItemBackgroundBorderless"
++                android:contentDescription="@string/cd_favorite"
++                android:padding="12dp"
++                android:scaleType="fitCenter"
++                android:src="@drawable/ic_favorite_border" />
++        </LinearLayout>
++
++        <!-- Progress -->
++        <SeekBar
++            android:id="@+id/seekBar"
++            android:layout_width="match_parent"
++            android:layout_height="32dp"
++            android:layout_marginTop="12dp"
++            android:paddingStart="24dp"
++            android:paddingEnd="24dp"
++            android:progressBackgroundTint="@color/content_weak"
++            android:progressTint="@color/brand_main"
++            android:thumbTint="@color/brand_main" />
++
++        <FrameLayout
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:paddingStart="24dp"
++            android:paddingEnd="24dp">
++
++            <TextView
++                android:id="@+id/textPosition"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_gravity="start"
++                android:textColor="@color/content_soft"
++                android:textSize="12sp" />
++
++            <TextView
++                android:id="@+id/textDuration"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_gravity="end"
++                android:textColor="@color/content_soft"
++                android:textSize="12sp" />
++        </FrameLayout>
++
++        <!-- Controls -->
++        <LinearLayout
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_marginTop="16dp"
++            android:gravity="center_vertical"
++            android:orientation="horizontal"
++            android:paddingStart="16dp"
++            android:paddingEnd="16dp">
++
++            <ImageButton
++                android:id="@+id/btnShuffle"
++                android:layout_width="0dp"
++                android:layout_height="48dp"
++                android:layout_weight="1"
++                android:background="?attr/selectableItemBackgroundBorderless"
++                android:contentDescription="@string/cd_shuffle"
++                android:padding="12dp"
++                android:scaleType="fitCenter"
++                android:src="@drawable/ic_shuffle" />
++
++            <ImageButton
++                android:id="@+id/btnPrev"
++                android:layout_width="0dp"
++                android:layout_height="56dp"
++                android:layout_weight="1"
++                android:background="?attr/selectableItemBackgroundBorderless"
++                android:contentDescription="@string/cd_previous"
++                android:padding="12dp"
++                android:scaleType="fitCenter"
++                android:src="@drawable/ic_skip_previous" />
++
++            <ImageButton
++                android:id="@+id/btnPlayPause"
++                android:layout_width="72dp"
++                android:layout_height="72dp"
++                android:background="@drawable/bg_play_circle"
++                android:contentDescription="@string/cd_play_pause"
++                android:padding="20dp"
++                android:scaleType="fitCenter"
++                android:src="@drawable/ic_play" />
++
++            <ImageButton
++                android:id="@+id/btnNext"
++                android:layout_width="0dp"
++                android:layout_height="56dp"
++                android:layout_weight="1"
++                android:background="?attr/selectableItemBackgroundBorderless"
++                android:contentDescription="@string/cd_next"
++                android:padding="12dp"
++                android:scaleType="fitCenter"
++                android:src="@drawable/ic_skip_next" />
++
++            <ImageButton
++                android:id="@+id/btnRepeat"
++                android:layout_width="0dp"
++                android:layout_height="48dp"
++                android:layout_weight="1"
++                android:background="?attr/selectableItemBackgroundBorderless"
++                android:contentDescription="@string/cd_repeat"
++                android:padding="12dp"
++                android:scaleType="fitCenter"
++                android:src="@drawable/ic_repeat" />
++        </LinearLayout>
++    </LinearLayout>
+ 
+ </androidx.constraintlayout.widget.ConstraintLayout>
+diff --git a/app/src/main/res/layout/item_song.xml b/app/src/main/res/layout/item_song.xml
+index ec50eb1..ddb7f0e 100644
+--- a/app/src/main/res/layout/item_song.xml
++++ b/app/src/main/res/layout/item_song.xml
+@@ -1,47 +1,85 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<LinearLayout
++<androidx.constraintlayout.widget.ConstraintLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_width="match_parent"
+-    android:layout_height="wrap_content"
++    android:layout_height="80dp"
+     android:background="?attr/selectableItemBackground"
+-    android:gravity="center_vertical"
+-    android:orientation="horizontal"
+-    android:paddingHorizontal="16dp"
+-    android:paddingVertical="12dp">
++    android:paddingHorizontal="16dp">
+ 
+-    <ImageView
+-        android:layout_width="40dp"
+-        android:layout_height="40dp"
+-        android:contentDescription="@string/app_name"
+-        android:src="@drawable/ic_music_note"
+-        android:tint="@color/primary" />
++    <FrameLayout
++        android:id="@+id/coverContainer"
++        android:layout_width="64dp"
++        android:layout_height="64dp"
++        app:layout_constraintTop_toTopOf="parent"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintStart_toStartOf="parent">
+ 
+-    <LinearLayout
++        <ImageView
++            android:layout_width="match_parent"
++            android:layout_height="match_parent"
++            android:importantForAccessibility="no"
++            android:scaleType="fitXY"
++            android:src="@drawable/ph_cover_small" />
++
++        <ImageView
++            android:id="@+id/iconPlaying"
++            android:layout_width="match_parent"
++            android:layout_height="match_parent"
++            android:background="@drawable/bg_cover_playing"
++            android:importantForAccessibility="no"
++            android:padding="20dp"
++            android:scaleType="fitCenter"
++            android:src="@drawable/ic_equalizer"
++            android:visibility="gone" />
++    </FrameLayout>
++
++    <TextView
++        android:id="@+id/textDuration"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:layout_marginStart="8dp"
++        android:textColor="@color/content_weak"
++        android:textSize="12sp"
++        app:layout_constraintTop_toTopOf="parent"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintEnd_toEndOf="parent" />
++
++    <TextView
++        android:id="@+id/textTitle"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="16dp"
+-        android:layout_weight="1"
+-        android:orientation="vertical">
++        android:layout_marginEnd="8dp"
++        android:ellipsize="end"
++        android:fontFamily="sans-serif"
++        android:maxLines="1"
++        android:text="@string/unknown_title"
++        android:textColor="@color/content_main"
++        android:textSize="17sp"
++        android:textStyle="bold"
++        app:layout_constraintVertical_chainStyle="packed"
++        app:layout_constraintTop_toTopOf="parent"
++        app:layout_constraintBottom_toTopOf="@id/textSubtitle"
++        app:layout_constraintStart_toEndOf="@id/coverContainer"
++        app:layout_constraintEnd_toStartOf="@id/textDuration" />
+ 
+-        <TextView
+-            android:id="@+id/textTitle"
+-            android:layout_width="match_parent"
+-            android:layout_height="wrap_content"
+-            android:ellipsize="end"
+-            android:maxLines="1"
+-            android:text="@string/unknown_title"
+-            android:textColor="@color/on_surface"
+-            android:textSize="16sp"
+-            android:textStyle="bold" />
+-
+-        <TextView
+-            android:id="@+id/textSubtitle"
+-            android:layout_width="match_parent"
+-            android:layout_height="wrap_content"
+-            android:ellipsize="end"
+-            android:maxLines="1"
+-            android:text="@string/unknown_artist"
+-            android:textColor="@color/on_surface_variant" />
+-    </LinearLayout>
++    <TextView
++        android:id="@+id/textSubtitle"
++        android:layout_width="0dp"
++        android:layout_height="wrap_content"
++        android:layout_marginStart="16dp"
++        android:layout_marginTop="4dp"
++        android:layout_marginEnd="8dp"
++        android:ellipsize="end"
++        android:fontFamily="sans-serif-medium"
++        android:maxLines="1"
++        android:text="@string/unknown_artist"
++        android:textColor="@color/content_soft"
++        android:textSize="12sp"
++        app:layout_constraintTop_toBottomOf="@id/textTitle"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintStart_toEndOf="@id/coverContainer"
++        app:layout_constraintEnd_toStartOf="@id/textDuration" />
+ 
+-</LinearLayout>
++</androidx.constraintlayout.widget.ConstraintLayout>
+diff --git a/app/src/main/res/menu/menu_main.xml b/app/src/main/res/menu/menu_main.xml
+deleted file mode 100644
+index 712ce24..0000000
+--- a/app/src/main/res/menu/menu_main.xml
++++ /dev/null
+@@ -1,12 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:app="http://schemas.android.com/apk/res-auto">
+-    <item
+-        android:id="@+id/action_favorites"
+-        android:title="@string/menu_favorites"
+-        app:showAsAction="never" />
+-    <item
+-        android:id="@+id/action_about"
+-        android:title="@string/menu_about"
+-        app:showAsAction="never" />
+-</menu>
+diff --git a/app/src/main/res/values/colors.xml b/app/src/main/res/values/colors.xml
+index 76f31b9..c9a9139 100644
+--- a/app/src/main/res/values/colors.xml
++++ b/app/src/main/res/values/colors.xml
+@@ -1,15 +1,15 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <resources>
+-    <color name="primary">#1F6FEB</color>
+-    <color name="on_primary">#FFFFFF</color>
+-    <color name="primary_container">#D6E2FF</color>
+-    <color name="on_primary_container">#001B3F</color>
+-    <color name="secondary">#565E71</color>
+-    <color name="on_secondary">#FFFFFF</color>
+-    <color name="background">#FFFFFF</color>
+-    <color name="surface">#FFFFFF</color>
+-    <color name="surface_variant">#E1E2EC</color>
+-    <color name="on_surface">#1A1B20</color>
+-    <color name="on_surface_variant">#44474F</color>
+-    <color name="mini_player_bg">#EEF1F6</color>
++    <!-- Dark-green palette. Visual reference: the default theme of the Lark Player package. -->
++    <color name="bg_main">#16271F</color>
++    <color name="bg_overlay">#153C2A</color>
++    <color name="bg_overlay_top">#144D32</color>
++    <color name="brand_bg">#1D3A2D</color>
++    <color name="brand_main">#12C371</color>
++    <color name="brand_content">#15E082</color>
++    <color name="content_main">#F0FBF6</color>
++    <color name="content_soft">#99F0FBF6</color>
++    <color name="content_weak">#5CF0FBF6</color>
++    <color name="on_brand">#04140C</color>
++    <color name="playing_dim">#B316271F</color>
+ </resources>
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+index 4522927..c84c227 100644
+--- a/app/src/main/res/values/strings.xml
++++ b/app/src/main/res/values/strings.xml
+@@ -18,17 +18,24 @@
+     <string name="pick_a_song">Pick a song first</string>
+     <string name="unknown_title">Unknown title</string>
+     <string name="unknown_artist">Unknown artist</string>
++    <string name="tab_songs">Songs</string>
++    <string name="tab_favorites">Favorites</string>
+ 
+     <!-- Player -->
+     <string name="now_playing">Now Playing</string>
+     <string name="added_to_favorites">Added to favorites</string>
+     <string name="removed_from_favorites">Removed from favorites</string>
+ 
+-    <!-- Menu -->
+-    <string name="menu_about">About</string>
+-    <string name="menu_favorites">Favorites</string>
+-
+     <!-- Content descriptions -->
+     <string name="cd_play_pause">Play or pause</string>
+     <string name="cd_favorite">Toggle favorite</string>
++    <string name="cd_search">Search</string>
++    <string name="cd_close_search">Close search</string>
++    <string name="cd_about">About</string>
++    <string name="cd_back">Back</string>
++    <string name="cd_previous">Previous song</string>
++    <string name="cd_next">Next song</string>
++    <string name="cd_shuffle">Shuffle</string>
++    <string name="cd_repeat">Repeat mode</string>
++    <string name="cd_cover">Album cover</string>
+ </resources>
+diff --git a/app/src/main/res/values/themes.xml b/app/src/main/res/values/themes.xml
+index b47bd6a..61cd059 100644
+--- a/app/src/main/res/values/themes.xml
++++ b/app/src/main/res/values/themes.xml
+@@ -1,12 +1,27 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <resources>
+-    <style name="Theme.MissionPlayer" parent="Theme.Material3.DayNight.NoActionBar">
+-        <item name="colorPrimary">@color/primary</item>
+-        <item name="colorOnPrimary">@color/on_primary</item>
+-        <item name="colorPrimaryContainer">@color/primary_container</item>
+-        <item name="colorOnPrimaryContainer">@color/on_primary_container</item>
+-        <item name="colorSecondary">@color/secondary</item>
+-        <item name="colorOnSecondary">@color/on_secondary</item>
+-        <item name="android:statusBarColor">@color/primary</item>
++    <style name="Theme.MissionPlayer" parent="Theme.Material3.Dark.NoActionBar">
++        <item name="colorPrimary">@color/brand_main</item>
++        <item name="colorOnPrimary">@color/on_brand</item>
++        <item name="colorPrimaryContainer">@color/brand_bg</item>
++        <item name="colorOnPrimaryContainer">@color/brand_content</item>
++        <item name="colorSecondary">@color/brand_content</item>
++        <item name="colorOnSecondary">@color/on_brand</item>
++        <item name="colorSurface">@color/bg_main</item>
++        <item name="colorOnSurface">@color/content_main</item>
++        <item name="colorSurfaceVariant">@color/bg_overlay</item>
++        <item name="colorOnSurfaceVariant">@color/content_soft</item>
++        <item name="android:colorBackground">@color/bg_main</item>
++        <item name="android:windowBackground">@color/bg_main</item>
++        <item name="android:statusBarColor">@color/bg_main</item>
++        <item name="android:navigationBarColor">@color/bg_main</item>
++        <item name="android:textColorPrimary">@color/content_main</item>
++        <item name="android:textColorSecondary">@color/content_soft</item>
++    </style>
++
++    <style name="TextAppearance.Mission.Tab" parent="TextAppearance.Material3.TitleSmall">
++        <item name="android:textSize">15sp</item>
++        <item name="android:textStyle">bold</item>
++        <item name="textAllCaps">false</item>
+     </style>
+ </resources>
