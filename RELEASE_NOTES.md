@@ -1,7 +1,7 @@
-## MissionPlayer v2.6.3 — Aleatório que nunca termina
+## MissionPlayer v2.6.4 — Ajustes nos controles do player
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.6.3-arm64-v8a.apk`.
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.6.4-arm64-v8a.apk`.
 
-### Correções
-- **Aleatório não trava mais no fim da lista**: ao chegar na última música da rodada, o botão avançar continua funcionando (e a reprodução segue sozinha). O app escolhe uma música diferente, aleatória e tocada há mais tempo, para começar uma nova rodada embaralhada, sem repetir a que acabou de tocar. Cada rodada toca todas as músicas uma vez antes de qualquer repetição.
-- Com o aleatório ligado, o modo "repetir desligado" passa a se comportar como "repetir todas", já que o aleatório não deve parar.
+### Mudanças
+- **Repetir** e **Fila** trocaram de lugar: a fila agora fica na linha de baixo (à esquerda) e o botão de repetir ao lado do avançar.
+- **Novo ícone de letras**: baseado no ícone anterior (linhas de texto), agora com uma nota musical ao lado.

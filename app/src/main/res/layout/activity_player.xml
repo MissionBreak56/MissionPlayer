@@ -349,15 +349,15 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
                 <ImageButton
-                android:id="@+id/btnQueue"
+                android:id="@+id/btnRepeat"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/cd_queue"
+                android:contentDescription="@string/cd_repeat"
                 android:padding="12dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_queue"
-                app:tint="?attr/colorOnSurface" />
+                android:src="@drawable/ic_repeat"
+                app:tint="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
         </LinearLayout>
 
@@ -375,15 +375,15 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
                 <ImageButton
-                android:id="@+id/btnRepeat"
+                android:id="@+id/btnQueue"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/cd_repeat"
+                android:contentDescription="@string/cd_queue"
                 android:padding="12dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_repeat"
-                app:tint="?attr/colorOnSurfaceVariant" />
+                android:src="@drawable/ic_queue"
+                app:tint="?attr/colorOnSurface" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
