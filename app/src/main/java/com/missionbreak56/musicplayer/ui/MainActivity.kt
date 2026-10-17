@@ -112,6 +112,8 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
         }
 
         Library.addListener(libraryListener)
+        // The library may already be loaded (e.g. the screen was recreated): show it right away.
+        if (Library.loaded) pages.refresh()
         if (hasAudioPermission()) onPermissionGranted() else requestAudioPermission()
         maybeRequestNotificationPermission()
     }
@@ -150,6 +152,7 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
 
     override fun onDestroy() {
         Library.removeListener(libraryListener)
+        pages.release()
         super.onDestroy()
     }
 

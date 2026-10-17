@@ -1,11 +1,20 @@
-## MissionPlayer v2.6.6 — README completo e tela Sobre atualizada
+## MissionPlayer v2.6.7 — Listas aparecem mais rápido
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.6.6-arm64-v8a.apk`.
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.6.7-arm64-v8a.apk`.
 
-### Novidades
-- **README reescrito** com tudo sobre o app: instalação, requisitos, todas as funções, permissões, tecnologia, estrutura do projeto, como compilar e publicar com a chave de assinatura fixa, e o histórico de todas as versões (2.0.0 a 2.6.6).
-- **Tela Sobre atualizada**: a lista de recursos não cita mais itens que saíram do app (Playlists como aba, Gêneros e Temporizador) e passa a mencionar o liquid glass, o volume extra, a busca nas letras, a foto da pasta e o aleatório sem repetir.
+### Correções
+- **Listas demoravam para aparecer** (e mostravam "Nada por aqui ainda" enquanto carregavam). Agora:
+  - o app guarda uma **cópia da biblioteca** e mostra as listas na hora ao abrir, enquanto atualiza em segundo plano com o que mudou no aparelho;
+  - as listas de músicas, álbuns, artistas e pastas são montadas **fora da tela principal**, então o app não trava ao carregar;
+  - enquanto as listas são montadas aparece **"Carregando…"** em vez da mensagem de lista vazia;
+  - ao reabrir a tela inicial com a biblioteca já carregada, as listas são mostradas direto, sem esperar uma mudança.
+- **Ordenação bem mais rápida** (A a Z, artista, álbum): o texto sem acentos de cada item passa a ser calculado uma só vez, em vez de a cada comparação.
+- **Abrir uma pasta, álbum ou artista** ficou mais rápido: as coleções são montadas uma vez por mudança na biblioteca e reaproveitadas.
+- O app não lê mais os gêneros do aparelho a cada abertura (uma consulta por gênero, sem uso desde que a aba Gêneros saiu).
 
 ### Alterações técnicas
-- `README.md`, `values/strings.xml` e `values-pt/strings.xml` (`about_body`).
-- Versão: 2.6.5 → 2.6.6 (versionCode 19).
+- `SongCache` (novo): cópia binária da lista de músicas em `filesDir`, lida antes da consulta ao MediaStore e regravada quando algo muda.
+- `Library`: `Derived` (álbuns, artistas, pastas e A a Z calculados sob demanda e guardados), `sortKey` com caminho rápido para texto ASCII e regex única, `letterOf` só normaliza a primeira letra, `load()` sem `loadGenres`.
+- `LibraryPagerAdapter`: `refresh()` monta um `Snapshot` em `Dispatchers.Default` e só então atualiza os adaptadores; novo estado `ready` e `release()`.
+- `MainActivity`: `pages.refresh()` na criação quando a biblioteca já está carregada; `pages.release()` no `onDestroy`.
+- Versão: 2.6.6 → 2.6.7 (versionCode 20).

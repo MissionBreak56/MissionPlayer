@@ -20,6 +20,7 @@
     <string name="sort_duration">Duration</string>
     <string name="no_songs">No music found on this device</string>
     <string name="no_results">No results</string>
+    <string name="loading">Loading…</string>
     <string name="empty_list">Nothing here yet</string>
     <string name="permission_required">Allow access to your music to build your library</string>
     <string name="grant_permission">Allow access</string>

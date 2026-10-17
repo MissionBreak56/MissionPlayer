@@ -58,18 +58,39 @@ object Library {
     suspend fun load(context: Context, force: Boolean = true) {
         if (loaded && !force) return
         val app = context.applicationContext
-        val result = withContext(Dispatchers.IO) {
-            MusicRepository.loadSongs(app) to MusicRepository.loadGenres(app)
+
+        // 1. Show the last known library at once, while MediaStore is queried below.
+        var hadCache = false
+        if (!loaded) {
+            val cached = withContext(Dispatchers.IO) { SongCache.read(app) }
+            if (cached != null && !loaded) {
+                hadCache = true
+                publish(cached)
+                listeners.forEach { it() }
+            }
         }
-        val changed = !loaded || result.first != allSongs || result.second != genreMap
-        allSongs = result.first
-        allById = result.first.associateBy { it.id }
-        genreMap = result.second
-        applyHidden(notify = false)
-        loaded = true
+
+        // 2. The real scan (genres are no longer read: there is no Genres tab).
+        val fresh = withContext(Dispatchers.IO) { MusicRepository.loadSongs(app) }
+        val changed = publish(fresh)
         // Reloading on every return to the app must not rebuild the lists when nothing changed,
         // otherwise a tap right after coming back is swallowed by the refresh.
-        if (changed) listeners.forEach { it() }
+        if (changed) {
+            listeners.forEach { it() }
+            withContext(Dispatchers.IO) { SongCache.write(app, fresh) }
+        } else if (!hadCache && !SongCache.exists(app)) {
+            withContext(Dispatchers.IO) { SongCache.write(app, fresh) }
+        }
+    }
+
+    /** Stores [songs] as the library. Returns true when it differs from what was shown before. */
+    private fun publish(songs: List<Song>): Boolean {
+        val changed = !loaded || songs != allSongs
+        allSongs = songs
+        allById = songs.associateBy { it.id }
+        applyHidden(notify = false)
+        loaded = true
+        return changed
     }
 
     fun isFolderHidden(path: String, hidden: Set<String>): Boolean =
@@ -88,6 +109,7 @@ object Library {
         }
         songs = visible
         byId = visible.associateBy { it.id }
+        derived = Derived(visible)
         if (notify) listeners.forEach { it() }
     }
 
@@ -105,15 +127,24 @@ object Library {
         applyHidden()
     }
 
+    private val accents = Regex("\\p{M}+")
+
     /** Lower-case text without accents, so "Álbum" sorts next to "Album". */
-    fun sortKey(text: String): String =
-        java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFD)
-            .replace(Regex("\\p{M}+"), "")
+    fun sortKey(text: String): String {
+        var plain = true
+        for (ch in text) {
+            if (ch.code >= 128) { plain = false; break }
+        }
+        if (plain) return text.lowercase()
+        return java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFD)
+            .replace(accents, "")
             .lowercase()
+    }
 
     /** Index-bar letter of a title: "A".."Z", or "#" for digits and symbols. */
     fun letterOf(text: String): String {
-        val c = sortKey(text.trim()).firstOrNull() ?: return "#"
+        val first = text.trim().firstOrNull() ?: return "#"
+        val c = sortKey(first.toString()).firstOrNull() ?: return "#"
         return if (c in 'a'..'z') c.uppercaseChar().toString() else "#"
     }
 
@@ -122,37 +153,60 @@ object Library {
      * 5 most played, 6 Z-A.
      */
     fun sorted(list: List<Song>, order: Int): List<Song> = when (order) {
-        1 -> list.sortedBy { sortKey(it.displayArtist) }
-        2 -> list.sortedBy { sortKey(it.displayAlbum) }
+        1 -> list.sortedByText { it.displayArtist }
+        2 -> list.sortedByText { it.displayAlbum }
         3 -> list.sortedByDescending { it.dateAdded }
         4 -> list.sortedByDescending { it.durationMs }
         5 -> {
             val counts = Prefs.playCounts()
-            list.sortedWith(
-                compareByDescending<Song> { counts[it.id] ?: 0 }.thenBy { sortKey(it.displayTitle) }
-            )
+            list.map { Triple(counts[it.id] ?: 0, sortKey(it.displayTitle), it) }
+                .sortedWith(compareByDescending<Triple<Int, String, Song>> { it.first }.thenBy { it.second })
+                .map { it.third }
         }
-        6 -> list.sortedByDescending { sortKey(it.displayTitle) }
-        else -> list.sortedBy { sortKey(it.displayTitle) }
+        6 -> list.sortedByText { it.displayTitle }.reversed()
+        else -> {
+            val d = derived
+            if (list === d.songs) d.byTitle else list.sortedByText { it.displayTitle }
+        }
     }
 
-    fun albums(): List<Group> = songs.groupBy { it.albumId }.map { (albumId, list) ->
-        val first = list.first()
-        val artists = list.map { it.displayArtist }.distinct()
-        Group(
-            Kind.ALBUM, albumId.toString(), first.displayAlbum,
-            if (artists.size == 1) artists[0] else "",
-            list.sortedWith(compareBy({ it.track }, { it.displayTitle.lowercase() }))
-        )
-    }.sortedBy { sortKey(it.title) }
+    /** Collections derived from the visible songs; built once per library change, on first use. */
+    private class Derived(val songs: List<Song>) {
+        val byTitle: List<Song> by lazy { songs.sortedByText { it.displayTitle } }
 
-    fun artists(): List<Group> = songs.groupBy { it.displayArtist }.map { (name, list) ->
-        Group(Kind.ARTIST, name, name, "", list.sortedBy { it.displayTitle.lowercase() })
-    }.sortedBy { sortKey(it.title) }
+        val albums: List<Group> by lazy {
+            songs.groupBy { it.albumId }.map { (albumId, list) ->
+                val first = list.first()
+                val artists = list.map { it.displayArtist }.distinct()
+                Group(
+                    Kind.ALBUM, albumId.toString(), first.displayAlbum,
+                    if (artists.size == 1) artists[0] else "",
+                    list.sortedWith(compareBy({ it.track }, { it.displayTitle.lowercase() }))
+                )
+            }.sortedByText { it.title }
+        }
 
-    fun folders(): List<Group> = songs.groupBy { it.folderPath }.map { (path, list) ->
-        Group(Kind.FOLDER, path, list.first().folderName, "", list.sortedBy { it.displayTitle.lowercase() })
-    }.sortedBy { sortKey(it.title) }
+        val artists: List<Group> by lazy {
+            songs.groupBy { it.displayArtist }.map { (name, list) ->
+                Group(Kind.ARTIST, name, name, "", list.sortedByText { it.displayTitle })
+            }.sortedByText { it.title }
+        }
+
+        val folders: List<Group> by lazy {
+            songs.groupBy { it.folderPath }.map { (path, list) ->
+                Group(Kind.FOLDER, path, list.first().folderName, "", list.sortedByText { it.displayTitle })
+            }.sortedByText { it.title }
+        }
+    }
+
+    @Volatile
+    private var derived = Derived(emptyList())
+
+    fun albums(): List<Group> = derived.albums
+
+    fun artists(): List<Group> = derived.artists
+
+    fun folders(): List<Group> = derived.folders
 
     fun genres(): List<Group> = genreMap.mapNotNull { (name, ids) ->
         val list = ids.mapNotNull { byId[it] }.distinctBy { it.id }
@@ -189,3 +243,7 @@ object Library {
         Kind.PLAYLIST, Kind.AUTO -> playlists(context).firstOrNull { it.kind == kind && it.key == key }
     }
 }
+
+/** Sorts by the accent-free text of [text], computing each key only once. */
+private fun <T> List<T>.sortedByText(text: (T) -> String): List<T> =
+    map { Library.sortKey(text(it)) to it }.sortedBy { it.first }.map { it.second }

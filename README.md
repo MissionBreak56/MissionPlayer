@@ -175,6 +175,7 @@ variáveis `SIGNING_KEYSTORE_FILE`, `SIGNING_STORE_PASSWORD`, `SIGNING_KEY_ALIAS
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.6.7** | Listas aparecem bem mais rápido: cópia salva da biblioteca, ordenação mais rápida e aviso "Carregando…" |
 | **2.6.6** | README completo e texto da tela *Sobre* atualizados |
 | **2.6.5** | Tela cheia (sob o entalhe); o player não fecha mais com a fila vazia; ícone de lista só com linhas |
 | **2.6.4** | Repetir e Fila trocam de lugar; novo ícone de letras |

@@ -14,6 +14,13 @@ import com.missionbreak56.musicplayer.data.Library
 import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.data.Song
 import com.missionbreak56.musicplayer.databinding.PageListBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 interface LibraryHost {
     fun onPlay(list: List<Song>, index: Int)
@@ -58,12 +65,44 @@ class LibraryPagerAdapter(
         songAdapter.playingId = id
     }
 
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private var refreshJob: Job? = null
+
+    /** False until the first lists have been built, so "loading" is shown instead of "empty". */
+    private var ready = false
+
+    private class Snapshot(
+        val songs: List<Song>,
+        val albums: List<Group>,
+        val artists: List<Group>,
+        val folders: List<Group>
+    )
+
+    /** Rebuilds the lists off the main thread, then shows them. */
     fun refresh() {
-        songAdapter.submit(Library.sorted(Library.songs, Prefs.sortOrder))
-        groupAdapters[1]?.submit(Library.albums())
-        groupAdapters[2]?.submit(Library.artists())
-        groupAdapters[3]?.submit(Library.folders())
-        notifyDataSetChanged()
+        val order = Prefs.sortOrder
+        refreshJob?.cancel()
+        refreshJob = scope.launch {
+            val snap = withContext(Dispatchers.Default) {
+                Snapshot(
+                    Library.sorted(Library.songs, order),
+                    Library.albums(),
+                    Library.artists(),
+                    Library.folders()
+                )
+            }
+            songAdapter.submit(snap.songs)
+            groupAdapters[1]?.submit(snap.albums)
+            groupAdapters[2]?.submit(snap.artists)
+            groupAdapters[3]?.submit(snap.folders)
+            ready = true
+            notifyDataSetChanged()
+        }
+    }
+
+    /** Stops any list rebuild still running (call from the activity's onDestroy). */
+    fun release() {
+        scope.cancel()
     }
 
     // One view type per tab so a recycled holder never carries another tab's layout manager
@@ -90,7 +129,13 @@ class LibraryPagerAdapter(
             if (b.list.adapter !== adapter) b.list.adapter = adapter
 
             b.textEmpty.visibility = if (adapter.itemCount == 0) View.VISIBLE else View.GONE
-            b.textEmpty.setText(if (page == 0) R.string.no_songs else R.string.empty_list)
+            b.textEmpty.setText(
+                when {
+                    !ready -> R.string.loading
+                    page == 0 -> R.string.no_songs
+                    else -> R.string.empty_list
+                }
+            )
 
             setupIndexBar(page)
 
