@@ -128,6 +128,11 @@
     <string name="search_lyrics_hint">Lyrics match</string>
     <string name="folder_change_photo">Change folder photo</string>
     <string name="folder_remove_photo">Remove folder photo</string>
+    <string name="folder_pick_from_songs">Choose photo from songs</string>
+    <string name="folder_no_song_art">None of the songs in this folder has a cover</string>
+    <string name="volume_boost">Volume boost</string>
+    <string name="volume_boost_off">Off</string>
+    <string name="volume_boost_note">Raises the volume above the normal maximum. High values can distort the sound and harm your hearing or the speaker.</string>
     <string name="folder_photo_failed">Could not use that image</string>
     <string name="about_repo">GitHub: MissionBreak56/MissionPlayer</string>
     <string name="repo_url" translatable="false">https://github.com/MissionBreak56/MissionPlayer</string>

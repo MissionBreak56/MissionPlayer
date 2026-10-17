@@ -216,14 +216,16 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
     override fun onFolderMenu(anchor: View, group: Group) {
         val popup = PopupMenu(this, anchor)
         popup.menu.add(0, 1, 0, R.string.folder_change_photo)
-        if (FolderArt.has(this, group.key)) popup.menu.add(0, 2, 1, R.string.folder_remove_photo)
-        popup.menu.add(0, 3, 2, R.string.hide_folder)
+        popup.menu.add(0, 4, 1, R.string.folder_pick_from_songs)
+        if (FolderArt.has(this, group.key)) popup.menu.add(0, 2, 2, R.string.folder_remove_photo)
+        popup.menu.add(0, 3, 3, R.string.hide_folder)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 1 -> {
                     pendingFolder = group.key
                     pickFolderArt.launch(arrayOf("image/*"))
                 }
+                4 -> FolderArtPicker.pickFromSongs(this, group.key, group.songs) { pages.refresh() }
                 2 -> {
                     FolderArt.remove(this, group.key)
                     pages.refresh()

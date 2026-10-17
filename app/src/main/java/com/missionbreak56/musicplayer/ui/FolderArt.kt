@@ -43,4 +43,16 @@ object FolderArt {
             false
         }
     }
+
+    /** Stores an already decoded bitmap (e.g. the cover of a song) as the folder picture. */
+    fun saveBitmap(context: Context, path: String, bmp: Bitmap): Boolean {
+        return try {
+            val target = file(context, path)
+            target.parentFile?.mkdirs()
+            target.outputStream().use { bmp.compress(Bitmap.CompressFormat.JPEG, 90, it) }
+            true
+        } catch (_: Throwable) {
+            false
+        }
+    }
 }

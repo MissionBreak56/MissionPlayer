@@ -3,6 +3,7 @@ package com.missionbreak56.musicplayer.playback
 import android.content.SharedPreferences
 import android.media.audiofx.BassBoost
 import android.media.audiofx.Equalizer
+import android.media.audiofx.LoudnessEnhancer
 import android.media.audiofx.Virtualizer
 import com.missionbreak56.musicplayer.data.Prefs
 
@@ -15,6 +16,10 @@ object AudioFx {
     private var eq: Equalizer? = null
     private var bass: BassBoost? = null
     private var virt: Virtualizer? = null
+    private var loud: LoudnessEnhancer? = null
+
+    /** Highest volume boost offered (millibels, 1500 = +15 dB). */
+    const val MAX_GAIN_MB = 1500
 
     // SharedPreferences keeps listeners weakly, so it must be held here.
     private val prefListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
@@ -34,6 +39,7 @@ object AudioFx {
         try { eq = Equalizer(0, sessionId) } catch (_: Throwable) { eq = null }
         try { bass = BassBoost(0, sessionId) } catch (_: Throwable) { bass = null }
         try { virt = Virtualizer(0, sessionId) } catch (_: Throwable) { virt = null }
+        try { loud = LoudnessEnhancer(sessionId) } catch (_: Throwable) { loud = null }
         Prefs.registerListener(prefListener)
         apply()
     }
@@ -42,9 +48,11 @@ object AudioFx {
         try { eq?.release() } catch (_: Throwable) {}
         try { bass?.release() } catch (_: Throwable) {}
         try { virt?.release() } catch (_: Throwable) {}
+        try { loud?.release() } catch (_: Throwable) {}
         eq = null
         bass = null
         virt = null
+        loud = null
     }
 
     fun apply() {
@@ -75,6 +83,15 @@ object AudioFx {
                 val strength = Prefs.fxVirtualizer
                 v.setEnabled(enabled && strength > 0)
                 if (v.strengthSupported) v.setStrength(strength.coerceIn(0, 1000).toShort())
+            }
+        } catch (_: Throwable) {}
+
+        // Volume boost works on its own, independent of the equalizer switch.
+        try {
+            loud?.let { l ->
+                val gain = Prefs.fxGain.coerceIn(0, MAX_GAIN_MB)
+                l.setTargetGain(gain)
+                l.setEnabled(gain > 0)
             }
         } catch (_: Throwable) {}
     }

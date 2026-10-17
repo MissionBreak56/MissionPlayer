@@ -67,6 +67,9 @@ object ArtLoader {
         }
     }
 
+    /** Blocking decode (call from a background thread). Returns null when the song has no cover. */
+    fun decodeSync(context: Context, song: Song, size: Int): Bitmap? = decode(context, song, size)
+
     /** Suspending variant used when the raw bitmap is needed (e.g. for colour extraction). */
     suspend fun bitmap(context: Context, song: Song, size: Int): Bitmap? {
         val k = key(song, size)

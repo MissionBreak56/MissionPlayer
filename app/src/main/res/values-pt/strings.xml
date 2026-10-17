@@ -128,6 +128,11 @@
     <string name="search_lyrics_hint">Encontrado na letra</string>
     <string name="folder_change_photo">Alterar foto da pasta</string>
     <string name="folder_remove_photo">Remover foto da pasta</string>
+    <string name="folder_pick_from_songs">Escolher foto das músicas</string>
+    <string name="folder_no_song_art">Nenhuma música desta pasta tem capa</string>
+    <string name="volume_boost">Aumentar volume</string>
+    <string name="volume_boost_off">Desligado</string>
+    <string name="volume_boost_note">Aumenta o volume além do máximo normal. Valores altos podem distorcer o som e prejudicar a audição ou o alto-falante.</string>
     <string name="folder_photo_failed">Não foi possível usar essa imagem</string>
     <string name="about_repo">GitHub: MissionBreak56/MissionPlayer</string>
     <string name="menu_tabs_order">Organizar abas</string>

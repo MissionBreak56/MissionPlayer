@@ -26,6 +26,7 @@ object Prefs {
     private const val KEY_FX_LEVELS = "fx_levels"
     private const val KEY_FX_BASS = "fx_bass"
     private const val KEY_FX_VIRT = "fx_virtualizer"
+    private const val KEY_FX_GAIN = "fx_gain"
 
     private const val SEP_ENTRY = "\n"
     private const val SEP_FIELD = "|"
@@ -238,6 +239,11 @@ object Prefs {
     var fxVirtualizer: Int
         get() = sp?.getInt(KEY_FX_VIRT, 0) ?: 0
         set(value) { store().edit().putInt(KEY_FX_VIRT, value).apply() }
+
+    /** Volume boost above the normal maximum, in millibels (0 = off). */
+    var fxGain: Int
+        get() = sp?.getInt(KEY_FX_GAIN, 0) ?: 0
+        set(value) { store().edit().putInt(KEY_FX_GAIN, value).apply() }
 
     fun fxLevels(): IntArray {
         val raw = sp?.getString(KEY_FX_LEVELS, "") ?: ""

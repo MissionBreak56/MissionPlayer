@@ -24,6 +24,7 @@ class EqualizerActivity : BaseActivity() {
         binding = ActivityEqualizerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.btnBack.setOnClickListener { finish() }
+        setupBoost()
 
         val eqInfo = AudioFx.info()
         info = eqInfo
@@ -34,6 +35,24 @@ class EqualizerActivity : BaseActivity() {
             return
         }
         build(eqInfo)
+    }
+
+    /** Volume boost above the normal maximum (0-100 % of [AudioFx.MAX_GAIN_MB]). */
+    private fun setupBoost() {
+        val perPercent = AudioFx.MAX_GAIN_MB / 100f
+        binding.sliderBoost.value = (Prefs.fxGain / perPercent).coerceIn(0f, 100f)
+        updateBoostLabel()
+        binding.sliderBoost.addOnChangeListener { _, v, fromUser ->
+            if (fromUser) {
+                Prefs.fxGain = (v * perPercent).toInt()
+                updateBoostLabel()
+            }
+        }
+    }
+
+    private fun updateBoostLabel() {
+        val percent = Math.round(Prefs.fxGain * 100f / AudioFx.MAX_GAIN_MB)
+        binding.textBoostValue.text = if (percent == 0) getString(R.string.volume_boost_off) else "+$percent%"
     }
 
     private fun build(eq: AudioFx.Info) {
@@ -116,6 +135,9 @@ class EqualizerActivity : BaseActivity() {
         Prefs.fxPreset = -1
         Prefs.fxBass = 0
         Prefs.fxVirtualizer = 0
+        Prefs.fxGain = 0
+        binding.sliderBoost.value = 0f
+        updateBoostLabel()
         binding.sliderBass.value = 0f
         binding.sliderSurround.value = 0f
         updatePresetLabel()

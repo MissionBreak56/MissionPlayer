@@ -17,10 +17,11 @@ equalizer, sleep timer, lyrics, color themes).
 | Smart playlists | Favorites, Recently added, Most played, Recently played |
 | Playlists | Create, rename, delete, add / remove songs from the song menu |
 | Song menu | Play next, add to queue, add to playlist, favorite, set as ringtone, share |
+| Folders | Pick a folder photo from your gallery or from the covers of the songs inside the folder |
 | Mini player | Art, title, progress, play/pause, next, queue sheet — shown on every list screen |
 | Now playing | Large art with color tint taken from the cover, seek bar, shuffle, repeat (off / all / one), favorite, queue |
 | Lyrics | Attach a `.lrc` (synced, tap a line to seek) or `.txt` file per song |
-| Equalizer | Device equalizer with presets and band sliders, bass boost, surround |
+| Equalizer | Device equalizer with presets and band sliders, bass boost, surround, **volume boost** above the normal maximum (up to +15 dB) |
 | Sleep timer | 15 / 30 / 45 / 60 / 90 / 120 minutes, works in the background |
 | Themes | 8 accent colors + system / light / dark mode |
 | Languages | English and Portuguese (Brazil) |
