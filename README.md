@@ -100,6 +100,20 @@ ponto. Músicas apagadas ou ocultas desde então são ignoradas. Se o Android pa
 (por exemplo com a música pausada), o player recoloca a última fila ao voltar ao app, em vez de
 fechar.
 
+### Estatísticas
+Menu ⋮ → *Estatísticas*: total de músicas, reproduções, tempo ouvido, tempo da biblioteca, favoritas
+e álbuns, além das **músicas, artistas e álbuns mais ouvidos**.
+
+### Letras automáticas
+- O app procura sozinho, em segundo plano e só quando há internet, as letras das músicas que não têm,
+  consultando em ordem **LRCLIB**, **NetEase**, **Kugou** e **lyrics.ovh**. A primeira letra
+  sincronizada vence; texto simples só entra se nenhuma fonte tiver a versão sincronizada.
+- As letras baixadas ficam salvas no aparelho e funcionam **offline**, inclusive na busca por letra.
+  Ao abrir uma música sem letra, ela é buscada na hora.
+- A busca roda a cada 15 minutos (o menor intervalo que o Android permite), com 4 músicas ao mesmo
+  tempo; músicas não encontradas são tentadas de novo após 15 minutos.
+- Nada para configurar. Para desligar: menu ⋮ → *Letras automáticas*.
+
 ### Equalizador e volume
 - Equalizador do aparelho com presets e controles por banda, reforço de graves e surround.
 - **Aumentar volume** além do máximo normal, até cerca de +15 dB (funciona sem ligar o equalizador).
@@ -107,6 +121,8 @@ fechar.
 
 ### Aparência
 - 8 cores de destaque e modo **claro / escuro / do sistema** (fundo preto no modo escuro).
+- **7 temas completos** com visual próprio (cores, fonte e formato dos cantos): *Neon, Papel, Oceano,
+  Pôr do sol, Mono, Floresta* e *Rosé*. Escolha em menu ⋮ → *Temas*.
 - **Tela cheia:** o app ocupa a tela toda, inclusive atrás do entalhe/câmera e da barra de status, sem
   faixa preta no topo; o conteúdo continua longe da câmera e das barras.
 - Ícone adaptativo (Android 8+), com versão monocromática para o tema de ícones do Android 13+.
@@ -117,8 +133,9 @@ Serviço de mídia (Media3): continua tocando com a tela desligada, com notifica
 tela de bloqueio.
 
 ### Privacidade
-Sem anúncios, sem rastreadores, sem contas e **sem permissão de internet**. O app só lê as músicas do
-aparelho.
+Sem anúncios, sem rastreadores e sem contas. A internet é usada **só** para baixar letras que faltam
+(título, artista, álbum e duração são enviados aos serviços de letras acima); a reprodução é 100%
+local. Desligue em menu ⋮ → *Letras automáticas* para o app não usar a rede.
 
 ## Permissões
 
@@ -126,6 +143,7 @@ aparelho.
 |---|---|
 | `READ_MEDIA_AUDIO` / `READ_EXTERNAL_STORAGE` (até Android 12) | Ler as músicas do aparelho |
 | `FOREGROUND_SERVICE` (+ `_MEDIA_PLAYBACK`) e `WAKE_LOCK` | Tocar em segundo plano |
+| `INTERNET` e `ACCESS_NETWORK_STATE` | Baixar letras que faltam e rodar a busca só quando há internet |
 | `POST_NOTIFICATIONS` | Notificação com os controles de reprodução |
 | `MODIFY_AUDIO_SETTINGS` | Equalizador, graves, surround e aumento de volume |
 | `WRITE_SETTINGS` | Somente se você usar *Definir como toque* |
@@ -142,12 +160,13 @@ app/src/main/java/com/missionbreak56/musicplayer/
 ├── App.kt
 ├── data/      Song, MusicRepository (MediaStore), Library (álbuns, artistas, pastas, playlists),
 │              Prefs (favoritos, playlists, estatísticas, tema, equalizador, modos e fila salvos),
-│              Lyrics (leitor .lrc e índice de busca), Labels
+│              Lyrics (leitor .lrc e índice de busca), LyricsFetcher (fontes de letra online),
+│              LyricsWorker (busca automática em segundo plano), Labels
 ├── playback/  PlaybackService (sessão, ordem aleatória justa, salvamento de estado), PlaybackQueue,
 │              PlaybackState (salvar/restaurar fila), PlayerConnection, AudioFx (equalizador e aumento
 │              de volume), SleepTimer (código mantido, sem acesso na interface)
 └── ui/        MainActivity (abas), DetailActivity, SearchActivity, PlaylistsActivity, PlayerActivity,
-               EqualizerActivity, ThemesActivity, AboutActivity, AlphaIndexBar (barra # A–Z),
+               EqualizerActivity, ThemesActivity, StatsActivity, AboutActivity, AlphaIndexBar (barra # A–Z),
                FolderArt / FolderArtPicker (foto da pasta), BaseActivity (tela cheia), adaptadores e diálogos
 ```
 

@@ -116,4 +116,235 @@
         <item name="colorSecondaryContainer">@color/t7_container</item>
         <item name="colorOnSecondaryContainer">@color/t7_on_container</item>
     </style>
+
+    <style name="Shape.X8" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+    <style name="Widget.X8.Text" parent="android:Widget.TextView">
+        <item name="android:fontFamily">monospace</item>
+    </style>
+    <style name="Theme.MissionPlayer.T8" parent="Theme.MissionPlayer">
+        <item name="android:colorBackground">@color/x8_bg</item>
+        <item name="android:windowBackground">@color/x8_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:textViewStyle">@style/Widget.X8.Text</item>
+        <item name="colorSurface">@color/x8_surface</item>
+        <item name="colorOnSurface">@color/x8_on</item>
+        <item name="colorOnBackground">@color/x8_on</item>
+        <item name="colorOnSurfaceVariant">@color/x8_var</item>
+        <item name="colorSurfaceVariant">@color/x8_high</item>
+        <item name="colorSurfaceContainerLowest">@color/x8_bg</item>
+        <item name="colorSurfaceContainerLow">@color/x8_surface</item>
+        <item name="colorSurfaceContainer">@color/x8_high</item>
+        <item name="colorSurfaceContainerHigh">@color/x8_high</item>
+        <item name="colorSurfaceContainerHighest">@color/x8_high</item>
+        <item name="colorPrimary">@color/x8_primary</item>
+        <item name="colorOnPrimary">@color/x8_on_primary</item>
+        <item name="colorPrimaryContainer">@color/x8_container</item>
+        <item name="colorOnPrimaryContainer">@color/x8_on_container</item>
+        <item name="colorSecondary">@color/x8_primary</item>
+        <item name="colorSecondaryContainer">@color/x8_container</item>
+        <item name="colorOnSecondaryContainer">@color/x8_on_container</item>
+        <item name="shapeAppearanceSmallComponent">@style/Shape.X8</item>
+        <item name="shapeAppearanceMediumComponent">@style/Shape.X8</item>
+    </style>
+
+    <style name="Shape.X9" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">4dp</item>
+    </style>
+    <style name="Widget.X9.Text" parent="android:Widget.TextView">
+        <item name="android:fontFamily">serif</item>
+    </style>
+    <style name="Theme.MissionPlayer.T9" parent="Theme.MissionPlayer">
+        <item name="android:colorBackground">@color/x9_bg</item>
+        <item name="android:windowBackground">@color/x9_bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:textViewStyle">@style/Widget.X9.Text</item>
+        <item name="colorSurface">@color/x9_surface</item>
+        <item name="colorOnSurface">@color/x9_on</item>
+        <item name="colorOnBackground">@color/x9_on</item>
+        <item name="colorOnSurfaceVariant">@color/x9_var</item>
+        <item name="colorSurfaceVariant">@color/x9_high</item>
+        <item name="colorSurfaceContainerLowest">@color/x9_bg</item>
+        <item name="colorSurfaceContainerLow">@color/x9_surface</item>
+        <item name="colorSurfaceContainer">@color/x9_high</item>
+        <item name="colorSurfaceContainerHigh">@color/x9_high</item>
+        <item name="colorSurfaceContainerHighest">@color/x9_high</item>
+        <item name="colorPrimary">@color/x9_primary</item>
+        <item name="colorOnPrimary">@color/x9_on_primary</item>
+        <item name="colorPrimaryContainer">@color/x9_container</item>
+        <item name="colorOnPrimaryContainer">@color/x9_on_container</item>
+        <item name="colorSecondary">@color/x9_primary</item>
+        <item name="colorSecondaryContainer">@color/x9_container</item>
+        <item name="colorOnSecondaryContainer">@color/x9_on_container</item>
+        <item name="shapeAppearanceSmallComponent">@style/Shape.X9</item>
+        <item name="shapeAppearanceMediumComponent">@style/Shape.X9</item>
+    </style>
+
+    <style name="Shape.X10" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">28dp</item>
+    </style>
+    <style name="Widget.X10.Text" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+    <style name="Theme.MissionPlayer.T10" parent="Theme.MissionPlayer">
+        <item name="android:colorBackground">@color/x10_bg</item>
+        <item name="android:windowBackground">@color/x10_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:textViewStyle">@style/Widget.X10.Text</item>
+        <item name="colorSurface">@color/x10_surface</item>
+        <item name="colorOnSurface">@color/x10_on</item>
+        <item name="colorOnBackground">@color/x10_on</item>
+        <item name="colorOnSurfaceVariant">@color/x10_var</item>
+        <item name="colorSurfaceVariant">@color/x10_high</item>
+        <item name="colorSurfaceContainerLowest">@color/x10_bg</item>
+        <item name="colorSurfaceContainerLow">@color/x10_surface</item>
+        <item name="colorSurfaceContainer">@color/x10_high</item>
+        <item name="colorSurfaceContainerHigh">@color/x10_high</item>
+        <item name="colorSurfaceContainerHighest">@color/x10_high</item>
+        <item name="colorPrimary">@color/x10_primary</item>
+        <item name="colorOnPrimary">@color/x10_on_primary</item>
+        <item name="colorPrimaryContainer">@color/x10_container</item>
+        <item name="colorOnPrimaryContainer">@color/x10_on_container</item>
+        <item name="colorSecondary">@color/x10_primary</item>
+        <item name="colorSecondaryContainer">@color/x10_container</item>
+        <item name="colorOnSecondaryContainer">@color/x10_on_container</item>
+        <item name="shapeAppearanceSmallComponent">@style/Shape.X10</item>
+        <item name="shapeAppearanceMediumComponent">@style/Shape.X10</item>
+    </style>
+
+    <style name="Shape.X11" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+    <style name="Widget.X11.Text" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+    <style name="Theme.MissionPlayer.T11" parent="Theme.MissionPlayer">
+        <item name="android:colorBackground">@color/x11_bg</item>
+        <item name="android:windowBackground">@color/x11_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:textViewStyle">@style/Widget.X11.Text</item>
+        <item name="colorSurface">@color/x11_surface</item>
+        <item name="colorOnSurface">@color/x11_on</item>
+        <item name="colorOnBackground">@color/x11_on</item>
+        <item name="colorOnSurfaceVariant">@color/x11_var</item>
+        <item name="colorSurfaceVariant">@color/x11_high</item>
+        <item name="colorSurfaceContainerLowest">@color/x11_bg</item>
+        <item name="colorSurfaceContainerLow">@color/x11_surface</item>
+        <item name="colorSurfaceContainer">@color/x11_high</item>
+        <item name="colorSurfaceContainerHigh">@color/x11_high</item>
+        <item name="colorSurfaceContainerHighest">@color/x11_high</item>
+        <item name="colorPrimary">@color/x11_primary</item>
+        <item name="colorOnPrimary">@color/x11_on_primary</item>
+        <item name="colorPrimaryContainer">@color/x11_container</item>
+        <item name="colorOnPrimaryContainer">@color/x11_on_container</item>
+        <item name="colorSecondary">@color/x11_primary</item>
+        <item name="colorSecondaryContainer">@color/x11_container</item>
+        <item name="colorOnSecondaryContainer">@color/x11_on_container</item>
+        <item name="shapeAppearanceSmallComponent">@style/Shape.X11</item>
+        <item name="shapeAppearanceMediumComponent">@style/Shape.X11</item>
+    </style>
+
+    <style name="Shape.X12" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">0dp</item>
+    </style>
+    <style name="Widget.X12.Text" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <style name="Theme.MissionPlayer.T12" parent="Theme.MissionPlayer">
+        <item name="android:colorBackground">@color/x12_bg</item>
+        <item name="android:windowBackground">@color/x12_bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:textViewStyle">@style/Widget.X12.Text</item>
+        <item name="colorSurface">@color/x12_surface</item>
+        <item name="colorOnSurface">@color/x12_on</item>
+        <item name="colorOnBackground">@color/x12_on</item>
+        <item name="colorOnSurfaceVariant">@color/x12_var</item>
+        <item name="colorSurfaceVariant">@color/x12_high</item>
+        <item name="colorSurfaceContainerLowest">@color/x12_bg</item>
+        <item name="colorSurfaceContainerLow">@color/x12_surface</item>
+        <item name="colorSurfaceContainer">@color/x12_high</item>
+        <item name="colorSurfaceContainerHigh">@color/x12_high</item>
+        <item name="colorSurfaceContainerHighest">@color/x12_high</item>
+        <item name="colorPrimary">@color/x12_primary</item>
+        <item name="colorOnPrimary">@color/x12_on_primary</item>
+        <item name="colorPrimaryContainer">@color/x12_container</item>
+        <item name="colorOnPrimaryContainer">@color/x12_on_container</item>
+        <item name="colorSecondary">@color/x12_primary</item>
+        <item name="colorSecondaryContainer">@color/x12_container</item>
+        <item name="colorOnSecondaryContainer">@color/x12_on_container</item>
+        <item name="shapeAppearanceSmallComponent">@style/Shape.X12</item>
+        <item name="shapeAppearanceMediumComponent">@style/Shape.X12</item>
+    </style>
+
+    <style name="Shape.X13" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+    <style name="Widget.X13.Text" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <style name="Theme.MissionPlayer.T13" parent="Theme.MissionPlayer">
+        <item name="android:colorBackground">@color/x13_bg</item>
+        <item name="android:windowBackground">@color/x13_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:textViewStyle">@style/Widget.X13.Text</item>
+        <item name="colorSurface">@color/x13_surface</item>
+        <item name="colorOnSurface">@color/x13_on</item>
+        <item name="colorOnBackground">@color/x13_on</item>
+        <item name="colorOnSurfaceVariant">@color/x13_var</item>
+        <item name="colorSurfaceVariant">@color/x13_high</item>
+        <item name="colorSurfaceContainerLowest">@color/x13_bg</item>
+        <item name="colorSurfaceContainerLow">@color/x13_surface</item>
+        <item name="colorSurfaceContainer">@color/x13_high</item>
+        <item name="colorSurfaceContainerHigh">@color/x13_high</item>
+        <item name="colorSurfaceContainerHighest">@color/x13_high</item>
+        <item name="colorPrimary">@color/x13_primary</item>
+        <item name="colorOnPrimary">@color/x13_on_primary</item>
+        <item name="colorPrimaryContainer">@color/x13_container</item>
+        <item name="colorOnPrimaryContainer">@color/x13_on_container</item>
+        <item name="colorSecondary">@color/x13_primary</item>
+        <item name="colorSecondaryContainer">@color/x13_container</item>
+        <item name="colorOnSecondaryContainer">@color/x13_on_container</item>
+        <item name="shapeAppearanceSmallComponent">@style/Shape.X13</item>
+        <item name="shapeAppearanceMediumComponent">@style/Shape.X13</item>
+    </style>
+
+    <style name="Shape.X14" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">6dp</item>
+    </style>
+    <style name="Widget.X14.Text" parent="android:Widget.TextView">
+        <item name="android:fontFamily">serif</item>
+    </style>
+    <style name="Theme.MissionPlayer.T14" parent="Theme.MissionPlayer">
+        <item name="android:colorBackground">@color/x14_bg</item>
+        <item name="android:windowBackground">@color/x14_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:textViewStyle">@style/Widget.X14.Text</item>
+        <item name="colorSurface">@color/x14_surface</item>
+        <item name="colorOnSurface">@color/x14_on</item>
+        <item name="colorOnBackground">@color/x14_on</item>
+        <item name="colorOnSurfaceVariant">@color/x14_var</item>
+        <item name="colorSurfaceVariant">@color/x14_high</item>
+        <item name="colorSurfaceContainerLowest">@color/x14_bg</item>
+        <item name="colorSurfaceContainerLow">@color/x14_surface</item>
+        <item name="colorSurfaceContainer">@color/x14_high</item>
+        <item name="colorSurfaceContainerHigh">@color/x14_high</item>
+        <item name="colorSurfaceContainerHighest">@color/x14_high</item>
+        <item name="colorPrimary">@color/x14_primary</item>
+        <item name="colorOnPrimary">@color/x14_on_primary</item>
+        <item name="colorPrimaryContainer">@color/x14_container</item>
+        <item name="colorOnPrimaryContainer">@color/x14_on_container</item>
+        <item name="colorSecondary">@color/x14_primary</item>
+        <item name="colorSecondaryContainer">@color/x14_container</item>
+        <item name="colorOnSecondaryContainer">@color/x14_on_container</item>
+        <item name="shapeAppearanceSmallComponent">@style/Shape.X14</item>
+        <item name="shapeAppearanceMediumComponent">@style/Shape.X14</item>
+    </style>
 </resources>

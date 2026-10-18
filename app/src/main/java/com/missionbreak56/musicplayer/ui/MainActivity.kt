@@ -20,6 +20,7 @@ import com.missionbreak56.musicplayer.R
 import com.missionbreak56.musicplayer.data.Group
 import com.missionbreak56.musicplayer.data.Kind
 import com.missionbreak56.musicplayer.data.Library
+import com.missionbreak56.musicplayer.data.LyricsWorker
 import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.data.Song
 import com.missionbreak56.musicplayer.databinding.ActivityMainBinding
@@ -191,14 +192,31 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
     private fun showMainMenu(anchor: View) {
         val popup = PopupMenu(this, anchor)
         popup.menu.add(0, 1, 0, R.string.menu_equalizer)
+        popup.menu.add(0, 8, 1, tr("Estatísticas", "Statistics"))
         popup.menu.add(0, 3, 2, R.string.menu_themes)
+        popup.menu.add(
+            0, 9, 2,
+            if (Prefs.autoLyrics) tr("Letras automáticas: ligado", "Auto lyrics: on")
+            else tr("Letras automáticas: desligado", "Auto lyrics: off")
+        )
         popup.menu.add(0, 6, 3, R.string.menu_tabs_order)
         popup.menu.add(0, 5, 3, R.string.menu_hidden)
         popup.menu.add(0, 4, 4, R.string.menu_about)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 1 -> startActivity(Intent(this, EqualizerActivity::class.java))
+                8 -> startActivity(Intent(this, StatsActivity::class.java))
                 3 -> startActivity(Intent(this, ThemesActivity::class.java))
+                9 -> {
+                    Prefs.autoLyrics = !Prefs.autoLyrics
+                    if (Prefs.autoLyrics) LyricsWorker.schedule(this) else LyricsWorker.cancel(this)
+                    android.widget.Toast.makeText(
+                        this,
+                        if (Prefs.autoLyrics) tr("Letras automáticas ligadas", "Auto lyrics on")
+                        else tr("Letras automáticas desligadas", "Auto lyrics off"),
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
                 4 -> startActivity(Intent(this, AboutActivity::class.java))
                 5 -> Dialogs.manageHidden(this) { pages.refresh() }
                 6 -> Dialogs.reorderTabs(this, pages.order) { order ->

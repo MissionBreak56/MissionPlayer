@@ -363,6 +363,11 @@ object LyricsIndex {
         index.remove(id)
     }
 
+    /** Makes freshly downloaded lyrics searchable right away. */
+    fun update(id: Long, raw: String) {
+        index[id] = plain(raw)
+    }
+
     fun matches(id: Long, query: String): Boolean = index[id]?.contains(query) == true
 
     /** First line of the lyrics containing [query], for showing under the song title. */

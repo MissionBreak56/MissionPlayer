@@ -86,6 +86,13 @@
     <string name="theme_red">Vermelho</string>
     <string name="theme_pink">Rosa</string>
     <string name="theme_gold">Dourado</string>
+    <string name="theme_x8">Neon</string>
+    <string name="theme_x9">Papel</string>
+    <string name="theme_x10">Oceano</string>
+    <string name="theme_x11">Pôr do sol</string>
+    <string name="theme_x12">Mono</string>
+    <string name="theme_x13">Floresta</string>
+    <string name="theme_x14">Rosé</string>
     <string name="lyrics">Letra</string>
     <string name="no_lyrics">Sem letra para esta música</string>
     <string name="add_lyrics">Adicionar arquivo de letra (.lrc ou .txt)</string>
@@ -98,7 +105,7 @@
     <string name="about">Sobre</string>
     <string name="version_format">Versão %1$s</string>
     <string name="developer_format">Desenvolvido por %1$s</string>
-    <string name="about_body">O MissionPlayer é um player de músicas offline e sem anúncios.\n\nRecursos:\n• Músicas, álbuns, artistas e pastas, com foto personalizada da pasta\n• Mini player e tela Tocando agora em liquid glass\n• Equalizador, reforço de graves, surround e aumento de volume\n• Letras sincronizadas (arquivos .lrc) e busca dentro das letras\n• Aleatório sem repetir; lembra a última música, o aleatório e o repetir\n• 8 temas de cor, modo claro e escuro\n• Favoritas, tocadas recentemente e mais tocadas\n• Sem permissão de internet, sem anúncios, sem rastreadores</string>
+    <string name="about_body">O MissionPlayer é um player de músicas offline e sem anúncios.\n\nRecursos:\n• Músicas, álbuns, artistas e pastas, com foto personalizada da pasta\n• Mini player e tela Tocando agora em liquid glass\n• Equalizador, reforço de graves, surround e aumento de volume\n• Letras sincronizadas (arquivos .lrc) e busca dentro das letras\n• Aleatório sem repetir; lembra a última música, o aleatório e o repetir\n• 15 temas de cor, modo claro e escuro\n• Favoritas, tocadas recentemente e mais tocadas\n• Estatísticas de audição\n• Letras que faltam são baixadas automaticamente (LRCLIB, NetEase, Kugou, lyrics.ovh) e guardadas para uso offline\n• Sem anúncios, sem rastreadores</string>
     <string name="cd_back">Voltar</string>
     <string name="cd_more">Mais opções</string>
     <string name="cd_search">Buscar</string>

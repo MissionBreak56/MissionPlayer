@@ -10,11 +10,13 @@ object Themes {
         R.style.Theme_MissionPlayer_T0, R.style.Theme_MissionPlayer_T1,
         R.style.Theme_MissionPlayer_T2, R.style.Theme_MissionPlayer_T3,
         R.style.Theme_MissionPlayer_T4, R.style.Theme_MissionPlayer_T5,
-        R.style.Theme_MissionPlayer_T6, R.style.Theme_MissionPlayer_T7
+        R.style.Theme_MissionPlayer_T6, R.style.Theme_MissionPlayer_T7,
+        R.style.Theme_MissionPlayer_T8, R.style.Theme_MissionPlayer_T9, R.style.Theme_MissionPlayer_T10, R.style.Theme_MissionPlayer_T11, R.style.Theme_MissionPlayer_T12, R.style.Theme_MissionPlayer_T13, R.style.Theme_MissionPlayer_T14
     )
     val colors = intArrayOf(
         R.color.t0_primary, R.color.t1_primary, R.color.t2_primary, R.color.t3_primary,
-        R.color.t4_primary, R.color.t5_primary, R.color.t6_primary, R.color.t7_primary
+        R.color.t4_primary, R.color.t5_primary, R.color.t6_primary, R.color.t7_primary,
+        R.color.x8_primary, R.color.x9_primary, R.color.x10_primary, R.color.x11_primary, R.color.x12_primary, R.color.x13_primary, R.color.x14_primary
     )
 
     fun style(index: Int): Int = styles[index.coerceIn(0, styles.lastIndex)]

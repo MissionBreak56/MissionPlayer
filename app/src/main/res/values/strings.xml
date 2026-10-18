@@ -86,6 +86,13 @@
     <string name="theme_red">Red</string>
     <string name="theme_pink">Pink</string>
     <string name="theme_gold">Gold</string>
+    <string name="theme_x8">Neon</string>
+    <string name="theme_x9">Paper</string>
+    <string name="theme_x10">Ocean</string>
+    <string name="theme_x11">Sunset</string>
+    <string name="theme_x12">Mono</string>
+    <string name="theme_x13">Forest</string>
+    <string name="theme_x14">Rosé</string>
     <string name="lyrics">Lyrics</string>
     <string name="no_lyrics">No lyrics for this song</string>
     <string name="add_lyrics">Add lyrics file (.lrc or .txt)</string>
@@ -98,7 +105,7 @@
     <string name="about">About</string>
     <string name="version_format">Version %1$s</string>
     <string name="developer_format">Developed by %1$s</string>
-    <string name="about_body">MissionPlayer is an offline, ad-free music player.\n\nFeatures:\n• Songs, albums, artists and folders, with custom folder photos\n• Liquid glass mini player and Now Playing screen\n• Equalizer, bass boost, surround and volume boost\n• Synced lyrics (.lrc files) and search inside lyrics\n• Shuffle without repeats; remembers the last song, shuffle and repeat\n• 8 color themes, light and dark mode\n• Favorites, recently played and most played\n• No internet permission, no ads, no trackers</string>
+    <string name="about_body">MissionPlayer is an offline, ad-free music player.\n\nFeatures:\n• Songs, albums, artists and folders, with custom folder photos\n• Liquid glass mini player and Now Playing screen\n• Equalizer, bass boost, surround and volume boost\n• Synced lyrics (.lrc files) and search inside lyrics\n• Shuffle without repeats; remembers the last song, shuffle and repeat\n• 15 color themes, light and dark mode\n• Favorites, recently played and most played\n• Listening statistics\n• Missing lyrics are downloaded automatically (LRCLIB, NetEase, Kugou, lyrics.ovh) and kept for offline use\n• No ads, no trackers</string>
     <string name="cd_back">Back</string>
     <string name="cd_more">More options</string>
     <string name="cd_search">Search</string>

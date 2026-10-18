@@ -11,8 +11,8 @@ android {
         applicationId = "com.missionbreak56.musicplayer"
         minSdk = 23
         targetSdk = 34
-        versionCode = 20
-        versionName = "2.6.7"
+        versionCode = 21
+        versionName = "2.7.0"
 
         // Author metadata -> available in the manifest as ${author}
         manifestPlaceholders["author"] = "MissionBreak56"
@@ -93,6 +93,9 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer:1.4.1")
     implementation("androidx.media3:media3-session:1.4.1")
     implementation("androidx.media3:media3-ui:1.4.1")
+
+    // Automatic lyrics download in the background (runs only when online)
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")

@@ -24,5 +24,12 @@
         <item>@string/theme_red</item>
         <item>@string/theme_pink</item>
         <item>@string/theme_gold</item>
+        <item>@string/theme_x8</item>
+        <item>@string/theme_x9</item>
+        <item>@string/theme_x10</item>
+        <item>@string/theme_x11</item>
+        <item>@string/theme_x12</item>
+        <item>@string/theme_x13</item>
+        <item>@string/theme_x14</item>
     </string-array>
 </resources>

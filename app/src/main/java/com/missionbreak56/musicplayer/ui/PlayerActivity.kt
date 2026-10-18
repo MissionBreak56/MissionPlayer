@@ -33,6 +33,7 @@ import com.missionbreak56.musicplayer.data.Labels
 import com.missionbreak56.musicplayer.data.Library
 import com.missionbreak56.musicplayer.data.LrcParser
 import com.missionbreak56.musicplayer.data.LyricLine
+import com.missionbreak56.musicplayer.data.LyricsFetcher
 import com.missionbreak56.musicplayer.data.LyricsIndex
 import com.missionbreak56.musicplayer.data.LyricsStore
 import com.missionbreak56.musicplayer.data.Prefs
@@ -55,6 +56,7 @@ class PlayerActivity : PlayerBoundActivity() {
     private var seeking = false
     private var lyricsLines: List<LyricLine> = emptyList()
     private var lyricIndex = -1
+    private val triedOnline = HashSet<Long>()
 
     private var closePending = false
     private var restoreTried = false
@@ -440,6 +442,15 @@ class PlayerActivity : PlayerBoundActivity() {
             binding.textLyricsHint.text = if (lines.isEmpty()) getString(R.string.no_lyrics_short) else ""
             binding.textLyricsHint.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
             binding.btnAddLyrics.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
+
+            // No lyrics yet: try to download them now (once per song per session), then reload.
+            if (lines.isEmpty() && id > 0 && song != null && Prefs.autoLyrics && triedOnline.add(id)) {
+                val found = withContext(Dispatchers.IO) {
+                    LyricsFetcher.shouldTry(applicationContext, id) &&
+                        LyricsFetcher.fetch(applicationContext, song) == LyricsFetcher.Outcome.FOUND
+                }
+                if (found && shownId == id) loadLyrics(id)
+            }
         }
     }
 

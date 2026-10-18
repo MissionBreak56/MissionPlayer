@@ -32,6 +32,7 @@ object Prefs {
     private const val KEY_LAST_QUEUE = "last_queue"
     private const val KEY_LAST_INDEX = "last_index"
     private const val KEY_LAST_POS = "last_position"
+    private const val KEY_AUTO_LYRICS = "auto_lyrics"
 
     private const val SEP_ENTRY = "\n"
     private const val SEP_FIELD = "|"
@@ -62,6 +63,11 @@ object Prefs {
         get() = sp?.getInt(KEY_NIGHT, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
             ?: AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
         set(value) { store().edit().putInt(KEY_NIGHT, value).apply() }
+
+    /** Download missing lyrics automatically (needs internet only for the download). */
+    var autoLyrics: Boolean
+        get() = sp?.getBoolean(KEY_AUTO_LYRICS, true) ?: true
+        set(value) { store().edit().putBoolean(KEY_AUTO_LYRICS, value).apply() }
 
     var sortOrder: Int
         get() = sp?.getInt(KEY_SORT, 0) ?: 0
