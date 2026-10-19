@@ -33,6 +33,7 @@ object Prefs {
     private const val KEY_LAST_QUEUE = "last_queue"
     private const val KEY_LAST_INDEX = "last_index"
     private const val KEY_LAST_POS = "last_position"
+    private const val KEY_PLAYER_THEME = "player_theme"
     private const val KEY_AUTO_LYRICS = "auto_lyrics"
     private const val KEY_ACCENT = "custom_accent"
     private const val KEY_FONT = "custom_font"
@@ -67,6 +68,11 @@ object Prefs {
     }
 
     // ----- Appearance / list options -----
+
+    /** Look of the full player: 0 liquid glass (default), 1 AMOLED, 2 blurred cover, 3 aurora, 4 solid, 5 graphite. */
+    var playerTheme: Int
+        get() = (sp?.getInt(KEY_PLAYER_THEME, 0) ?: 0).coerceIn(0, 5)
+        set(value) { store().edit().putInt(KEY_PLAYER_THEME, value).apply() }
 
     /**
      * The theme picker was removed: everyone uses the base theme with the personalization settings.

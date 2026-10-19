@@ -78,6 +78,10 @@ A foto aparece apenas dentro da pasta (cabeçalho do detalhe), não na lista.
   brilho de vidro, com transição suave ao trocar de música; título, artista, tempo, barra de
   progresso, ícones e letras ficam brancos para ler bem em qualquer capa. Sem capa, usa as cores do
   tema.
+- **Temas do player** (botão de camisa no topo do player; só existe nele). A escolha fica salva:
+  *Liquid glass* (padrão, mistura as cores da capa), *Preto AMOLED* (preto puro), *Capa desfocada*
+  (a própria capa borrada ao fundo), *Aurora* (degradê diagonal mais vivo com as cores da capa),
+  *Cor sólida* (cor principal da capa) e *Grafite* (cinza escuro fixo).
 - **Abre de baixo:** ao tocar no mini player, a tela sobe de baixo para cima e desce ao fechar.
 - Capa grande, barra de progresso, aleatório, repetir (desligado / tudo / uma), favorito, fila e letra. Os botões de voltar e avançar são maiores; o repetir fica ao lado do avançar e a fila na
   linha de baixo, à esquerda.
@@ -230,6 +234,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.11.0** | Temas do player: Liquid glass, Preto AMOLED, Capa desfocada, Aurora, Cor sólida e Grafite (botão só no player) |
 | **2.10.2** | *Cor Padrão* (azul-escuro fixo) no lugar de "usar a cor do tema"; removida a opção "usar a fonte do tema" e *Padrão do sistema* vai para o topo da lista de fontes |
 | **2.10.1** | Remove o tema de vez: ficam só as personalizações (modo, ícone, cor, fundo e fonte); janela flutuante do modo com tamanho ajustado |
 | **2.10.0** | *Temas* some das Configurações: tema e modo (claro/escuro) viram menus flutuantes dentro de *Personalização* (antes "Personalização avançada"); padrões novos: fundo preto puro, fonte do sistema e cor de destaque azul-escuro; mini player alinhado |

@@ -1,13 +1,17 @@
-## MissionPlayer v2.10.2 — Cor Padrão e fontes
+## MissionPlayer v2.11.0 — Temas do player
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.10.2-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.11.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
 
-### Mudanças
-- **Cor de Destaque**: o botão "Usar a cor do tema" virou **Cor Padrão** e aplica a **cor fixa do app** (azul-escuro, a mesma do visual padrão). Quando ela está ativa, o botão fica marcado e o texto mostra "Cor padrão do app". Quem ainda estava com "cor do tema" passa para a Cor Padrão.
-- **Fonte**: removida a opção **"Usar a fonte do tema"**; **"Padrão do sistema"** agora é a **primeira** da lista (e continua sendo a fonte padrão). Quem usava "fonte do tema" passa para a fonte do sistema.
-- README atualizado.
+### Novidade
+- **Temas do player**: botão (ícone de camisa) no topo da tela Tocando agora — a opção aparece **só no player**. Seis temas, com a escolha salva:
+  - **Liquid glass** (padrão): mistura as cores da capa com brilho de vidro.
+  - **Preto AMOLED**: fundo preto puro, ideal para telas OLED.
+  - **Capa desfocada**: a própria capa borrada ao fundo, com um véu escuro.
+  - **Aurora**: degradê diagonal mais vivo com as cores da capa.
+  - **Cor sólida**: a cor principal da capa, sem degradê.
+  - **Grafite**: cinza escuro fixo, igual para todas as músicas.
 
 ### Alterações técnicas
-- `Prefs.accent` e `Prefs.fontStyle` passam a mapear os valores antigos (-1 e 0) para `DEFAULT_ACCENT` e `DEFAULT_FONT`.
-- `CustomizeActivity`: botão Cor Padrão; lista de fontes com ordem própria (índices salvos não mudam).
-- Versão: 2.10.1 → 2.10.2 (versionCode 37).
+- `Prefs.playerTheme`; `PlayerActivity.showPlayerThemes()` e `styleSkin()` separado em `styleLiquid`, `styleBlur` e `styleAurora`.
+- Tela Sobre e README atualizados.
+- Versão: 2.10.2 → 2.11.0 (versionCode 38).

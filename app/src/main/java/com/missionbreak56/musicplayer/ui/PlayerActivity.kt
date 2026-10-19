@@ -105,6 +105,7 @@ class PlayerActivity : PlayerBoundActivity() {
 
         binding.btnBack.setOnClickListener { finish() }
         binding.btnMore.setOnClickListener { showMoreMenu(it) }
+        binding.btnThemes.setOnClickListener { showPlayerThemes() }
         binding.btnPlayPause.setOnClickListener { togglePlay() }
         binding.btnNext.setOnClickListener { controller?.seekToNextMediaItem() }
         binding.btnPrev.setOnClickListener { controller?.seekToPrevious() }
@@ -309,6 +310,7 @@ class PlayerActivity : PlayerBoundActivity() {
         lifecycleScope.launch {
             val bitmap = if (song != null) ArtLoader.bitmap(applicationContext, song, 200) else null
             if (shownId != id) return@launch
+            skinBitmap = bitmap
             val picked = if (bitmap != null) {
                 withContext(Dispatchers.Default) { skinFromBitmap(bitmap) }
             } else {
@@ -366,8 +368,79 @@ class PlayerActivity : PlayerBoundActivity() {
         }
     }
 
+    // ----- Player themes -----
+
+    private var skinBitmap: Bitmap? = null
+
+    private fun playerThemeNames() = arrayOf(
+        tr("Liquid glass (padrão)", "Liquid glass (default)"),
+        tr("Preto AMOLED", "AMOLED black"),
+        tr("Capa desfocada", "Blurred cover"),
+        tr("Aurora", "Aurora"),
+        tr("Cor sólida", "Solid color"),
+        tr("Grafite", "Graphite")
+    )
+
+    private fun showPlayerThemes() {
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle(tr("Tema do player", "Player theme"))
+            .setSingleChoiceItems(playerThemeNames(), Prefs.playerTheme) { dialog, which ->
+                Prefs.playerTheme = which
+                dialog.dismiss()
+                skinAnimator?.cancel()
+                styleSkin(skinColors ?: fallbackSkin())
+            }
+            .setNegativeButton(tr("Cancelar", "Cancel"), null)
+            .show()
+    }
+
     private fun styleSkin(c: IntArray) {
         skinColors = c
+        when (Prefs.playerTheme) {
+            1 -> binding.bgTint.background = android.graphics.drawable.ColorDrawable(Color.BLACK)
+            2 -> styleBlur(c)
+            3 -> styleAurora(c)
+            4 -> binding.bgTint.background = android.graphics.drawable.ColorDrawable(c[0])
+            5 -> binding.bgTint.background = GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                intArrayOf(0xFF2B2E35.toInt(), 0xFF181A1F.toInt(), 0xFF0B0C0F.toInt())
+            )
+            else -> styleLiquid(c)
+        }
+    }
+
+    /** The cover itself, heavily blurred (shrunk and stretched back) under a dark scrim. */
+    private fun styleBlur(c: IntArray) {
+        val bmp = skinBitmap
+        if (bmp == null) {
+            styleLiquid(c)
+            return
+        }
+        val tiny = Bitmap.createScaledBitmap(bmp, 12, 12, true)
+        val blurred = android.graphics.drawable.BitmapDrawable(resources, tiny)
+        blurred.isFilterBitmap = true
+        val scrim = GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM,
+            intArrayOf(Color.argb(95, 0, 0, 0), Color.argb(130, 0, 0, 0), Color.argb(190, 0, 0, 0))
+        )
+        binding.bgTint.background = LayerDrawable(arrayOf(blurred, scrim))
+    }
+
+    /** Brighter diagonal mix of the cover colours, without glass highlights. */
+    private fun styleAurora(c: IntArray) {
+        fun lift(color: Int) = ColorUtils.blendARGB(color, Color.WHITE, 0.10f)
+        val base = GradientDrawable(
+            GradientDrawable.Orientation.TL_BR,
+            intArrayOf(lift(c[0]), lift(c[1]), lift(c[2]), lift(c[3]))
+        )
+        val shade = GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM,
+            intArrayOf(Color.argb(0, 0, 0, 0), Color.argb(90, 0, 0, 0))
+        )
+        binding.bgTint.background = LayerDrawable(arrayOf(base, shade))
+    }
+
+    private fun styleLiquid(c: IntArray) {
         val w = resources.displayMetrics.widthPixels.toFloat()
         val base = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(c[0], c[3], c[2]))
         fun blob(color: Int, cx: Float, cy: Float, radius: Float) = GradientDrawable().apply {
@@ -404,7 +477,7 @@ class PlayerActivity : PlayerBoundActivity() {
     private fun applySkinForeground() {
         val white = ColorStateList.valueOf(fgActive)
         listOf(
-            binding.btnBack, binding.btnPlaylistAdd, binding.btnMore,
+            binding.btnBack, binding.btnPlaylistAdd, binding.btnThemes, binding.btnMore,
             binding.btnFavorite, binding.btnPrev, binding.btnNext, binding.btnQueue,
             binding.btnEqualizer, binding.btnPlayPause
         ).forEach { it.imageTintList = white }
