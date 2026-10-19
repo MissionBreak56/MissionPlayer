@@ -122,6 +122,7 @@ class PlaybackService : MediaSessionService() {
             val commands = MediaSession.ConnectionResult.DEFAULT_SESSION_COMMANDS.buildUpon()
                 .add(PlaybackQueue.RESHUFFLE)
                 .add(PlaybackQueue.FIX_ADDED)
+                .add(PlaybackQueue.REFRESH_ART)
                 .build()
             return MediaSession.ConnectionResult.AcceptedResultBuilder(session)
                 .setAvailableSessionCommands(commands)
@@ -134,6 +135,9 @@ class PlaybackService : MediaSessionService() {
             customCommand: SessionCommand,
             args: Bundle
         ): ListenableFuture<SessionResult> {
+            if (customCommand.customAction == PlaybackQueue.REFRESH_ART.customAction) {
+                mediaSession?.let { onUpdateNotification(it, false) }
+            }
             val p = exo
             if (p != null) {
                 when (customCommand.customAction) {
@@ -253,6 +257,7 @@ class PlaybackService : MediaSessionService() {
         mediaSession = MediaSession.Builder(this, player)
             .setSessionActivity(openApp)
             .setCallback(sessionCallback)
+            .setBitmapLoader(SongBitmapLoader(this))
             .build()
     }
 

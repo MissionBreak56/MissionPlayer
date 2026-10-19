@@ -87,6 +87,8 @@ class PlayerActivity : PlayerBoundActivity() {
     /** Reloads the cover and the colours taken from it after it was changed. */
     private fun refreshCover() {
         val c = controller ?: return
+        // also redraw the playback notification with the new cover
+        c.sendCustomCommand(com.missionbreak56.musicplayer.playback.PlaybackQueue.REFRESH_ART, Bundle.EMPTY)
         val id = c.currentMediaItem?.mediaId?.toLongOrNull() ?: return
         showSong(c.currentMediaItem, id)
     }

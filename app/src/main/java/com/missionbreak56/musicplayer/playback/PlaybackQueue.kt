@@ -20,7 +20,7 @@ fun Song.toMediaItem(): MediaItem = MediaItem.Builder()
             .setTitle(displayTitle)
             .setArtist(displayArtist)
             .setAlbumTitle(displayAlbum)
-            .setArtworkUri(ContentUris.withAppendedId(ART_BASE, albumId))
+            .setArtworkUri(SongBitmapLoader.uriFor(id, albumId))
             .setIsBrowsable(false)
             .setIsPlayable(true)
             .build()
@@ -32,6 +32,9 @@ object PlaybackQueue {
 
     /** Asks the service to rebuild the shuffle order so every song plays once before any repeats. */
     val RESHUFFLE = SessionCommand("com.missionbreak56.musicplayer.RESHUFFLE", Bundle.EMPTY)
+
+    /** Asks the service to redraw the playback notification (e.g. after a custom cover was set). */
+    val REFRESH_ART = SessionCommand("com.missionbreak56.musicplayer.REFRESH_ART", Bundle.EMPTY)
 
     /** Tells the service a song was just added to the queue (extras: "index", "next"). */
     val FIX_ADDED = SessionCommand("com.missionbreak56.musicplayer.FIX_ADDED", Bundle.EMPTY)

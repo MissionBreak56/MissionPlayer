@@ -100,7 +100,7 @@ No menu ⋮ do player:
 - **Remover capa personalizada** — volta à capa original.
 
 A capa escolhida vale para a música em todo o app (listas, mini player e player), as cores do liquid
-glass acompanham a nova capa e ela fica salva só no aparelho. A notificação continua com a capa original.
+glass acompanham a nova capa, a capa também aparece na **notificação de reprodução** e na tela de bloqueio, e ela fica salva só no aparelho.
 
 ### Aleatório e repetição
 - **Aleatório sem repetir:** todas as músicas da fila tocam uma vez, começando pela atual, antes de
@@ -234,6 +234,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.11.1** | A capa personalizada também aparece na notificação de reprodução e na tela de bloqueio |
 | **2.11.0** | Temas do player: Liquid glass, Preto AMOLED, Capa desfocada, Aurora, Cor sólida e Grafite (botão só no player) |
 | **2.10.2** | *Cor Padrão* (azul-escuro fixo) no lugar de "usar a cor do tema"; removida a opção "usar a fonte do tema" e *Padrão do sistema* vai para o topo da lista de fontes |
 | **2.10.1** | Remove o tema de vez: ficam só as personalizações (modo, ícone, cor, fundo e fonte); janela flutuante do modo com tamanho ajustado |
