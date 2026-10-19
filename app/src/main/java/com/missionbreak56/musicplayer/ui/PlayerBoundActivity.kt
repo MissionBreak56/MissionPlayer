@@ -27,6 +27,7 @@ import com.missionbreak56.musicplayer.data.Labels
 import com.missionbreak56.musicplayer.data.Library
 import com.missionbreak56.musicplayer.data.Song
 import com.missionbreak56.musicplayer.databinding.SheetQueueBinding
+import com.missionbreak56.musicplayer.playback.PlaybackState
 import com.missionbreak56.musicplayer.playback.PlayerConnection
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
@@ -47,6 +48,7 @@ abstract class PlayerBoundActivity : BaseActivity() {
     protected val uiHandler = Handler(Looper.getMainLooper())
     private var connection: PlayerConnection? = null
     private var miniShownId = -1L
+    private var restoreTried = false
 
     private val tick = object : Runnable {
         override fun run() {
@@ -67,6 +69,7 @@ abstract class PlayerBoundActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
+        restoreTried = false
         bindMiniPlayer()
         val conn = PlayerConnection(this) { c ->
             controller = c
@@ -91,11 +94,25 @@ abstract class PlayerBoundActivity : BaseActivity() {
     protected open fun onControllerReady(c: MediaController) {}
 
     protected open fun onPlayerChanged() {
+        restoreQueueIfEmpty()
         updateMiniPlayer()
     }
 
     protected open fun onTick() {
+        restoreQueueIfEmpty()
         updateMiniProgress()
+    }
+
+    /**
+     * The system may stop the music service while the song is paused and the app is in the
+     * background. When the screen comes back with an empty player, put the last queue back
+     * (paused, same position) so the mini player does not disappear.
+     */
+    private fun restoreQueueIfEmpty() {
+        val c = controller ?: return
+        if (restoreTried || c.mediaItemCount > 0 || !Library.loaded) return
+        restoreTried = true
+        PlaybackState.restoreIfEmpty(c)
     }
 
     // ----- Mini player -----
