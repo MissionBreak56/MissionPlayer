@@ -1,10 +1,10 @@
-## MissionPlayer v2.9.3 — Trocar de tema volta cor e fonte para o padrão do tema
+## MissionPlayer v2.9.4 — Restaurar padrões pede confirmação
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.9.3-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.9.4-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
 
 ### Mudança
-- **Ao trocar de tema**, as opções *Cor de Destaque* e *Fonte* voltam para *Usar a cor do tema* e *Usar a fonte do tema*, e o novo tema aparece com o visual padrão dele. Depois você pode personalizar de novo em Personalização avançada. Tocar no tema que já está ativo não muda nada.
+- **Restaurar padrões** agora abre uma janela perguntando se você quer mesmo restaurar (Restaurar / Cancelar), para não perder a personalização por um toque sem querer.
 
 ### Alterações técnicas
-- `ThemesActivity`: ao escolher um tema diferente, `Prefs.accent = -1` e `Prefs.fontStyle = 0`.
-- Versão: 2.9.2 → 2.9.3 (versionCode 26).
+- `CustomizeActivity`: `MaterialAlertDialogBuilder` antes de limpar as escolhas.
+- Versão: 2.9.3 → 2.9.4 (versionCode 27).

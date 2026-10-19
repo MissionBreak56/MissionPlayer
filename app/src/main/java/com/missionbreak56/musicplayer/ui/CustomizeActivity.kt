@@ -515,13 +515,25 @@ class CustomizeActivity : BaseActivity() {
         val b = MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle)
         b.text = tr("Restaurar padrões", "Restore defaults")
         b.setOnClickListener {
-            BgImage.clear(applicationContext)
-            Prefs.resetCustomization()
-            if (Prefs.iconVariant != 0) {
-                Prefs.iconVariant = 0
-                IconManager.apply(this, 0)
-            }
-            recreate()
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(tr("Restaurar padrões?", "Restore defaults?"))
+                .setMessage(
+                    tr(
+                        "Ícone, cor de destaque, fundo (inclusive a imagem) e fonte voltarão ao original.",
+                        "Icon, accent color, background (including the image) and font will go back to the original."
+                    )
+                )
+                .setPositiveButton(tr("Restaurar", "Restore")) { _, _ ->
+                    BgImage.clear(applicationContext)
+                    Prefs.resetCustomization()
+                    if (Prefs.iconVariant != 0) {
+                        Prefs.iconVariant = 0
+                        IconManager.apply(this, 0)
+                    }
+                    recreate()
+                }
+                .setNegativeButton(tr("Cancelar", "Cancel"), null)
+                .show()
         }
         body.addView(b, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(28) })
     }
