@@ -520,4 +520,11 @@ class PlayerActivity : PlayerBoundActivity() {
         }
         popup.show()
     }
+
+    override fun finish() {
+        super.finish()
+        // ...and slides back down when closed.
+        @Suppress("DEPRECATION")
+        overridePendingTransition(R.anim.stay, R.anim.slide_down_out)
+    }
 }

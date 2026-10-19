@@ -114,6 +114,9 @@ abstract class PlayerBoundActivity : BaseActivity() {
 
     fun openPlayer() {
         startActivity(Intent(this, PlayerActivity::class.java))
+        // The full player slides up from the bottom (like expanding the mini player).
+        @Suppress("DEPRECATION")
+        overridePendingTransition(R.anim.slide_up_in, R.anim.stay)
     }
 
     fun togglePlay() {
