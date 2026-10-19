@@ -42,6 +42,11 @@ object Prefs {
     private const val KEY_BG_IMAGE = "custom_bg_image"
     private const val KEY_BG_VISIBLE = "custom_bg_image_visible"
 
+    /** Default look: custom deep blue accent (hue 220, "Escuro"), system font, pure background. */
+    const val DEFAULT_ACCENT = 544
+    const val DEFAULT_FONT = 9
+    const val DEFAULT_BG = 1
+
     private const val SEP_ENTRY = "\n"
     private const val SEP_FIELD = "|"
     private const val SEP_ID = ","
@@ -81,19 +86,20 @@ object Prefs {
 
     /** Accent color override: -1 follows the theme, 0.. picks one of the palette colors. */
     var accent: Int
-        get() = sp?.getInt(KEY_ACCENT, -1) ?: -1
+        get() = sp?.getInt(KEY_ACCENT, DEFAULT_ACCENT) ?: DEFAULT_ACCENT
         set(value) { store().edit().putInt(KEY_ACCENT, value).apply() }
 
     var fontStyle: Int
-        get() = sp?.getInt(KEY_FONT, 0) ?: 0
+        get() = sp?.getInt(KEY_FONT, DEFAULT_FONT) ?: DEFAULT_FONT
         set(value) { store().edit().putInt(KEY_FONT, value).apply() }
 
     var cornerStyle: Int
         get() = sp?.getInt(KEY_CORNERS, 0) ?: 0
         set(value) { store().edit().putInt(KEY_CORNERS, value).apply() }
 
+    /** 1 = pure (pure black in dark mode) is the default; the old "default" option (0) was removed. */
     var backgroundStyle: Int
-        get() = sp?.getInt(KEY_BG, 0) ?: 0
+        get() = (sp?.getInt(KEY_BG, DEFAULT_BG) ?: DEFAULT_BG).let { if (it == 0) DEFAULT_BG else it }
         set(value) { store().edit().putInt(KEY_BG, value).apply() }
 
     /** Which launcher icon is active (0 = original). */
@@ -115,8 +121,8 @@ object Prefs {
     fun customSignature(): String = "$accent|$fontStyle|$cornerStyle|$backgroundStyle|$bgImageStamp|$bgImageVisible"
 
     fun resetCustomization() {
-        store().edit().putInt(KEY_ACCENT, -1).putInt(KEY_FONT, 0).putInt(KEY_CORNERS, 0)
-            .putInt(KEY_BG, 0).putLong(KEY_BG_IMAGE, 0L).putInt(KEY_BG_VISIBLE, 55).apply()
+        store().edit().putInt(KEY_ACCENT, DEFAULT_ACCENT).putInt(KEY_FONT, DEFAULT_FONT).putInt(KEY_CORNERS, 0)
+            .putInt(KEY_BG, DEFAULT_BG).putInt(KEY_THEME, 0).putInt(KEY_NIGHT, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM).putLong(KEY_BG_IMAGE, 0L).putInt(KEY_BG_VISIBLE, 55).apply()
     }
 
     /** Sort order chosen inside albums / folders / artists / playlists (-1 = their own order). */

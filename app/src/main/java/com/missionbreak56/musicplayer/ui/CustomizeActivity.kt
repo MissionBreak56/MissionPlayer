@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Advanced customization: app icon, accent color, background, font and corner style.
+ * Customization: theme, light/dark mode, app icon, accent color, background, font and corner style.
  * Look settings are layered over the chosen theme (see [Themes.applyOverlays]).
  */
 class CustomizeActivity : BaseActivity() {
@@ -60,7 +60,7 @@ class CustomizeActivity : BaseActivity() {
         val root = LinearLayout(this)
         root.orientation = LinearLayout.VERTICAL
         root.setBackgroundColor(MaterialColors.getColor(this, android.R.attr.colorBackground, 0))
-        root.addView(screenHeader(this, tr("Personalização avançada", "Advanced customization")) { finish() })
+        root.addView(screenHeader(this, tr("Personalização", "Customization")) { finish() })
 
         scroll = ScrollView(this)
         body = LinearLayout(this)
@@ -90,6 +90,8 @@ class CustomizeActivity : BaseActivity() {
 
     private fun build() {
         body.removeAllViews()
+        themeSection()
+        modeSection()
         iconSection()
         accentSection()
         backgroundSection()
@@ -154,6 +156,97 @@ class CustomizeActivity : BaseActivity() {
         row.orientation = LinearLayout.HORIZONTAL
         body.addView(row, LinearLayout.LayoutParams(-1, -2))
         return row
+    }
+
+    // ----- Theme and light / dark mode (floating menus) -----
+
+    /** A button that looks like the font / icon pickers: current value and a small arrow. */
+    private fun dropdownButton(text: String, onClick: (View) -> Unit) {
+        val button = LinearLayout(this)
+        button.orientation = LinearLayout.HORIZONTAL
+        button.gravity = Gravity.CENTER_VERTICAL
+        button.setPadding(dp(14), dp(12), dp(14), dp(12))
+        button.background = ring(false, 14)
+        val label = TextView(this)
+        label.text = text
+        label.textSize = 16f
+        button.addView(label, LinearLayout.LayoutParams(0, -2, 1f))
+        val arrow = TextView(this)
+        arrow.text = "▾"
+        arrow.textSize = 18f
+        button.addView(arrow)
+        button.setOnClickListener { onClick(button) }
+        body.addView(button, LinearLayout.LayoutParams(-1, -2))
+    }
+
+    /** Floating list with the current choice highlighted. */
+    private fun showListMenu(anchor: View, labels: List<String>, selected: Int, onPick: (Int) -> Unit) {
+        val popup = android.widget.ListPopupWindow(this)
+        popup.anchorView = anchor
+        popup.width = anchor.width
+        popup.height = (resources.displayMetrics.heightPixels * 0.6f).toInt()
+        popup.isModal = true
+        val bg = GradientDrawable()
+        bg.setColor(MaterialColors.getColor(this, com.google.android.material.R.attr.colorSurfaceContainerHigh, 0))
+        bg.cornerRadius = dp(14).toFloat()
+        popup.setBackgroundDrawable(bg)
+        popup.setAdapter(object : android.widget.ArrayAdapter<String>(
+            this, android.R.layout.simple_list_item_1, labels
+        ) {
+            override fun getView(position: Int, convertView: View?, parent: android.view.ViewGroup): View {
+                val v = super.getView(position, convertView, parent) as TextView
+                v.text = labels[position]
+                v.textSize = 16f
+                v.setTextColor(
+                    if (position == selected) primary
+                    else MaterialColors.getColor(v, com.google.android.material.R.attr.colorOnSurface)
+                )
+                v.setPadding(dp(16), dp(12), dp(16), dp(12))
+                return v
+            }
+        })
+        popup.setOnItemClickListener { _, _, position, _ ->
+            popup.dismiss()
+            if (position != selected) onPick(position)
+        }
+        popup.show()
+        popup.listView?.setSelection(selected)
+    }
+
+    private fun themeSection() {
+        section(
+            tr("Tema", "Theme"),
+            tr("Cores e visual completo do app. Ao trocar, a cor de destaque e a fonte seguem o tema.", "Colors and full look of the app. When you change it, the accent color and font follow the theme.")
+        )
+        val names = resources.getStringArray(com.missionbreak56.musicplayer.R.array.theme_names).toList()
+        val current = Prefs.theme.coerceIn(0, names.lastIndex)
+        dropdownButton(names[current]) { anchor ->
+            showListMenu(anchor, names, current) { index ->
+                // A new theme starts with its own accent color and font.
+                Prefs.accent = -1
+                Prefs.fontStyle = 0
+                Prefs.theme = index
+                recreate()
+            }
+        }
+    }
+
+    private fun modeSection() {
+        section(tr("Modo", "Mode"))
+        val labels = listOf(tr("Do sistema", "System"), tr("Claro", "Light"), tr("Escuro", "Dark"))
+        val modes = intArrayOf(
+            androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
+            androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO,
+            androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+        )
+        val current = modes.indexOf(Prefs.nightMode).coerceAtLeast(0)
+        dropdownButton(labels[current]) { anchor ->
+            showListMenu(anchor, labels, current) { index ->
+                Prefs.nightMode = modes[index]
+                androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(modes[index])
+                build()
+            }
+        }
     }
 
     // ----- Icon -----
@@ -362,8 +455,10 @@ class CustomizeActivity : BaseActivity() {
         )
         val perRow = 3
         var row = newRow()
-        for (i in 0 until Themes.backgroundCount) {
-            if (i > 0 && i % perRow == 0) row = newRow()
+        var shown = 0
+        for (i in 1 until Themes.backgroundCount) {
+            if (shown > 0 && shown % perRow == 0) row = newRow()
+            shown++
             val selected = i == Prefs.backgroundStyle
             val cell = LinearLayout(this)
             cell.orientation = LinearLayout.VERTICAL
@@ -389,6 +484,11 @@ class CustomizeActivity : BaseActivity() {
                 if (Prefs.backgroundStyle != i) { Prefs.backgroundStyle = i; recreate() }
             }
             row.addView(cell, LinearLayout.LayoutParams(0, -2, 1f))
+        }
+        // keep the last row aligned with the others
+        while (shown % perRow != 0) {
+            row.addView(View(this), LinearLayout.LayoutParams(0, 1, 1f))
+            shown++
         }
         imageBlock()
     }
@@ -519,13 +619,14 @@ class CustomizeActivity : BaseActivity() {
                 .setTitle(tr("Restaurar padrões?", "Restore defaults?"))
                 .setMessage(
                     tr(
-                        "Ícone, cor de destaque, fundo (inclusive a imagem) e fonte voltarão ao original.",
-                        "Icon, accent color, background (including the image) and font will go back to the original."
+                        "Tema, modo, ícone, cor de destaque, fundo (inclusive a imagem) e fonte voltarão ao padrão do app.",
+                        "Theme, mode, icon, accent color, background (including the image) and font will go back to the app defaults."
                     )
                 )
                 .setPositiveButton(tr("Restaurar", "Restore")) { _, _ ->
                     BgImage.clear(applicationContext)
                     Prefs.resetCustomization()
+                    androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(Prefs.nightMode)
                     if (Prefs.iconVariant != 0) {
                         Prefs.iconVariant = 0
                         IconManager.apply(this, 0)

@@ -44,12 +44,8 @@ class SettingsActivity : BaseActivity() {
 
         header(tr("Aparência", "Appearance"))
         entry(
-            tr("Temas", "Themes"),
-            tr("Tema do app e modo claro, escuro ou do sistema", "App theme and light, dark or system mode")
-        ) { open(ThemesActivity::class.java) }
-        entry(
-            tr("Personalização avançada", "Advanced customization"),
-            tr("Ícone, cor de destaque, fonte e fundo (cor ou imagem)", "Icon, accent color, font and background (color or image)")
+            tr("Personalização", "Customization"),
+            tr("Tema, modo claro/escuro, ícone, cor de destaque, fonte e fundo", "Theme, light/dark mode, icon, accent color, font and background")
         ) { open(CustomizeActivity::class.java) }
 
         header(tr("Biblioteca", "Library"))

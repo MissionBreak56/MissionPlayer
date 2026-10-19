@@ -16,7 +16,6 @@ import com.missionbreak56.musicplayer.data.Library
 import com.missionbreak56.musicplayer.data.Song
 import com.missionbreak56.musicplayer.databinding.ItemLyricBinding
 import com.missionbreak56.musicplayer.databinding.ItemSongBinding
-import com.missionbreak56.musicplayer.databinding.ItemThemeBinding
 
 class SongAdapter(
     private val onClick: (List<Song>, Int) -> Unit,
@@ -229,34 +228,6 @@ class LyricsAdapter(
             )
             tv.textSize = if (active) 24f else 20f
             tv.setOnClickListener { onLineClick(line) }
-        }
-    }
-}
-
-class ThemeAdapter(
-    private val names: Array<String>,
-    private var selected: Int,
-    private val onPick: (Int) -> Unit
-) : RecyclerView.Adapter<ThemeAdapter.VH>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
-        VH(ItemThemeBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-
-    override fun onBindViewHolder(holder: VH, position: Int) = holder.bind(position)
-
-    override fun getItemCount(): Int = Themes.colors.size
-
-    inner class VH(private val b: ItemThemeBinding) : RecyclerView.ViewHolder(b.root) {
-        fun bind(position: Int) {
-            val color = ContextCompat.getColor(b.root.context, Themes.colors[position])
-            b.dot.backgroundTintList = ColorStateList.valueOf(color)
-            b.check.visibility = if (position == selected) View.VISIBLE else View.GONE
-            b.textName.text = names.getOrElse(position) { "" }
-            b.root.setOnClickListener {
-                selected = position
-                notifyDataSetChanged()
-                onPick(position)
-            }
         }
     }
 }
