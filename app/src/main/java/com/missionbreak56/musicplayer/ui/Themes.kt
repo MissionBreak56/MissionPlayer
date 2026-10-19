@@ -152,7 +152,6 @@ object Themes {
         } else if (accent in accentOverlays.indices) {
             theme.applyStyle(accentOverlays[accent], true)
         }
-        cornerOverlays.getOrNull(Prefs.cornerStyle)?.takeIf { it != 0 }?.let { theme.applyStyle(it, true) }
         fontOverlays.getOrNull(Prefs.fontStyle)?.takeIf { it != 0 }?.let { theme.applyStyle(it, true) }
     }
 }

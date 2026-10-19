@@ -94,7 +94,6 @@ class CustomizeActivity : BaseActivity() {
         accentSection()
         backgroundSection()
         fontSection()
-        cornerSection()
         resetButton()
     }
 
@@ -263,77 +262,145 @@ class CustomizeActivity : BaseActivity() {
             frame.setOnClickListener {
                 if (Prefs.accent != i) { Prefs.accent = i; recreate() }
             }
-            row.addView(frame, LinearLayout.LayoutParams(0, dp(40), 1f).apply { setMargins(dp(1), dp(2), dp(1), dp(2)) })
+            // fixed square size inside a weighted cell, so the dots are real circles
+            val cell = FrameLayout(this)
+            cell.addView(frame, FrameLayout.LayoutParams(dp(38), dp(38), Gravity.CENTER))
+            row.addView(cell, LinearLayout.LayoutParams(0, dp(44), 1f))
         }
         wheelBlock(current)
     }
 
-    /** Color wheel: pick any hue, then one of five tones from pastel to deep. */
+    /**
+     * Free accent color: a hue wheel, or (compact mode) a hue bar, plus a bar for the tone
+     * (pastel .. deep). Both modes save the same value.
+     */
     private fun wheelBlock(current: Int) {
         val onWheel = Themes.isWheel(current)
+        var hue = if (onWheel) Themes.wheelHue(current) else 0
+        var tone = if (onWheel) Themes.wheelTone(current) else 2
+        val compact = Prefs.accentCompact
+
         val title = TextView(this)
-        title.text = tr("Roda de cores", "Color wheel")
+        title.text = tr("Cor livre", "Free color")
         title.textSize = 15f
         title.setTypeface(title.typeface, Typeface.BOLD)
         body.addView(title, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(18) })
         val hint = TextView(this)
-        hint.text = tr(
-            "Arraste no círculo para escolher o tom e toque numa intensidade abaixo.",
-            "Drag on the circle to pick a hue, then tap an intensity below."
-        )
+        hint.text = if (compact) {
+            tr("Use as barras para escolher o tom e a intensidade.", "Use the bars to pick the hue and the intensity.")
+        } else {
+            tr("Arraste no círculo para escolher o tom e use a barra para a intensidade.", "Drag on the circle to pick the hue and use the bar for the intensity.")
+        }
         hint.textSize = 13f
         hint.alpha = 0.7f
-        body.addView(hint, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(6) })
+        body.addView(hint, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
 
-        val wheel = ColorWheelView(this)
-        wheel.hue = if (onWheel) Themes.wheelHue(current) else 0
-        wheel.tone = if (onWheel) Themes.wheelTone(current) else 2
-        wheel.showThumb = onWheel
-        body.addView(wheel, LinearLayout.LayoutParams(-1, -2).apply { gravity = Gravity.CENTER_HORIZONTAL })
+        // wheel / bars switch
+        val modeRow = newRow()
+        val modeNames = arrayOf(tr("Roda", "Wheel"), tr("Barras (compacto)", "Bars (compact)"))
+        for (m in 0..1) {
+            val selected = (m == 1) == compact
+            val chip = TextView(this)
+            chip.text = modeNames[m]
+            chip.textSize = 13f
+            chip.gravity = Gravity.CENTER
+            chip.maxLines = 1
+            chip.setPadding(dp(4), dp(10), dp(4), dp(10))
+            chip.background = ring(selected, 20, if (selected) tint(primary, 0x26) else Color.TRANSPARENT)
+            if (selected) chip.setTypeface(chip.typeface, Typeface.BOLD)
+            chip.setOnClickListener {
+                if (Prefs.accentCompact != (m == 1)) {
+                    Prefs.accentCompact = (m == 1)
+                    build()
+                }
+            }
+            modeRow.addView(chip, LinearLayout.LayoutParams(0, -2, 1f).apply { setMargins(dp(3), 0, dp(3), 0) })
+        }
 
-        val toneRow = newRow()
+        fun commit() {
+            Prefs.accent = Themes.wheelCode(hue, tone)
+            recreate()
+        }
+
         val toneNames = arrayOf(
             tr("Pastel", "Pastel"), tr("Suave", "Soft"), tr("Vivo", "Vivid"),
             tr("Forte", "Strong"), tr("Escuro", "Deep")
         )
-        val dots = ArrayList<GradientDrawable>()
-        for (t in 0 until Themes.WHEEL_TONES) {
-            val selected = onWheel && t == Themes.wheelTone(current)
-            val cell = LinearLayout(this)
-            cell.orientation = LinearLayout.VERTICAL
-            cell.gravity = Gravity.CENTER_HORIZONTAL
-            val frame = FrameLayout(this)
-            frame.setPadding(dp(3), dp(3), dp(3), dp(3))
-            val ringBg = GradientDrawable()
-            ringBg.shape = GradientDrawable.OVAL
-            ringBg.setColor(Color.TRANSPARENT)
-            ringBg.setStroke(
-                dp(if (selected) 3 else 0),
-                if (selected) MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurface, 0) else Color.TRANSPARENT
-            )
-            frame.background = ringBg
-            val dot = View(this)
-            val dotBg = GradientDrawable()
-            dotBg.shape = GradientDrawable.OVAL
-            dotBg.setColor(Themes.wheelColor(wheel.hue, t))
-            dot.background = dotBg
-            dots.add(dotBg)
-            frame.addView(dot, FrameLayout.LayoutParams(-1, -1))
-            cell.addView(frame, LinearLayout.LayoutParams(dp(44), dp(44)))
-            cell.addView(caption(toneNames[t], selected), LinearLayout.LayoutParams(-2, -2))
-            cell.setOnClickListener {
-                Prefs.accent = Themes.wheelCode(wheel.hue, t)
-                recreate()
+        var wheel: ColorWheelView? = null
+        var previewBg: GradientDrawable? = null
+        val toneLabel = TextView(this)
+        fun toneText() = tr("Intensidade: ${toneNames[tone]}", "Intensity: ${toneNames[tone]}")
+
+        if (!compact) {
+            val w = ColorWheelView(this)
+            w.hue = hue
+            w.tone = tone
+            w.showThumb = onWheel
+            w.onPick = { h, final ->
+                hue = h
+                if (final) commit()
             }
-            toneRow.addView(cell, LinearLayout.LayoutParams(0, -2, 1f))
-        }
-        wheel.onPick = { hue, final ->
-            for (t in dots.indices) dots[t].setColor(Themes.wheelColor(hue, t))
-            if (final) {
-                Prefs.accent = Themes.wheelCode(hue, wheel.tone)
-                recreate()
+            wheel = w
+            body.addView(w, LinearLayout.LayoutParams(-1, -2).apply {
+                gravity = Gravity.CENTER_HORIZONTAL
+                topMargin = dp(8)
+            })
+        } else {
+            // live preview of the chosen color
+            val preview = View(this)
+            val pb = GradientDrawable()
+            pb.shape = GradientDrawable.RECTANGLE
+            pb.cornerRadius = dp(12).toFloat()
+            pb.setColor(Themes.wheelColor(hue, tone))
+            preview.background = pb
+            previewBg = pb
+            body.addView(preview, LinearLayout.LayoutParams(-1, dp(36)).apply { topMargin = dp(10) })
+
+            val hueLabel = TextView(this)
+            hueLabel.text = tr("Tom", "Hue")
+            hueLabel.textSize = 13f
+            body.addView(hueLabel, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(10) })
+            val hueBar = SeekBar(this)
+            hueBar.max = Themes.WHEEL_HUES - 1
+            hueBar.progress = hue
+            val rainbow = IntArray(Themes.WHEEL_HUES + 1) {
+                Color.HSVToColor(floatArrayOf(it * 5f, 0.85f, 0.95f))
             }
+            val track = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, rainbow)
+            track.cornerRadius = dp(8).toFloat()
+            hueBar.background = android.graphics.drawable.InsetDrawable(track, dp(14), dp(11), dp(14), dp(11))
+            hueBar.progressDrawable = android.graphics.drawable.ColorDrawable(Color.TRANSPARENT)
+            hueBar.thumbTintList = android.content.res.ColorStateList.valueOf(Color.WHITE)
+            hueBar.setPadding(dp(14), 0, dp(14), 0)
+            hueBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(bar: SeekBar?, progress: Int, fromUser: Boolean) {
+                    hue = progress
+                    previewBg?.setColor(Themes.wheelColor(hue, tone))
+                }
+                override fun onStartTrackingTouch(bar: SeekBar?) {}
+                override fun onStopTrackingTouch(bar: SeekBar?) { commit() }
+            })
+            body.addView(hueBar, LinearLayout.LayoutParams(-1, dp(40)))
         }
+
+        // tone bar (both modes)
+        toneLabel.text = toneText()
+        toneLabel.textSize = 13f
+        body.addView(toneLabel, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(10) })
+        val toneBar = SeekBar(this)
+        toneBar.max = Themes.WHEEL_TONES - 1
+        toneBar.progress = tone
+        toneBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(bar: SeekBar?, progress: Int, fromUser: Boolean) {
+                tone = progress
+                toneLabel.text = toneText()
+                wheel?.tone = tone
+                previewBg?.setColor(Themes.wheelColor(hue, tone))
+            }
+            override fun onStartTrackingTouch(bar: SeekBar?) {}
+            override fun onStopTrackingTouch(bar: SeekBar?) { commit() }
+        })
+        body.addView(toneBar, LinearLayout.LayoutParams(-1, -2))
     }
 
     // ----- Background -----
@@ -440,56 +507,60 @@ class CustomizeActivity : BaseActivity() {
             tr("Fonte", "Font"),
             tr("Vale para todo o app. \"Usar a fonte do tema\" mantém a fonte própria de cada tema.", "Applies to the whole app. \"Use the theme's font\" keeps each theme's own font.")
         )
-        for (i in 0 until Themes.fontCount) {
-            val selected = i == Prefs.fontStyle
-            val row = LinearLayout(this)
-            row.orientation = LinearLayout.HORIZONTAL
-            row.gravity = Gravity.CENTER_VERTICAL
-            row.setPadding(dp(14), dp(10), dp(14), dp(10))
-            row.background = ring(selected, 14, if (selected) tint(primary, 0x26) else Color.TRANSPARENT)
-
-            val option = Themes.fonts[i]
-            val sample = TextView(this)
-            sample.text = if (i == 0) option.label else "${option.label} — " + tr("Minha música favorita", "My favorite song")
-            sample.textSize = 16f
-            Themes.typeface(this, i)?.let { sample.typeface = it }
-            row.addView(sample, LinearLayout.LayoutParams(0, -2, 1f))
-            if (selected) {
-                val mark = TextView(this)
-                mark.text = "✓"
-                mark.textSize = 18f
-                mark.setTextColor(primary)
-                row.addView(mark)
-            }
-            row.setOnClickListener {
-                if (Prefs.fontStyle != i) { Prefs.fontStyle = i; recreate() }
-            }
-            body.addView(row, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(6) })
-        }
+        val index = Prefs.fontStyle.coerceIn(0, Themes.fontCount - 1)
+        val button = LinearLayout(this)
+        button.orientation = LinearLayout.HORIZONTAL
+        button.gravity = Gravity.CENTER_VERTICAL
+        button.setPadding(dp(14), dp(12), dp(14), dp(12))
+        button.background = ring(false, 14)
+        val sample = TextView(this)
+        sample.text = Themes.fonts[index].label
+        sample.textSize = 16f
+        Themes.typeface(this, index)?.let { sample.typeface = it }
+        button.addView(sample, LinearLayout.LayoutParams(0, -2, 1f))
+        val arrow = TextView(this)
+        arrow.text = "▾"
+        arrow.textSize = 18f
+        button.addView(arrow)
+        button.setOnClickListener { showFontMenu(button) }
+        body.addView(button, LinearLayout.LayoutParams(-1, -2))
     }
 
-    // ----- Corners -----
-
-    private fun cornerSection() {
-        val names = arrayOf(tr("Padrão", "Default"), tr("Retos", "Square"), tr("Suaves", "Soft"), tr("Redondos", "Round"))
-        val preview = intArrayOf(14, 0, 8, 22)
-        section(tr("Cantos", "Corners"), tr("Formato de botões, cartões e janelas.", "Shape of buttons, cards and dialogs."))
-        val row = newRow()
-        for (i in 0 until Themes.cornerCount) {
-            val selected = i == Prefs.cornerStyle
-            val chip = TextView(this)
-            chip.text = names[i]
-            chip.textSize = 13f
-            chip.gravity = Gravity.CENTER
-            chip.maxLines = 1
-            chip.setPadding(dp(4), dp(12), dp(4), dp(12))
-            chip.background = ring(selected, preview[i], if (selected) tint(primary, 0x26) else Color.TRANSPARENT)
-            if (selected) chip.setTypeface(chip.typeface, Typeface.BOLD)
-            chip.setOnClickListener {
-                if (Prefs.cornerStyle != i) { Prefs.cornerStyle = i; recreate() }
+    /** Floating list of fonts, each name drawn in its own font. */
+    private fun showFontMenu(anchor: View) {
+        val labels = Themes.fonts.map { it.label }
+        val selected = Prefs.fontStyle.coerceIn(0, labels.lastIndex)
+        val popup = android.widget.ListPopupWindow(this)
+        popup.anchorView = anchor
+        popup.width = anchor.width
+        popup.height = (resources.displayMetrics.heightPixels * 0.6f).toInt()
+        popup.isModal = true
+        val bg = GradientDrawable()
+        bg.setColor(MaterialColors.getColor(this, com.google.android.material.R.attr.colorSurfaceContainerHigh, 0))
+        bg.cornerRadius = dp(14).toFloat()
+        popup.setBackgroundDrawable(bg)
+        popup.setAdapter(object : android.widget.ArrayAdapter<String>(
+            this, android.R.layout.simple_list_item_1, labels
+        ) {
+            override fun getView(position: Int, convertView: View?, parent: android.view.ViewGroup): View {
+                val v = super.getView(position, convertView, parent) as TextView
+                v.text = labels[position]
+                v.textSize = 16f
+                v.typeface = Themes.typeface(context, position) ?: Typeface.DEFAULT
+                v.setTextColor(
+                    if (position == selected) primary
+                    else MaterialColors.getColor(v, com.google.android.material.R.attr.colorOnSurface)
+                )
+                v.setPadding(dp(16), dp(12), dp(16), dp(12))
+                return v
             }
-            row.addView(chip, LinearLayout.LayoutParams(0, -2, 1f).apply { setMargins(dp(3), 0, dp(3), 0) })
+        })
+        popup.setOnItemClickListener { _, _, position, _ ->
+            popup.dismiss()
+            if (Prefs.fontStyle != position) { Prefs.fontStyle = position; recreate() }
         }
+        popup.show()
+        popup.listView?.setSelection(selected)
     }
 
     // ----- Reset -----

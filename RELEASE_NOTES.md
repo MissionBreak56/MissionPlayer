@@ -1,22 +1,16 @@
-## MissionPlayer v2.9.0 — Configurações, roda de cores, imagem de fundo e mais fontes
+## MissionPlayer v2.9.1 — Cores redondas, cor livre compacta e fonte em menu flutuante
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.9.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.9.1-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
 
 ### Novidades
-- **Tela de Configurações:** o menu flutuante da tela inicial foi substituído por uma engrenagem que abre uma tela própria, com tudo organizado em seções: *Aparência* (Temas e Personalização avançada), *Biblioteca* (Organizar abas e Itens ocultos), *Áudio e letras* (Equalizador e a chave de Letras automáticas) e *Mais* (Estatísticas e Sobre).
-- **Roda de cores** na cor de destaque: arraste no círculo para escolher qualquer tom e toque numa das 5 intensidades (pastel, suave, vivo, forte e escuro). Cada escolha tem versão clara e escura. As 16 cores prontas e *Usar a cor do tema* continuam disponíveis.
-- **Imagem da galeria como fundo:** em *Cor do fundo* agora dá para escolher uma foto da galeria, ajustar a visibilidade (ela se mistura com a cor do fundo para o texto continuar legível), trocar ou remover. A tela *Tocando agora* mantém o visual liquid glass da capa.
-- **Mais fontes:** de 9 para 19 opções. Novas do sistema: *Padrão do sistema, Fina, Versalete, Condensada leve, Condensada média* e *Serifa mono*. Novas embutidas (SIL Open Font License): *Arredondada (Fredoka), Manuscrita (Amatic), Rabisco (Intuitive), Serifa elegante (Source Serif)* e *Moderna (Hanken Grotesk)*.
-- **Usar a fonte do tema:** nova opção na fonte, igual à da cor, que mantém a fonte própria de cada tema (a opção *Padrão* virou *Padrão do sistema*, uma fonte explícita).
+- **Bolinhas de cor redondas:** as 16 cores de destaque estavam achatadas (ovais); agora são círculos de verdade.
+- **Cor livre compacta:** nova opção *Barras (compacto)* ao lado da *Roda*, com uma barra de tom (arco-íris) e uma barra de intensidade, mais uma prévia da cor. Na roda, as bolinhas de intensidade foram trocadas por uma barra.
+- **Fonte em menu flutuante:** a lista longa virou um botão que abre um menu flutuante; cada fonte aparece escrita no próprio estilo e a atual vem destacada.
 
-### Correção
-- **A fonte não mudava com alguns temas** (os temas completos T8 a T14 definem a própria fonte no estilo dos textos e ela vencia a escolha do usuário). Agora a fonte escolhida vale em qualquer tema.
-
-### Outras mudanças
-- README atualizado (a seção de compilação foi removida).
-- Restaurar padrões também remove a imagem de fundo.
+### Removido
+- **Opção de cantos** da Personalização avançada (cada tema completo continua com o seu formato de cantos).
 
 ### Alterações técnicas
-- `SettingsActivity`, `ColorWheelView` e `BgImage` (novos); `Themes` com catálogo de fontes (`FontOption`) e 360 overlays gerados para a roda de cores (`accent_wheel.xml`, claro e escuro).
-- `Overlay.Font*` agora também substituem `android:textViewStyle`; fontes embutidas em `res/font` e estilos em `values-v26`.
-- `Prefs`: `bgImageStamp` e `bgImageVisible`; versão 2.8.0 → 2.9.0 (versionCode 23).
+- `CustomizeActivity`: paleta com células de tamanho fixo, `wheelBlock` reescrito (roda/barras + barra de intensidade) e `ListPopupWindow` para as fontes.
+- `Prefs.accentCompact` (novo); `Themes` não aplica mais o overlay de cantos.
+- Versão: 2.9.0 → 2.9.1 (versionCode 24).

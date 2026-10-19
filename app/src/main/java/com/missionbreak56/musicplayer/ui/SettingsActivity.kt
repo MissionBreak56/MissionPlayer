@@ -49,7 +49,7 @@ class SettingsActivity : BaseActivity() {
         ) { open(ThemesActivity::class.java) }
         entry(
             tr("Personalização avançada", "Advanced customization"),
-            tr("Ícone, cor de destaque, fonte, cantos e fundo (cor ou imagem)", "Icon, accent color, font, corners and background (color or image)")
+            tr("Ícone, cor de destaque, fonte e fundo (cor ou imagem)", "Icon, accent color, font and background (color or image)")
         ) { open(CustomizeActivity::class.java) }
 
         header(tr("Biblioteca", "Library"))

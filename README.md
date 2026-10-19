@@ -116,19 +116,19 @@ Configurações → *Personalização avançada*:
 - **Ícone do app:** 9 opções — *Original*, e variações *Verde, Azul, Violeta, Dourado, Rosa*, mais
   *Vinil, Ondas* e *Fones*. A troca é imediata (a tela inicial pode levar alguns segundos para
   atualizar). Os ícones também têm versão monocromática para o Android 13+ (ícones temáticos).
-- **Cor de destaque:** 16 cores prontas, *Usar a cor do tema* ou a **roda de cores**: arraste no
-  círculo para escolher qualquer tom (passos de 5°) e toque numa das 5 intensidades (do pastel ao
-  escuro). Cada escolha tem versão clara e escura.
+- **Cor de destaque:** 16 cores prontas (bolinhas redondas), *Usar a cor do tema* ou a **cor livre**:
+  na **roda de cores**, arraste no círculo para escolher o tom (passos de 5°); no modo **Barras
+  (compacto)**, use uma barra para o tom e outra para a intensidade. Nos dois modos a intensidade
+  vai do pastel ao escuro, numa barra. Cada escolha tem versão clara e escura.
 - **Cor do fundo:** *Padrão, Puro, Grafite, Azul-noite, Sépia* e *Musgo*, cada um com versão clara e
   escura. Também dá para usar uma **imagem da galeria** como fundo, com controle de visibilidade
   (a imagem se mistura com a cor do fundo para o texto continuar legível) e botão para remover. A
   tela *Tocando agora* mantém o visual liquid glass da capa.
-- **Fonte:** *Usar a fonte do tema* (cada tema completo tem a sua) ou uma de 19 fontes: *Serifada,
+- **Fonte:** menu flutuante (cada nome aparece na própria fonte) com *Usar a fonte do tema* ou uma de 19 fontes: *Serifada,
   Monoespaçada, Condensada, Leve, Média, Casual, Cursiva, Pesada, Padrão do sistema, Fina, Versalete,
   Condensada leve, Condensada média, Serifa mono* e as embutidas *Arredondada (Fredoka), Manuscrita
   (Amatic), Rabisco (Intuitive), Serifa elegante (Source Serif)* e *Moderna (Hanken Grotesk)*. A
   fonte escolhida vale em todo o app, inclusive com os temas completos.
-- **Cantos:** *Padrão, Retos, Suaves* ou *Redondos* para botões, cartões e janelas.
 - *Restaurar padrões* volta tudo (inclusive o ícone e a imagem de fundo) ao original.
 
 As escolhas valem por cima do tema escolhido em *Temas* e ficam salvas. As fontes embutidas usam a
@@ -210,6 +210,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.9.1** | Bolinhas de cor redondas; cor livre compacta com barras de tom e intensidade; fonte em menu flutuante; remove a opção de cantos |
 | **2.9.0** | Tela de Configurações (substitui o menu flutuante); roda de cores no destaque; imagem da galeria como fundo; 19 fontes e *Usar a fonte do tema*; corrige a fonte que não mudava com os temas completos |
 | **2.8.0** | Barra alfabética e ordenação dentro de álbuns/pastas/artistas/listas; personalização avançada (9 ícones, 16 cores de destaque, 6 fundos, 9 fontes, 4 estilos de cantos) |
 | **2.7.0** | Letras automáticas (LRCLIB, NetEase, Kugou, lyrics.ovh), estatísticas e 7 novos temas |
