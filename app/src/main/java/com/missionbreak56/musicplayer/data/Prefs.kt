@@ -68,6 +68,18 @@ object Prefs {
 
     // ----- Appearance / list options -----
 
+    /**
+     * The theme picker was removed: everyone uses the base theme with the personalization settings.
+     * Someone who had picked another theme starts from the default look instead.
+     */
+    fun migrateThemeRemoval() {
+        val st = store()
+        if (st.getInt(KEY_THEME, 0) != 0) {
+            st.edit().putInt(KEY_THEME, 0).putInt(KEY_ACCENT, DEFAULT_ACCENT)
+                .putInt(KEY_FONT, DEFAULT_FONT).apply()
+        }
+    }
+
     var theme: Int
         get() = sp?.getInt(KEY_THEME, 0) ?: 0
         set(value) { store().edit().putInt(KEY_THEME, value).apply() }

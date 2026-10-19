@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Customization: theme, light/dark mode, app icon, accent color, background, font and corner style.
+ * Customization: light/dark mode, app icon, accent color, background, font and corner style.
  * Look settings are layered over the chosen theme (see [Themes.applyOverlays]).
  */
 class CustomizeActivity : BaseActivity() {
@@ -90,7 +90,6 @@ class CustomizeActivity : BaseActivity() {
 
     private fun build() {
         body.removeAllViews()
-        themeSection()
         modeSection()
         iconSection()
         accentSection()
@@ -184,7 +183,9 @@ class CustomizeActivity : BaseActivity() {
         val popup = android.widget.ListPopupWindow(this)
         popup.anchorView = anchor
         popup.width = anchor.width
-        popup.height = (resources.displayMetrics.heightPixels * 0.6f).toInt()
+        // short lists only take the space they need
+        popup.height = if (labels.size <= 6) android.widget.ListPopupWindow.WRAP_CONTENT
+        else (resources.displayMetrics.heightPixels * 0.6f).toInt()
         popup.isModal = true
         val bg = GradientDrawable()
         bg.setColor(MaterialColors.getColor(this, com.google.android.material.R.attr.colorSurfaceContainerHigh, 0))
@@ -211,24 +212,6 @@ class CustomizeActivity : BaseActivity() {
         }
         popup.show()
         popup.listView?.setSelection(selected)
-    }
-
-    private fun themeSection() {
-        section(
-            tr("Tema", "Theme"),
-            tr("Cores e visual completo do app. Ao trocar, a cor de destaque e a fonte seguem o tema.", "Colors and full look of the app. When you change it, the accent color and font follow the theme.")
-        )
-        val names = resources.getStringArray(com.missionbreak56.musicplayer.R.array.theme_names).toList()
-        val current = Prefs.theme.coerceIn(0, names.lastIndex)
-        dropdownButton(names[current]) { anchor ->
-            showListMenu(anchor, names, current) { index ->
-                // A new theme starts with its own accent color and font.
-                Prefs.accent = -1
-                Prefs.fontStyle = 0
-                Prefs.theme = index
-                recreate()
-            }
-        }
     }
 
     private fun modeSection() {
@@ -619,8 +602,8 @@ class CustomizeActivity : BaseActivity() {
                 .setTitle(tr("Restaurar padrões?", "Restore defaults?"))
                 .setMessage(
                     tr(
-                        "Tema, modo, ícone, cor de destaque, fundo (inclusive a imagem) e fonte voltarão ao padrão do app.",
-                        "Theme, mode, icon, accent color, background (including the image) and font will go back to the app defaults."
+                        "Modo, ícone, cor de destaque, fundo (inclusive a imagem) e fonte voltarão ao padrão do app.",
+                        "Mode, icon, accent color, background (including the image) and font will go back to the app defaults."
                     )
                 )
                 .setPositiveButton(tr("Restaurar", "Restore")) { _, _ ->

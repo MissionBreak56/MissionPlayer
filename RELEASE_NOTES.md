@@ -1,16 +1,14 @@
-## MissionPlayer v2.10.0 — Personalização unificada e novos padrões
+## MissionPlayer v2.10.1 — Sem temas, só personalização
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.10.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.10.1-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
 
 ### Mudanças
-- **"Temas" removido das Configurações.** O **Tema** (os 8 de cor e os 7 completos) e o **Modo** (Do sistema / Claro / Escuro) agora são **menus flutuantes** no topo da tela de personalização, no mesmo estilo do menu de fontes.
-- **"Personalização avançada" agora se chama "Personalização"**.
-- **Novos padrões** (para quem ainda não tinha escolhido nada): **fundo preto puro**, **fonte do sistema** e **cor de destaque azul-escuro** (tom 220°, intensidade *Escuro*).
-- A opção de fundo **"Padrão" foi removida**; quem usava "Padrão" passa para **Puro**. *Restaurar padrões* também volta tema e modo.
-- **Mini player alinhado**: margens esquerda e direita iguais, espaços iguais entre play, próxima e fila, e centralização vertical corrigida.
+- **Temas removidos de vez**: sai a escolha de tema (os de cor e os completos como Neon e Papel). Na tela **Personalização** ficam apenas **Modo** (Do sistema / Claro / Escuro), **Ícone do app**, **Cor de Destaque**, **Cor do fundo** (e imagem da galeria) e **Fonte**.
+- Quem estava usando outro tema volta ao **visual padrão** (preto puro, fonte do sistema, destaque azul-escuro); as demais escolhas continuam salvas.
+- **Janela flutuante do modo**: agora tem só o tamanho necessário para as 3 opções, em vez de ocupar quase a tela toda.
+- Tela **Sobre**, README e texto de *Restaurar padrões* atualizados.
 
 ### Alterações técnicas
-- `ThemesActivity`, `ThemeAdapter` e layouts removidos; `CustomizeActivity` ganha `themeSection()` e `modeSection()` com `ListPopupWindow`.
-- `Prefs`: `DEFAULT_ACCENT = 544`, `DEFAULT_FONT = 9`, `DEFAULT_BG = 1` (valor salvo 0 vira 1).
-- `layout_mini_player.xml`: paddings e tamanhos dos botões simétricos.
-- Versão: 2.9.11 → 2.10.0 (versionCode 35).
+- `CustomizeActivity`: remove `themeSection()`; `showListMenu` usa `WRAP_CONTENT` para listas curtas.
+- `Prefs.migrateThemeRemoval()` (chamado em `App`): zera o tema salvo e recoloca o destaque e a fonte padrão.
+- Versão: 2.10.0 → 2.10.1 (versionCode 36).

@@ -118,7 +118,7 @@ fechar.
 
 ### Configurações
 Toque na engrenagem no topo da tela inicial. Tudo o que ficava no menu flutuante agora está aqui:
-- **Aparência:** *Personalização* (tema, modo claro/escuro/do sistema, ícone, cor de destaque, fundo e fonte).
+- **Aparência:** *Personalização* (modo claro/escuro/do sistema, ícone, cor de destaque, fundo e fonte).
 - **Biblioteca:** *Organizar abas* e *Itens ocultos*.
 - **Áudio e letras:** *Equalizador* e a chave de *Letras automáticas*.
 - **Mais:** *Estatísticas* e *Sobre*.
@@ -126,8 +126,6 @@ Toque na engrenagem no topo da tela inicial. Tudo o que ficava no menu flutuante
 ### Personalização
 Configurações → *Personalização*. A tela abre com o visual padrão: **fundo preto puro** (no modo escuro),
 **fonte do sistema** e uma **cor de destaque azul-escuro**.
-- **Tema:** menu flutuante com os 8 temas de cor e os 7 temas completos. Ao trocar de tema, a cor de
-  destaque e a fonte passam a seguir o tema.
 - **Modo:** menu flutuante com *Do sistema*, *Claro* e *Escuro*.
 - **Ícone do app:** menu flutuante com a imagem de cada ícone, 9 opções — *Original*, e variações *Verde, Azul, Violeta, Dourado, Rosa*, mais
   *Vinil, Ondas* e *Fones*. A troca é imediata (a tela inicial pode levar alguns segundos para
@@ -140,14 +138,14 @@ Configurações → *Personalização*. A tela abre com o visual padrão: **fund
   escura. Também dá para usar uma **imagem da galeria** como fundo, com controle de visibilidade
   (a imagem se mistura com a cor do fundo para o texto continuar legível) e botão para remover. A
   tela *Tocando agora* mantém o visual liquid glass da capa.
-- **Fonte:** menu flutuante (cada nome aparece na própria fonte); o padrão é *Padrão do sistema*. Há *Usar a fonte do tema* e 19 fontes: *Serifada,
+- **Fonte:** menu flutuante (cada nome aparece na própria fonte); o padrão é *Padrão do sistema*. Há 19 opções: *Serifada,
   Monoespaçada, Condensada, Leve, Média, Casual, Cursiva, Pesada, Padrão do sistema, Fina, Versalete,
   Condensada leve, Condensada média, Serifa mono* e as embutidas *Arredondada (Fredoka), Manuscrita
   (Amatic), Rabisco (Intuitive), Serifa elegante (Source Serif)* e *Moderna (Hanken Grotesk)*. A
-  fonte escolhida vale em todo o app, inclusive com os temas completos.
-- *Restaurar padrões* pede confirmação e, se você confirmar, volta tudo (tema, modo, ícone, cor, fundo com imagem e fonte) ao padrão do app.
+  fonte escolhida vale em todo o app.
+- *Restaurar padrões* pede confirmação e, se você confirmar, volta tudo (modo, ícone, cor, fundo com imagem e fonte) ao padrão do app.
 
-As escolhas valem por cima do tema escolhido e ficam salvas. Ao **trocar de tema**, a cor de destaque e a fonte voltam para *Usar do tema*. As fontes embutidas usam a
+As escolhas ficam salvas. As fontes embutidas usam a
 SIL Open Font License (texto em `FONTS-OFL.txt`).
 
 ### Estatísticas
@@ -175,9 +173,7 @@ tempo ouvido).
   Valores altos podem distorcer o som e prejudicar a audição ou o alto-falante.
 
 ### Aparência
-- 8 cores de destaque e modo **claro / escuro / do sistema** (fundo preto no modo escuro).
-- **7 temas completos** com visual próprio (cores, fonte e formato dos cantos): *Neon, Papel, Oceano,
-  Pôr do sol, Mono, Floresta* e *Rosé*. Escolha em Configurações → *Personalização* → *Tema*.
+- Modo **claro / escuro / do sistema** e cor de destaque livre (fundo preto puro por padrão no modo escuro).
 - **Tela cheia:** o app ocupa a tela toda, inclusive atrás do entalhe/câmera e da barra de status, sem
   faixa preta no topo; o conteúdo continua longe da câmera e das barras.
 - Ícone adaptativo (Android 8+), com versão monocromática para o tema de ícones do Android 13+.
@@ -234,6 +230,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.10.1** | Remove o tema de vez: ficam só as personalizações (modo, ícone, cor, fundo e fonte); janela flutuante do modo com tamanho ajustado |
 | **2.10.0** | *Temas* some das Configurações: tema e modo (claro/escuro) viram menus flutuantes dentro de *Personalização* (antes "Personalização avançada"); padrões novos: fundo preto puro, fonte do sistema e cor de destaque azul-escuro; mini player alinhado |
 | **2.9.11** | Corrige o mini player que sumia ao voltar ao app com a música pausada |
 | **2.9.10** | Liquid glass mistura as 4 cores de tons diferentes da capa |
