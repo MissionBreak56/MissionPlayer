@@ -38,7 +38,6 @@ object Prefs {
     private const val KEY_CORNERS = "custom_corners"
     private const val KEY_BG = "custom_background"
     private const val KEY_ICON = "custom_icon"
-    private const val KEY_ACCENT_COMPACT = "custom_accent_compact"
     private const val KEY_BG_IMAGE = "custom_bg_image"
     private const val KEY_BG_VISIBLE = "custom_bg_image_visible"
 
@@ -83,11 +82,6 @@ object Prefs {
     var accent: Int
         get() = sp?.getInt(KEY_ACCENT, -1) ?: -1
         set(value) { store().edit().putInt(KEY_ACCENT, value).apply() }
-
-    /** Free accent color picker: false = wheel, true = compact bars. */
-    var accentCompact: Boolean
-        get() = sp?.getBoolean(KEY_ACCENT_COMPACT, false) ?: false
-        set(value) { store().edit().putBoolean(KEY_ACCENT_COMPACT, value).apply() }
 
     var fontStyle: Int
         get() = sp?.getInt(KEY_FONT, 0) ?: 0

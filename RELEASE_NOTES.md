@@ -1,16 +1,14 @@
-## MissionPlayer v2.9.1 — Cores redondas, cor livre compacta e fonte em menu flutuante
+## MissionPlayer v2.9.2 — Cor de Destaque simplificada e ícone em menu flutuante
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.9.1-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.9.2-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
 
-### Novidades
-- **Bolinhas de cor redondas:** as 16 cores de destaque estavam achatadas (ovais); agora são círculos de verdade.
-- **Cor livre compacta:** nova opção *Barras (compacto)* ao lado da *Roda*, com uma barra de tom (arco-íris) e uma barra de intensidade, mais uma prévia da cor. Na roda, as bolinhas de intensidade foram trocadas por uma barra.
-- **Fonte em menu flutuante:** a lista longa virou um botão que abre um menu flutuante; cada fonte aparece escrita no próprio estilo e a atual vem destacada.
-
-### Removido
-- **Opção de cantos** da Personalização avançada (cada tema completo continua com o seu formato de cantos).
+### Mudanças
+- **Cor de Destaque:** a seção com as 16 bolinhas de cores prontas foi removida. A antiga "Cor livre" agora se chama **Cor de Destaque** e mantém a opção *Usar a cor do tema*.
+- **Só barras:** a roda de cores foi apagada; ficam a barra de tom (arco-íris), a barra de intensidade e a prévia da cor.
+- **Ícone do app em menu flutuante:** igual ao das fontes, um botão mostra o ícone atual e abre uma lista com a imagem e o nome de cada ícone.
+- Quem usava uma das 16 cores prontas mantém a mesma cor, agora como cor personalizada.
 
 ### Alterações técnicas
-- `CustomizeActivity`: paleta com células de tamanho fixo, `wheelBlock` reescrito (roda/barras + barra de intensidade) e `ListPopupWindow` para as fontes.
-- `Prefs.accentCompact` (novo); `Themes` não aplica mais o overlay de cantos.
-- Versão: 2.9.0 → 2.9.1 (versionCode 24).
+- `ColorWheelView` removido; `Themes.migrateLegacyAccent()` converte a cor pronta salva (chamado no `App`); `Prefs.accentCompact` removido.
+- `CustomizeActivity`: `accentSection` reescrita (tema ou barras) e `showIconMenu` com `ListPopupWindow`.
+- Versão: 2.9.1 → 2.9.2 (versionCode 25).

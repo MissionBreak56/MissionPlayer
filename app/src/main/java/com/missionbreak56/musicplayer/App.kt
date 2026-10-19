@@ -12,6 +12,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         Prefs.init(this)
+        com.missionbreak56.musicplayer.ui.Themes.migrateLegacyAccent()
         Labels.init(this)
         AppCompatDelegate.setDefaultNightMode(Prefs.nightMode)
         if (Prefs.autoLyrics) LyricsWorker.schedule(this)

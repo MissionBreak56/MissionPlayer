@@ -158,6 +158,12 @@ class CustomizeActivity : BaseActivity() {
 
     // ----- Icon -----
 
+    private fun iconNames() = arrayOf(
+        tr("Original", "Original"), tr("Verde", "Green"), tr("Azul", "Blue"),
+        tr("Violeta", "Violet"), tr("Dourado", "Gold"), tr("Rosa", "Pink"),
+        tr("Vinil", "Vinyl"), tr("Ondas", "Waves"), tr("Fones", "Headphones")
+    )
+
     private fun iconSection() {
         section(
             tr("Ícone do app", "App icon"),
@@ -166,156 +172,114 @@ class CustomizeActivity : BaseActivity() {
                 "Changes the home screen icon. It may take a few seconds to update."
             )
         )
-        val names = arrayOf(
-            tr("Original", "Original"), tr("Verde", "Green"), tr("Azul", "Blue"),
-            tr("Violeta", "Violet"), tr("Dourado", "Gold"), tr("Rosa", "Pink"),
-            tr("Vinil", "Vinyl"), tr("Ondas", "Waves"), tr("Fones", "Headphones")
-        )
-        val perRow = 3
-        var row = newRow()
-        for (i in 0 until IconManager.count) {
-            if (i > 0 && i % perRow == 0) row = newRow()
-            val selected = i == Prefs.iconVariant
-            val cell = LinearLayout(this)
-            cell.orientation = LinearLayout.VERTICAL
-            cell.gravity = Gravity.CENTER_HORIZONTAL
-            cell.setPadding(dp(4), dp(6), dp(4), dp(6))
+        val names = iconNames()
+        val index = Prefs.iconVariant.coerceIn(0, IconManager.count - 1)
+        val button = LinearLayout(this)
+        button.orientation = LinearLayout.HORIZONTAL
+        button.gravity = Gravity.CENTER_VERTICAL
+        button.setPadding(dp(14), dp(10), dp(14), dp(10))
+        button.background = ring(false, 14)
+        val img = ImageView(this)
+        img.setImageResource(IconManager.icons[index])
+        roundClip(img, 10)
+        button.addView(img, LinearLayout.LayoutParams(dp(40), dp(40)))
+        val label = TextView(this)
+        label.text = names[index]
+        label.textSize = 16f
+        button.addView(label, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(14) })
+        val arrow = TextView(this)
+        arrow.text = "▾"
+        arrow.textSize = 18f
+        button.addView(arrow)
+        button.setOnClickListener { showIconMenu(button) }
+        body.addView(button, LinearLayout.LayoutParams(-1, -2))
+    }
 
-            val frame = FrameLayout(this)
-            frame.background = ring(selected, 20)
-            frame.setPadding(dp(4), dp(4), dp(4), dp(4))
-            val img = ImageView(this)
-            img.setImageResource(IconManager.icons[i])
-            roundClip(img, 16)
-            frame.addView(img, FrameLayout.LayoutParams(dp(64), dp(64)))
-            cell.addView(frame, LinearLayout.LayoutParams(-2, -2))
-            cell.addView(caption(names[i], selected), LinearLayout.LayoutParams(-2, -2).apply { topMargin = dp(4) })
-
-            cell.setOnClickListener {
-                if (Prefs.iconVariant != i) {
-                    Prefs.iconVariant = i
-                    IconManager.apply(this, i)
-                    Toast.makeText(
-                        this,
-                        tr("Ícone alterado: ${names[i]}", "Icon changed: ${names[i]}"),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    build()
+    /** Floating list of app icons, each with its picture. */
+    private fun showIconMenu(anchor: View) {
+        val names = iconNames()
+        val selected = Prefs.iconVariant.coerceIn(0, IconManager.count - 1)
+        val popup = android.widget.ListPopupWindow(this)
+        popup.anchorView = anchor
+        popup.width = anchor.width
+        popup.height = (resources.displayMetrics.heightPixels * 0.6f).toInt()
+        popup.isModal = true
+        val bg = GradientDrawable()
+        bg.setColor(MaterialColors.getColor(this, com.google.android.material.R.attr.colorSurfaceContainerHigh, 0))
+        bg.cornerRadius = dp(14).toFloat()
+        popup.setBackgroundDrawable(bg)
+        popup.setAdapter(object : android.widget.BaseAdapter() {
+            override fun getCount(): Int = IconManager.count
+            override fun getItem(position: Int): Any = names[position]
+            override fun getItemId(position: Int): Long = position.toLong()
+            override fun getView(position: Int, convertView: View?, parent: android.view.ViewGroup): View {
+                val row = LinearLayout(this@CustomizeActivity)
+                row.orientation = LinearLayout.HORIZONTAL
+                row.gravity = Gravity.CENTER_VERTICAL
+                row.setPadding(dp(16), dp(8), dp(16), dp(8))
+                val pic = ImageView(this@CustomizeActivity)
+                pic.setImageResource(IconManager.icons[position])
+                roundClip(pic, 10)
+                row.addView(pic, LinearLayout.LayoutParams(dp(40), dp(40)))
+                val t = TextView(this@CustomizeActivity)
+                t.text = names[position]
+                t.textSize = 16f
+                t.setTextColor(
+                    if (position == selected) primary
+                    else MaterialColors.getColor(t, com.google.android.material.R.attr.colorOnSurface)
+                )
+                row.addView(t, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(14) })
+                if (position == selected) {
+                    val mark = TextView(this@CustomizeActivity)
+                    mark.text = "✓"
+                    mark.textSize = 18f
+                    mark.setTextColor(primary)
+                    row.addView(mark)
                 }
+                return row
             }
-            row.addView(cell, LinearLayout.LayoutParams(0, -2, 1f))
+        })
+        popup.setOnItemClickListener { _, _, position, _ ->
+            popup.dismiss()
+            if (Prefs.iconVariant != position) {
+                Prefs.iconVariant = position
+                IconManager.apply(this, position)
+                Toast.makeText(
+                    this,
+                    tr("Ícone alterado: ${names[position]}", "Icon changed: ${names[position]}"),
+                    Toast.LENGTH_SHORT
+                ).show()
+                build()
+            }
         }
-        // keep the last row's cells the same width as the others
-        val missing = (perRow - IconManager.count % perRow) % perRow
-        repeat(missing) { row.addView(View(this), LinearLayout.LayoutParams(0, 1, 1f)) }
+        popup.show()
+        popup.listView?.setSelection(selected)
     }
 
     // ----- Accent color -----
 
+    /** Accent color: the theme's own, or any hue (bar) at five intensities (bar). */
     private fun accentSection() {
-        val names = arrayOf(
-            tr("Vermelho", "Red"), tr("Laranja", "Orange"), tr("Âmbar", "Amber"), tr("Lima", "Lime"),
-            tr("Verde", "Green"), tr("Menta", "Mint"), tr("Turquesa", "Teal"), tr("Céu", "Sky"),
-            tr("Azul", "Blue"), tr("Índigo", "Indigo"), tr("Violeta", "Violet"), tr("Roxo", "Purple"),
-            tr("Rosa", "Pink"), tr("Vinho", "Wine"), tr("Marrom", "Brown"), tr("Grafite", "Graphite")
-        )
         val current = Prefs.accent
-        val currentName = when {
-            current in names.indices -> names[current]
-            Themes.isWheel(current) -> tr("Roda de cores", "Color wheel")
-            else -> tr("Do tema", "From theme")
-        }
+        val onCustom = Themes.isWheel(current)
+        var hue = if (onCustom) Themes.wheelHue(current) else 0
+        var tone = if (onCustom) Themes.wheelTone(current) else 2
+
         section(
-            tr("Cor de destaque", "Accent color"),
-            tr("Escolhida: $currentName", "Selected: $currentName")
+            tr("Cor de Destaque", "Accent color"),
+            if (onCustom) tr("Cor personalizada", "Custom color")
+            else tr("Usando a cor do tema", "Using the theme's color")
         )
 
         val themeChip = TextView(this)
         themeChip.text = tr("Usar a cor do tema", "Use the theme's color")
         themeChip.textSize = 14f
         themeChip.setPadding(dp(16), dp(10), dp(16), dp(10))
-        themeChip.background = ring(current < 0, 20, if (current < 0) tint(primary, 0x26) else Color.TRANSPARENT)
+        themeChip.background = ring(!onCustom, 20, if (!onCustom) tint(primary, 0x26) else Color.TRANSPARENT)
         themeChip.setOnClickListener {
             if (Prefs.accent != -1) { Prefs.accent = -1; recreate() }
         }
-        body.addView(themeChip, LinearLayout.LayoutParams(-2, -2).apply { bottomMargin = dp(8) })
-
-        val perRow = 8
-        var row = newRow()
-        for (i in Themes.accentColors.indices) {
-            if (i > 0 && i % perRow == 0) row = newRow()
-            val selected = i == current
-            val frame = FrameLayout(this)
-            frame.setPadding(dp(3), dp(3), dp(3), dp(3))
-            val ringBg = GradientDrawable()
-            ringBg.shape = GradientDrawable.OVAL
-            ringBg.setColor(Color.TRANSPARENT)
-            ringBg.setStroke(dp(if (selected) 3 else 0), if (selected) MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurface, 0) else Color.TRANSPARENT)
-            frame.background = ringBg
-            val dot = View(this)
-            val dotBg = GradientDrawable()
-            dotBg.shape = GradientDrawable.OVAL
-            dotBg.setColor(Themes.accentColors[i])
-            dot.background = dotBg
-            frame.addView(dot, FrameLayout.LayoutParams(-1, -1))
-            frame.contentDescription = names[i]
-            frame.setOnClickListener {
-                if (Prefs.accent != i) { Prefs.accent = i; recreate() }
-            }
-            // fixed square size inside a weighted cell, so the dots are real circles
-            val cell = FrameLayout(this)
-            cell.addView(frame, FrameLayout.LayoutParams(dp(38), dp(38), Gravity.CENTER))
-            row.addView(cell, LinearLayout.LayoutParams(0, dp(44), 1f))
-        }
-        wheelBlock(current)
-    }
-
-    /**
-     * Free accent color: a hue wheel, or (compact mode) a hue bar, plus a bar for the tone
-     * (pastel .. deep). Both modes save the same value.
-     */
-    private fun wheelBlock(current: Int) {
-        val onWheel = Themes.isWheel(current)
-        var hue = if (onWheel) Themes.wheelHue(current) else 0
-        var tone = if (onWheel) Themes.wheelTone(current) else 2
-        val compact = Prefs.accentCompact
-
-        val title = TextView(this)
-        title.text = tr("Cor livre", "Free color")
-        title.textSize = 15f
-        title.setTypeface(title.typeface, Typeface.BOLD)
-        body.addView(title, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(18) })
-        val hint = TextView(this)
-        hint.text = if (compact) {
-            tr("Use as barras para escolher o tom e a intensidade.", "Use the bars to pick the hue and the intensity.")
-        } else {
-            tr("Arraste no círculo para escolher o tom e use a barra para a intensidade.", "Drag on the circle to pick the hue and use the bar for the intensity.")
-        }
-        hint.textSize = 13f
-        hint.alpha = 0.7f
-        body.addView(hint, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
-
-        // wheel / bars switch
-        val modeRow = newRow()
-        val modeNames = arrayOf(tr("Roda", "Wheel"), tr("Barras (compacto)", "Bars (compact)"))
-        for (m in 0..1) {
-            val selected = (m == 1) == compact
-            val chip = TextView(this)
-            chip.text = modeNames[m]
-            chip.textSize = 13f
-            chip.gravity = Gravity.CENTER
-            chip.maxLines = 1
-            chip.setPadding(dp(4), dp(10), dp(4), dp(10))
-            chip.background = ring(selected, 20, if (selected) tint(primary, 0x26) else Color.TRANSPARENT)
-            if (selected) chip.setTypeface(chip.typeface, Typeface.BOLD)
-            chip.setOnClickListener {
-                if (Prefs.accentCompact != (m == 1)) {
-                    Prefs.accentCompact = (m == 1)
-                    build()
-                }
-            }
-            modeRow.addView(chip, LinearLayout.LayoutParams(0, -2, 1f).apply { setMargins(dp(3), 0, dp(3), 0) })
-        }
+        body.addView(themeChip, LinearLayout.LayoutParams(-2, -2).apply { bottomMargin = dp(4) })
 
         fun commit() {
             Prefs.accent = Themes.wheelCode(hue, tone)
@@ -326,64 +290,46 @@ class CustomizeActivity : BaseActivity() {
             tr("Pastel", "Pastel"), tr("Suave", "Soft"), tr("Vivo", "Vivid"),
             tr("Forte", "Strong"), tr("Escuro", "Deep")
         )
-        var wheel: ColorWheelView? = null
-        var previewBg: GradientDrawable? = null
+
+        // live preview of the chosen color
+        val preview = View(this)
+        val previewBg = GradientDrawable()
+        previewBg.shape = GradientDrawable.RECTANGLE
+        previewBg.cornerRadius = dp(12).toFloat()
+        previewBg.setColor(Themes.wheelColor(hue, tone))
+        preview.background = previewBg
+        preview.alpha = if (onCustom) 1f else 0.5f
+        body.addView(preview, LinearLayout.LayoutParams(-1, dp(36)).apply { topMargin = dp(10) })
+
+        val hueLabel = TextView(this)
+        hueLabel.text = tr("Tom", "Hue")
+        hueLabel.textSize = 13f
+        body.addView(hueLabel, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(10) })
+        val hueBar = SeekBar(this)
+        hueBar.max = Themes.WHEEL_HUES - 1
+        hueBar.progress = hue
+        val rainbow = IntArray(Themes.WHEEL_HUES + 1) {
+            Color.HSVToColor(floatArrayOf(it * 5f, 0.85f, 0.95f))
+        }
+        val track = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, rainbow)
+        track.cornerRadius = dp(8).toFloat()
+        hueBar.background = android.graphics.drawable.InsetDrawable(track, dp(14), dp(11), dp(14), dp(11))
+        hueBar.progressDrawable = android.graphics.drawable.ColorDrawable(Color.TRANSPARENT)
+        hueBar.thumbTintList = android.content.res.ColorStateList.valueOf(Color.WHITE)
+        hueBar.setPadding(dp(14), 0, dp(14), 0)
+        hueBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(bar: SeekBar?, progress: Int, fromUser: Boolean) {
+                hue = progress
+                previewBg.setColor(Themes.wheelColor(hue, tone))
+                preview.alpha = 1f
+            }
+            override fun onStartTrackingTouch(bar: SeekBar?) {}
+            override fun onStopTrackingTouch(bar: SeekBar?) { commit() }
+        })
+        body.addView(hueBar, LinearLayout.LayoutParams(-1, dp(40)))
+
         val toneLabel = TextView(this)
         fun toneText() = tr("Intensidade: ${toneNames[tone]}", "Intensity: ${toneNames[tone]}")
-
-        if (!compact) {
-            val w = ColorWheelView(this)
-            w.hue = hue
-            w.tone = tone
-            w.showThumb = onWheel
-            w.onPick = { h, final ->
-                hue = h
-                if (final) commit()
-            }
-            wheel = w
-            body.addView(w, LinearLayout.LayoutParams(-1, -2).apply {
-                gravity = Gravity.CENTER_HORIZONTAL
-                topMargin = dp(8)
-            })
-        } else {
-            // live preview of the chosen color
-            val preview = View(this)
-            val pb = GradientDrawable()
-            pb.shape = GradientDrawable.RECTANGLE
-            pb.cornerRadius = dp(12).toFloat()
-            pb.setColor(Themes.wheelColor(hue, tone))
-            preview.background = pb
-            previewBg = pb
-            body.addView(preview, LinearLayout.LayoutParams(-1, dp(36)).apply { topMargin = dp(10) })
-
-            val hueLabel = TextView(this)
-            hueLabel.text = tr("Tom", "Hue")
-            hueLabel.textSize = 13f
-            body.addView(hueLabel, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(10) })
-            val hueBar = SeekBar(this)
-            hueBar.max = Themes.WHEEL_HUES - 1
-            hueBar.progress = hue
-            val rainbow = IntArray(Themes.WHEEL_HUES + 1) {
-                Color.HSVToColor(floatArrayOf(it * 5f, 0.85f, 0.95f))
-            }
-            val track = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, rainbow)
-            track.cornerRadius = dp(8).toFloat()
-            hueBar.background = android.graphics.drawable.InsetDrawable(track, dp(14), dp(11), dp(14), dp(11))
-            hueBar.progressDrawable = android.graphics.drawable.ColorDrawable(Color.TRANSPARENT)
-            hueBar.thumbTintList = android.content.res.ColorStateList.valueOf(Color.WHITE)
-            hueBar.setPadding(dp(14), 0, dp(14), 0)
-            hueBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(bar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    hue = progress
-                    previewBg?.setColor(Themes.wheelColor(hue, tone))
-                }
-                override fun onStartTrackingTouch(bar: SeekBar?) {}
-                override fun onStopTrackingTouch(bar: SeekBar?) { commit() }
-            })
-            body.addView(hueBar, LinearLayout.LayoutParams(-1, dp(40)))
-        }
-
-        // tone bar (both modes)
         toneLabel.text = toneText()
         toneLabel.textSize = 13f
         body.addView(toneLabel, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(10) })
@@ -394,8 +340,8 @@ class CustomizeActivity : BaseActivity() {
             override fun onProgressChanged(bar: SeekBar?, progress: Int, fromUser: Boolean) {
                 tone = progress
                 toneLabel.text = toneText()
-                wheel?.tone = tone
-                previewBg?.setColor(Themes.wheelColor(hue, tone))
+                previewBg.setColor(Themes.wheelColor(hue, tone))
+                preview.alpha = 1f
             }
             override fun onStartTrackingTouch(bar: SeekBar?) {}
             override fun onStopTrackingTouch(bar: SeekBar?) { commit() }

@@ -140,6 +140,17 @@ object Themes {
     val fontCount = fonts.size
     val backgroundCount = backgroundOverlays.size
 
+    /** The 16 ready-made accent colors were removed; keep their users' color as a free color. */
+    fun migrateLegacyAccent() {
+        val a = Prefs.accent
+        if (a in accentColors.indices) {
+            val hsv = FloatArray(3)
+            Color.colorToHSV(accentColors[a], hsv)
+            val hue = Math.round(hsv[0] / 5f) % WHEEL_HUES
+            Prefs.accent = wheelCode(hue, 2)
+        }
+    }
+
     /** Layers the user's look settings over the chosen theme. */
     fun applyOverlays(theme: Resources.Theme, resources: Resources, packageName: String) {
         backgroundOverlays.getOrNull(Prefs.backgroundStyle)?.takeIf { it != 0 }?.let { theme.applyStyle(it, true) }
