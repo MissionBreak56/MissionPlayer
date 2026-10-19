@@ -76,7 +76,7 @@ object CoverSearch {
         val input = EditText(activity)
         input.setSingleLine()
         input.imeOptions = EditorInfo.IME_ACTION_SEARCH
-        input.setText("${song.displayTitle} ${song.displayArtist}".trim())
+        input.setText(song.displayTitle.trim())
         input.setSelection(input.text.length)
         box.addView(input, LinearLayout.LayoutParams(-1, -2))
 
