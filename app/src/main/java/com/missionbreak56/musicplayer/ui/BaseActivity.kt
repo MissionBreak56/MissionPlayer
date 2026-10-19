@@ -39,7 +39,7 @@ abstract class BaseActivity : AppCompatActivity() {
     /** Puts the accent / font / corner / background choices over whatever theme was just applied. */
     override fun onApplyThemeResource(theme: Resources.Theme, resid: Int, first: Boolean) {
         super.onApplyThemeResource(theme, resid, first)
-        Themes.applyOverlays(theme)
+        Themes.applyOverlays(theme, resources, packageName)
     }
 
     override fun setContentView(view: View?) {
@@ -51,6 +51,9 @@ abstract class BaseActivity : AppCompatActivity() {
         super.setContentView(layoutResID)
         applyWindowInsets()
     }
+
+    /** Screens with their own full-screen artwork (the player) turn the gallery background off. */
+    protected open val allowImageBackground: Boolean get() = true
 
     /** Called when the system bar / cutout sizes are known. */
     protected open fun onWindowInsets(bars: Insets) {}
@@ -75,6 +78,7 @@ abstract class BaseActivity : AppCompatActivity() {
             onWindowInsets(bars)
             WindowInsetsCompat.CONSUMED
         }
+        if (allowImageBackground) BgImage.drawable(this)?.let { root.background = it }
         ViewCompat.requestApplyInsets(root)
     }
 

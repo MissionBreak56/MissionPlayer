@@ -200,30 +200,6 @@
         <item name="colorSurfaceContainerHigh">#D9E8DB</item>
         <item name="colorSurfaceContainerHighest">#D9E8DB</item>
     </style>
-    <style name="Overlay.Font1" parent="">
-        <item name="android:fontFamily">serif</item>
-    </style>
-    <style name="Overlay.Font2" parent="">
-        <item name="android:fontFamily">monospace</item>
-    </style>
-    <style name="Overlay.Font3" parent="">
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-    <style name="Overlay.Font4" parent="">
-        <item name="android:fontFamily">sans-serif-light</item>
-    </style>
-    <style name="Overlay.Font5" parent="">
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-    <style name="Overlay.Font6" parent="">
-        <item name="android:fontFamily">casual</item>
-    </style>
-    <style name="Overlay.Font7" parent="">
-        <item name="android:fontFamily">cursive</item>
-    </style>
-    <style name="Overlay.Font8" parent="">
-        <item name="android:fontFamily">sans-serif-black</item>
-    </style>
     <style name="Shape.Custom1" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">0dp</item>

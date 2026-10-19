@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Font overlays. Besides android:fontFamily they replace android:textViewStyle, because some
+         themes (the complete ones) set their own font through that style and would otherwise win. -->
+    <style name="Widget.Font1" parent="android:Widget.TextView">
+        <item name="android:fontFamily">serif</item>
+    </style>
+    <style name="Overlay.Font1" parent="">
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textViewStyle">@style/Widget.Font1</item>
+    </style>
+    <style name="Widget.Font2" parent="android:Widget.TextView">
+        <item name="android:fontFamily">monospace</item>
+    </style>
+    <style name="Overlay.Font2" parent="">
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textViewStyle">@style/Widget.Font2</item>
+    </style>
+    <style name="Widget.Font3" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+    <style name="Overlay.Font3" parent="">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textViewStyle">@style/Widget.Font3</item>
+    </style>
+    <style name="Widget.Font4" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+    <style name="Overlay.Font4" parent="">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textViewStyle">@style/Widget.Font4</item>
+    </style>
+    <style name="Widget.Font5" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <style name="Overlay.Font5" parent="">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textViewStyle">@style/Widget.Font5</item>
+    </style>
+    <style name="Widget.Font6" parent="android:Widget.TextView">
+        <item name="android:fontFamily">casual</item>
+    </style>
+    <style name="Overlay.Font6" parent="">
+        <item name="android:fontFamily">casual</item>
+        <item name="android:textViewStyle">@style/Widget.Font6</item>
+    </style>
+    <style name="Widget.Font7" parent="android:Widget.TextView">
+        <item name="android:fontFamily">cursive</item>
+    </style>
+    <style name="Overlay.Font7" parent="">
+        <item name="android:fontFamily">cursive</item>
+        <item name="android:textViewStyle">@style/Widget.Font7</item>
+    </style>
+    <style name="Widget.Font8" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-black</item>
+    </style>
+    <style name="Overlay.Font8" parent="">
+        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:textViewStyle">@style/Widget.Font8</item>
+    </style>
+    <style name="Widget.Font9" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    <style name="Overlay.Font9" parent="">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textViewStyle">@style/Widget.Font9</item>
+    </style>
+    <style name="Widget.Font10" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+    <style name="Overlay.Font10" parent="">
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textViewStyle">@style/Widget.Font10</item>
+    </style>
+    <style name="Widget.Font11" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-smallcaps</item>
+    </style>
+    <style name="Overlay.Font11" parent="">
+        <item name="android:fontFamily">sans-serif-smallcaps</item>
+        <item name="android:textViewStyle">@style/Widget.Font11</item>
+    </style>
+    <style name="Widget.Font12" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-condensed-light</item>
+    </style>
+    <style name="Overlay.Font12" parent="">
+        <item name="android:fontFamily">sans-serif-condensed-light</item>
+        <item name="android:textViewStyle">@style/Widget.Font12</item>
+    </style>
+    <style name="Widget.Font13" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-condensed-medium</item>
+    </style>
+    <style name="Overlay.Font13" parent="">
+        <item name="android:fontFamily">sans-serif-condensed-medium</item>
+        <item name="android:textViewStyle">@style/Widget.Font13</item>
+    </style>
+    <style name="Widget.Font14" parent="android:Widget.TextView">
+        <item name="android:fontFamily">serif-monospace</item>
+    </style>
+    <style name="Overlay.Font14" parent="">
+        <item name="android:fontFamily">serif-monospace</item>
+        <item name="android:textViewStyle">@style/Widget.Font14</item>
+    </style>
+    <style name="Widget.Font15" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    <style name="Overlay.Font15" parent="">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textViewStyle">@style/Widget.Font15</item>
+    </style>
+    <style name="Widget.Font16" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    <style name="Overlay.Font16" parent="">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textViewStyle">@style/Widget.Font16</item>
+    </style>
+    <style name="Widget.Font17" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    <style name="Overlay.Font17" parent="">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textViewStyle">@style/Widget.Font17</item>
+    </style>
+    <style name="Widget.Font18" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    <style name="Overlay.Font18" parent="">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textViewStyle">@style/Widget.Font18</item>
+    </style>
+    <style name="Widget.Font19" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    <style name="Overlay.Font19" parent="">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textViewStyle">@style/Widget.Font19</item>
+    </style>
+</resources>

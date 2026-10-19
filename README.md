@@ -26,7 +26,7 @@ personalização.
 ## Funções
 
 ### Biblioteca
-- **Abas:** Músicas, Álbuns, Artistas e Pastas, que você pode **reorganizar** (menu ☰ → *Organizar
+- **Abas:** Músicas, Álbuns, Artistas e Pastas, que você pode **reorganizar** (Configurações → *Organizar
   abas*); a ordem fica salva.
 - **Atalhos na tela inicial:** Favoritos, Playlists e Recente.
 - **Músicas:** botão de reprodução aleatória e ordenação (botão de ordenar, a opção atual vem marcada)
@@ -42,7 +42,7 @@ personalização.
 - **Álbuns** em grade de 3 colunas, com capas.
 - **Pastas:** navegue pelas pastas do aparelho; cada pasta mostra sua foto no cabeçalho.
 - **Ocultar** músicas e pastas (só a pasta escolhida, as subpastas continuam visíveis). Para desfazer:
-  menu ☰ → *Itens ocultos*.
+  Configurações → *Itens ocultos*.
 
 ### Busca
 - Procura por título, artista, álbum e também **dentro das letras**: lê a letra gravada no arquivo
@@ -104,20 +104,35 @@ ponto. Músicas apagadas ou ocultas desde então são ignoradas. Se o Android pa
 (por exemplo com a música pausada), o player recoloca a última fila ao voltar ao app, em vez de
 fechar.
 
+### Configurações
+Toque na engrenagem no topo da tela inicial. Tudo o que ficava no menu flutuante agora está aqui:
+- **Aparência:** *Temas* (tema do app e modo claro/escuro/do sistema) e *Personalização avançada*.
+- **Biblioteca:** *Organizar abas* e *Itens ocultos*.
+- **Áudio e letras:** *Equalizador* e a chave de *Letras automáticas*.
+- **Mais:** *Estatísticas* e *Sobre*.
+
 ### Personalização avançada
-Menu ⋮ → *Personalização avançada*:
+Configurações → *Personalização avançada*:
 - **Ícone do app:** 9 opções — *Original*, e variações *Verde, Azul, Violeta, Dourado, Rosa*, mais
   *Vinil, Ondas* e *Fones*. A troca é imediata (a tela inicial pode levar alguns segundos para
   atualizar). Os ícones também têm versão monocromática para o Android 13+ (ícones temáticos).
-- **Cor de destaque:** 16 cores para usar no lugar da cor do tema (ou *Usar a cor do tema*).
+- **Cor de destaque:** 16 cores prontas, *Usar a cor do tema* ou a **roda de cores**: arraste no
+  círculo para escolher qualquer tom (passos de 5°) e toque numa das 5 intensidades (do pastel ao
+  escuro). Cada escolha tem versão clara e escura.
 - **Cor do fundo:** *Padrão, Puro, Grafite, Azul-noite, Sépia* e *Musgo*, cada um com versão clara e
-  escura.
-- **Fonte:** *Padrão, Serifada, Monoespaçada, Condensada, Leve, Média, Casual, Cursiva* e *Pesada*,
-  aplicada em todo o app.
+  escura. Também dá para usar uma **imagem da galeria** como fundo, com controle de visibilidade
+  (a imagem se mistura com a cor do fundo para o texto continuar legível) e botão para remover. A
+  tela *Tocando agora* mantém o visual liquid glass da capa.
+- **Fonte:** *Usar a fonte do tema* (cada tema completo tem a sua) ou uma de 19 fontes: *Serifada,
+  Monoespaçada, Condensada, Leve, Média, Casual, Cursiva, Pesada, Padrão do sistema, Fina, Versalete,
+  Condensada leve, Condensada média, Serifa mono* e as embutidas *Arredondada (Fredoka), Manuscrita
+  (Amatic), Rabisco (Intuitive), Serifa elegante (Source Serif)* e *Moderna (Hanken Grotesk)*. A
+  fonte escolhida vale em todo o app, inclusive com os temas completos.
 - **Cantos:** *Padrão, Retos, Suaves* ou *Redondos* para botões, cartões e janelas.
-- *Restaurar padrões* volta tudo (inclusive o ícone) ao original.
+- *Restaurar padrões* volta tudo (inclusive o ícone e a imagem de fundo) ao original.
 
-As escolhas valem por cima do tema escolhido em *Temas* e ficam salvas.
+As escolhas valem por cima do tema escolhido em *Temas* e ficam salvas. As fontes embutidas usam a
+SIL Open Font License (texto em `FONTS-OFL.txt`).
 
 ### Estatísticas
 Menu ⋮ → *Estatísticas*: total de músicas, reproduções, tempo ouvido, tempo da biblioteca, favoritas
@@ -131,7 +146,7 @@ e álbuns, além das **músicas, artistas e álbuns mais ouvidos**.
   Ao abrir uma música sem letra, ela é buscada na hora.
 - A busca roda a cada 15 minutos (o menor intervalo que o Android permite), com 4 músicas ao mesmo
   tempo; músicas não encontradas são tentadas de novo após 15 minutos.
-- Nada para configurar. Para desligar: menu ⋮ → *Letras automáticas*.
+- Nada para configurar. Para desligar: Configurações → *Letras automáticas*.
 
 ### Equalizador e volume
 - Equalizador do aparelho com presets e controles por banda, reforço de graves e surround.
@@ -141,7 +156,7 @@ e álbuns, além das **músicas, artistas e álbuns mais ouvidos**.
 ### Aparência
 - 8 cores de destaque e modo **claro / escuro / do sistema** (fundo preto no modo escuro).
 - **7 temas completos** com visual próprio (cores, fonte e formato dos cantos): *Neon, Papel, Oceano,
-  Pôr do sol, Mono, Floresta* e *Rosé*. Escolha em menu ⋮ → *Temas*.
+  Pôr do sol, Mono, Floresta* e *Rosé*. Escolha em Configurações → *Temas*.
 - **Tela cheia:** o app ocupa a tela toda, inclusive atrás do entalhe/câmera e da barra de status, sem
   faixa preta no topo; o conteúdo continua longe da câmera e das barras.
 - Ícone adaptativo (Android 8+), com versão monocromática para o tema de ícones do Android 13+.
@@ -154,7 +169,7 @@ tela de bloqueio.
 ### Privacidade
 Sem anúncios, sem rastreadores e sem contas. A internet é usada **só** para baixar letras que faltam
 (título, artista, álbum e duração são enviados aos serviços de letras acima); a reprodução é 100%
-local. Desligue em menu ⋮ → *Letras automáticas* para o app não usar a rede.
+local. Desligue em Configurações → *Letras automáticas* para o app não usar a rede.
 
 ## Permissões
 
@@ -185,35 +200,17 @@ app/src/main/java/com/missionbreak56/musicplayer/
 │              PlaybackState (salvar/restaurar fila), PlayerConnection, AudioFx (equalizador e aumento
 │              de volume), SleepTimer (código mantido, sem acesso na interface)
 └── ui/        MainActivity (abas), DetailActivity, SearchActivity, PlaylistsActivity, PlayerActivity,
-               EqualizerActivity, ThemesActivity, CustomizeActivity (personalização avançada), IconManager
-               (troca de ícone), StatsActivity, AboutActivity, AlphaIndexBar (barra # A–Z),
+               EqualizerActivity, ThemesActivity, SettingsActivity (configurações), CustomizeActivity
+               (personalização avançada), ColorWheelView (roda de cores), BgImage (imagem de fundo),
+               IconManager (troca de ícone), StatsActivity, AboutActivity, AlphaIndexBar (barra # A–Z),
                FolderArt / FolderArtPicker (foto da pasta), BaseActivity (tela cheia), adaptadores e diálogos
 ```
-
-## Compilar e publicar
-
-O workflow `.github/workflows/build-apk.yml` roda a cada push na `main`:
-
-1. compila o APK de release **arm64-v8a**;
-2. assina com a **chave permanente**, lida dos *Secrets* do repositório (`SIGNING_KEYSTORE_BASE64`,
-   `SIGNING_STORE_PASSWORD`, `SIGNING_KEY_ALIAS`, `SIGNING_KEY_PASSWORD`);
-3. publica o release `vX.Y.Z` (versão lida do `versionName` em `app/build.gradle.kts`) com o APK
-   anexo e o texto de `RELEASE_NOTES.md`.
-
-**Para lançar uma versão nova:** aumente `versionName` e `versionCode` em `app/build.gradle.kts`,
-escreva o changelog em `RELEASE_NOTES.md` e faça push na `main`.
-
-**Compilar localmente:** JDK 17, Android SDK 34 e Gradle 8.7, depois `gradle assembleRelease`. Sem as
-variáveis `SIGNING_KEYSTORE_FILE`, `SIGNING_STORE_PASSWORD`, `SIGNING_KEY_ALIAS` e
-`SIGNING_KEY_PASSWORD`, o build usa a chave de debug (o APK não atualiza por cima do oficial).
-
-> Nunca coloque o arquivo `.jks` nem as senhas no repositório (ele é público). Guarde o backup da
-> chave em local seguro: sem ela não é possível lançar atualizações com a mesma assinatura.
 
 ## Histórico de versões
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.9.0** | Tela de Configurações (substitui o menu flutuante); roda de cores no destaque; imagem da galeria como fundo; 19 fontes e *Usar a fonte do tema*; corrige a fonte que não mudava com os temas completos |
 | **2.8.0** | Barra alfabética e ordenação dentro de álbuns/pastas/artistas/listas; personalização avançada (9 ícones, 16 cores de destaque, 6 fundos, 9 fontes, 4 estilos de cantos) |
 | **2.7.0** | Letras automáticas (LRCLIB, NetEase, Kugou, lyrics.ovh), estatísticas e 7 novos temas |
 | **2.6.7** | Listas aparecem bem mais rápido: cópia salva da biblioteca, ordenação mais rápida e aviso "Carregando…" |

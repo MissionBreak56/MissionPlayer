@@ -1,7 +1,11 @@
 package com.missionbreak56.musicplayer.ui
 
+import android.content.Context
 import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.Typeface
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.color.MaterialColors
 import com.missionbreak56.musicplayer.R
 import com.missionbreak56.musicplayer.data.Prefs
@@ -38,15 +42,85 @@ object Themes {
         R.style.Overlay_Accent8, R.style.Overlay_Accent9, R.style.Overlay_Accent10, R.style.Overlay_Accent11,
         R.style.Overlay_Accent12, R.style.Overlay_Accent13, R.style.Overlay_Accent14, R.style.Overlay_Accent15
     )
-    /** Index 0 is "as the theme"; the rest are overlays. */
+    /**
+     * Font options. Index 0 follows the theme; the rest are overlays that also replace the theme's
+     * text view style (several complete themes set their own font there and would win otherwise).
+     * Indexes are saved in the settings, so new fonts are only ever added at the end.
+     */
+    class FontOption(
+        val pt: String,
+        val en: String,
+        /** Android system family, or null when the font is bundled in [fontRes]. */
+        val family: String?,
+        val fontRes: Int = 0
+    ) {
+        val label: String get() = tr(pt, en)
+    }
+
+    val fonts: List<FontOption> = listOf(
+        FontOption("Usar a fonte do tema", "Use the theme's font", null),
+        FontOption("Serifada", "Serif", "serif"),
+        FontOption("Monoespaçada", "Monospace", "monospace"),
+        FontOption("Condensada", "Condensed", "sans-serif-condensed"),
+        FontOption("Leve", "Light", "sans-serif-light"),
+        FontOption("Média", "Medium", "sans-serif-medium"),
+        FontOption("Casual", "Casual", "casual"),
+        FontOption("Cursiva", "Cursive", "cursive"),
+        FontOption("Pesada", "Black", "sans-serif-black"),
+        FontOption("Padrão do sistema", "System default", "sans-serif"),
+        FontOption("Fina", "Thin", "sans-serif-thin"),
+        FontOption("Versalete", "Small caps", "sans-serif-smallcaps"),
+        FontOption("Condensada leve", "Condensed light", "sans-serif-condensed-light"),
+        FontOption("Condensada média", "Condensed medium", "sans-serif-condensed-medium"),
+        FontOption("Serifada mono", "Serif mono", "serif-monospace"),
+        FontOption("Arredondada (Fredoka)", "Rounded (Fredoka)", null, R.font.fredoka_one),
+        FontOption("Manuscrita (Amatic)", "Handwritten (Amatic)", null, R.font.amatic_sc),
+        FontOption("Rabisco (Intuitive)", "Scribble (Intuitive)", null, R.font.intuitive),
+        FontOption("Serifa elegante (Source Serif)", "Elegant serif (Source Serif)", null, R.font.source_serif),
+        FontOption("Moderna (Hanken Grotesk)", "Modern (Hanken Grotesk)", null, R.font.hanken_grotesk)
+    )
     private val fontOverlays = intArrayOf(
         0, R.style.Overlay_Font1, R.style.Overlay_Font2, R.style.Overlay_Font3, R.style.Overlay_Font4,
-        R.style.Overlay_Font5, R.style.Overlay_Font6, R.style.Overlay_Font7, R.style.Overlay_Font8
+        R.style.Overlay_Font5, R.style.Overlay_Font6, R.style.Overlay_Font7, R.style.Overlay_Font8,
+        R.style.Overlay_Font9, R.style.Overlay_Font10, R.style.Overlay_Font11, R.style.Overlay_Font12,
+        R.style.Overlay_Font13, R.style.Overlay_Font14, R.style.Overlay_Font15, R.style.Overlay_Font16,
+        R.style.Overlay_Font17, R.style.Overlay_Font18, R.style.Overlay_Font19
     )
-    val fontFamilies = arrayOf(
-        "sans-serif", "serif", "monospace", "sans-serif-condensed", "sans-serif-light",
-        "sans-serif-medium", "casual", "cursive", "sans-serif-black"
+
+    /** Typeface used to preview a font option (null = whatever the theme uses). */
+    fun typeface(context: Context, index: Int): Typeface? {
+        val f = fonts.getOrNull(index) ?: return null
+        return when {
+            f.family != null -> Typeface.create(f.family, Typeface.NORMAL)
+            f.fontRes != 0 -> try { ResourcesCompat.getFont(context, f.fontRes) } catch (_: Throwable) { null }
+            else -> null
+        }
+    }
+
+    // ----- Accent color wheel -----
+
+    const val WHEEL_BASE = 100
+    const val WHEEL_HUES = 72
+    const val WHEEL_TONES = 5
+    private val wheelTones = arrayOf(
+        floatArrayOf(0.42f, 0.98f), floatArrayOf(0.62f, 0.95f), floatArrayOf(0.80f, 0.90f),
+        floatArrayOf(0.92f, 0.74f), floatArrayOf(0.95f, 0.55f)
     )
+
+    /** Accent code (as saved in [Prefs.accent]) for a wheel hue / tone. */
+    fun wheelCode(hue: Int, tone: Int): Int =
+        WHEEL_BASE + hue.coerceIn(0, WHEEL_HUES - 1) * 10 + tone.coerceIn(0, WHEEL_TONES - 1)
+
+    fun isWheel(code: Int): Boolean = code >= WHEEL_BASE
+    fun wheelHue(code: Int): Int = ((code - WHEEL_BASE) / 10).coerceIn(0, WHEEL_HUES - 1)
+    fun wheelTone(code: Int): Int = ((code - WHEEL_BASE) % 10).coerceIn(0, WHEEL_TONES - 1)
+
+    /** Color of a wheel hue (0..71, 5 degrees each) at a given tone (0 = pastel .. 4 = deep). */
+    fun wheelColor(hue: Int, tone: Int): Int {
+        val t = wheelTones[tone.coerceIn(0, WHEEL_TONES - 1)]
+        return Color.HSVToColor(floatArrayOf(hue.coerceIn(0, WHEEL_HUES - 1) * 5f, t[0], t[1]))
+    }
+
     private val cornerOverlays = intArrayOf(
         0, R.style.Overlay_Corner1, R.style.Overlay_Corner2, R.style.Overlay_Corner3
     )
@@ -63,13 +137,21 @@ object Themes {
         intArrayOf(0xFFEBF3EC.toInt(), 0xFF0B140D.toInt())
     )
     val cornerCount = cornerOverlays.size
-    val fontCount = fontOverlays.size
+    val fontCount = fonts.size
     val backgroundCount = backgroundOverlays.size
 
     /** Layers the user's look settings over the chosen theme. */
-    fun applyOverlays(theme: Resources.Theme) {
+    fun applyOverlays(theme: Resources.Theme, resources: Resources, packageName: String) {
         backgroundOverlays.getOrNull(Prefs.backgroundStyle)?.takeIf { it != 0 }?.let { theme.applyStyle(it, true) }
-        Prefs.accent.takeIf { it in accentOverlays.indices }?.let { theme.applyStyle(accentOverlays[it], true) }
+        val accent = Prefs.accent
+        if (isWheel(accent)) {
+            val id = resources.getIdentifier(
+                "Overlay_Wheel_${wheelHue(accent)}_${wheelTone(accent)}", "style", packageName
+            )
+            if (id != 0) theme.applyStyle(id, true)
+        } else if (accent in accentOverlays.indices) {
+            theme.applyStyle(accentOverlays[accent], true)
+        }
         cornerOverlays.getOrNull(Prefs.cornerStyle)?.takeIf { it != 0 }?.let { theme.applyStyle(it, true) }
         fontOverlays.getOrNull(Prefs.fontStyle)?.takeIf { it != 0 }?.let { theme.applyStyle(it, true) }
     }

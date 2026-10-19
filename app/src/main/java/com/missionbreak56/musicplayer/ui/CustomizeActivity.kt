@@ -11,12 +11,18 @@ import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.SeekBar
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
 import com.missionbreak56.musicplayer.data.Prefs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Advanced customization: app icon, accent color, background, font and corner style.
@@ -29,6 +35,25 @@ class CustomizeActivity : BaseActivity() {
 
     private val primary: Int
         get() = MaterialColors.getColor(this, androidx.appcompat.R.attr.colorPrimary, 0)
+
+    /** Gallery picker for the background image. */
+    private val pickBackground = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) {
+            lifecycleScope.launch {
+                val ok = withContext(Dispatchers.IO) { BgImage.save(applicationContext, uri) }
+                if (ok) {
+                    Prefs.bgImageStamp = System.currentTimeMillis()
+                    recreate()
+                } else {
+                    Toast.makeText(
+                        this@CustomizeActivity,
+                        tr("Não foi possível usar essa imagem", "Couldn't use that image"),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -196,7 +221,11 @@ class CustomizeActivity : BaseActivity() {
             tr("Rosa", "Pink"), tr("Vinho", "Wine"), tr("Marrom", "Brown"), tr("Grafite", "Graphite")
         )
         val current = Prefs.accent
-        val currentName = if (current in names.indices) names[current] else tr("Do tema", "From theme")
+        val currentName = when {
+            current in names.indices -> names[current]
+            Themes.isWheel(current) -> tr("Roda de cores", "Color wheel")
+            else -> tr("Do tema", "From theme")
+        }
         section(
             tr("Cor de destaque", "Accent color"),
             tr("Escolhida: $currentName", "Selected: $currentName")
@@ -235,6 +264,75 @@ class CustomizeActivity : BaseActivity() {
                 if (Prefs.accent != i) { Prefs.accent = i; recreate() }
             }
             row.addView(frame, LinearLayout.LayoutParams(0, dp(40), 1f).apply { setMargins(dp(1), dp(2), dp(1), dp(2)) })
+        }
+        wheelBlock(current)
+    }
+
+    /** Color wheel: pick any hue, then one of five tones from pastel to deep. */
+    private fun wheelBlock(current: Int) {
+        val onWheel = Themes.isWheel(current)
+        val title = TextView(this)
+        title.text = tr("Roda de cores", "Color wheel")
+        title.textSize = 15f
+        title.setTypeface(title.typeface, Typeface.BOLD)
+        body.addView(title, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(18) })
+        val hint = TextView(this)
+        hint.text = tr(
+            "Arraste no círculo para escolher o tom e toque numa intensidade abaixo.",
+            "Drag on the circle to pick a hue, then tap an intensity below."
+        )
+        hint.textSize = 13f
+        hint.alpha = 0.7f
+        body.addView(hint, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(6) })
+
+        val wheel = ColorWheelView(this)
+        wheel.hue = if (onWheel) Themes.wheelHue(current) else 0
+        wheel.tone = if (onWheel) Themes.wheelTone(current) else 2
+        wheel.showThumb = onWheel
+        body.addView(wheel, LinearLayout.LayoutParams(-1, -2).apply { gravity = Gravity.CENTER_HORIZONTAL })
+
+        val toneRow = newRow()
+        val toneNames = arrayOf(
+            tr("Pastel", "Pastel"), tr("Suave", "Soft"), tr("Vivo", "Vivid"),
+            tr("Forte", "Strong"), tr("Escuro", "Deep")
+        )
+        val dots = ArrayList<GradientDrawable>()
+        for (t in 0 until Themes.WHEEL_TONES) {
+            val selected = onWheel && t == Themes.wheelTone(current)
+            val cell = LinearLayout(this)
+            cell.orientation = LinearLayout.VERTICAL
+            cell.gravity = Gravity.CENTER_HORIZONTAL
+            val frame = FrameLayout(this)
+            frame.setPadding(dp(3), dp(3), dp(3), dp(3))
+            val ringBg = GradientDrawable()
+            ringBg.shape = GradientDrawable.OVAL
+            ringBg.setColor(Color.TRANSPARENT)
+            ringBg.setStroke(
+                dp(if (selected) 3 else 0),
+                if (selected) MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurface, 0) else Color.TRANSPARENT
+            )
+            frame.background = ringBg
+            val dot = View(this)
+            val dotBg = GradientDrawable()
+            dotBg.shape = GradientDrawable.OVAL
+            dotBg.setColor(Themes.wheelColor(wheel.hue, t))
+            dot.background = dotBg
+            dots.add(dotBg)
+            frame.addView(dot, FrameLayout.LayoutParams(-1, -1))
+            cell.addView(frame, LinearLayout.LayoutParams(dp(44), dp(44)))
+            cell.addView(caption(toneNames[t], selected), LinearLayout.LayoutParams(-2, -2))
+            cell.setOnClickListener {
+                Prefs.accent = Themes.wheelCode(wheel.hue, t)
+                recreate()
+            }
+            toneRow.addView(cell, LinearLayout.LayoutParams(0, -2, 1f))
+        }
+        wheel.onPick = { hue, final ->
+            for (t in dots.indices) dots[t].setColor(Themes.wheelColor(hue, t))
+            if (final) {
+                Prefs.accent = Themes.wheelCode(hue, wheel.tone)
+                recreate()
+            }
         }
     }
 
@@ -279,17 +377,69 @@ class CustomizeActivity : BaseActivity() {
             }
             row.addView(cell, LinearLayout.LayoutParams(0, -2, 1f))
         }
+        imageBlock()
+    }
+
+    /** Picture from the gallery as the background, with an adjustable amount of visibility. */
+    private fun imageBlock() {
+        val title = TextView(this)
+        title.text = tr("Imagem da galeria", "Gallery image")
+        title.textSize = 15f
+        title.setTypeface(title.typeface, Typeface.BOLD)
+        body.addView(title, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(18) })
+
+        val hint = TextView(this)
+        hint.text = if (BgImage.active) {
+            tr("Imagem de fundo ativa.", "Background image is on.")
+        } else {
+            tr("Use uma foto da galeria como fundo do app.", "Use a photo from your gallery as the app background.")
+        }
+        hint.textSize = 13f
+        hint.alpha = 0.7f
+        body.addView(hint, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+
+        val pick = MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle)
+        pick.text = if (BgImage.active) tr("Trocar imagem", "Change image") else tr("Escolher imagem da galeria", "Choose image from gallery")
+        pick.setOnClickListener { pickBackground.launch("image/*") }
+        body.addView(pick, LinearLayout.LayoutParams(-1, -2))
+
+        if (!BgImage.active) return
+
+        val label = TextView(this)
+        label.textSize = 13f
+        label.text = tr("Visibilidade da imagem: ${Prefs.bgImageVisible}%", "Image visibility: ${Prefs.bgImageVisible}%")
+        body.addView(label, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(12) })
+        val seek = SeekBar(this)
+        seek.max = 90
+        seek.progress = Prefs.bgImageVisible - 10
+        seek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(bar: SeekBar?, progress: Int, fromUser: Boolean) {
+                label.text = tr("Visibilidade da imagem: ${progress + 10}%", "Image visibility: ${progress + 10}%")
+            }
+            override fun onStartTrackingTouch(bar: SeekBar?) {}
+            override fun onStopTrackingTouch(bar: SeekBar?) {
+                Prefs.bgImageVisible = (bar?.progress ?: 45) + 10
+                recreate()
+            }
+        })
+        body.addView(seek, LinearLayout.LayoutParams(-1, -2))
+
+        val remove = MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle)
+        remove.text = tr("Remover imagem", "Remove image")
+        remove.setOnClickListener {
+            BgImage.clear(applicationContext)
+            recreate()
+        }
+        body.addView(remove, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(6) })
     }
 
     // ----- Font -----
 
     private fun fontSection() {
-        val names = arrayOf(
-            tr("Padrão", "Default"), tr("Serifada", "Serif"), tr("Monoespaçada", "Monospace"),
-            tr("Condensada", "Condensed"), tr("Leve", "Light"), tr("Média", "Medium"),
-            tr("Casual", "Casual"), tr("Cursiva", "Cursive"), tr("Pesada", "Black")
+        section(
+            tr("Fonte", "Font"),
+            tr("Vale para todo o app. \"Usar a fonte do tema\" mantém a fonte própria de cada tema.", "Applies to the whole app. \"Use the theme's font\" keeps each theme's own font.")
         )
-        section(tr("Fonte", "Font"), tr("Vale para todo o app.", "Applies to the whole app."))
         for (i in 0 until Themes.fontCount) {
             val selected = i == Prefs.fontStyle
             val row = LinearLayout(this)
@@ -298,10 +448,11 @@ class CustomizeActivity : BaseActivity() {
             row.setPadding(dp(14), dp(10), dp(14), dp(10))
             row.background = ring(selected, 14, if (selected) tint(primary, 0x26) else Color.TRANSPARENT)
 
+            val option = Themes.fonts[i]
             val sample = TextView(this)
-            sample.text = "${names[i]} — " + tr("Minha música favorita", "My favorite song")
+            sample.text = if (i == 0) option.label else "${option.label} — " + tr("Minha música favorita", "My favorite song")
             sample.textSize = 16f
-            sample.typeface = Typeface.create(Themes.fontFamilies[i], Typeface.NORMAL)
+            Themes.typeface(this, i)?.let { sample.typeface = it }
             row.addView(sample, LinearLayout.LayoutParams(0, -2, 1f))
             if (selected) {
                 val mark = TextView(this)
@@ -347,6 +498,7 @@ class CustomizeActivity : BaseActivity() {
         val b = MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle)
         b.text = tr("Restaurar padrões", "Restore defaults")
         b.setOnClickListener {
+            BgImage.clear(applicationContext)
             Prefs.resetCustomization()
             if (Prefs.iconVariant != 0) {
                 Prefs.iconVariant = 0

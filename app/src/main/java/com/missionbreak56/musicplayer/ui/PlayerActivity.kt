@@ -47,6 +47,8 @@ import kotlin.math.abs
 /** Full "Now playing" screen: art, seek bar, play modes, lyrics, sleep timer, equalizer, queue. */
 class PlayerActivity : PlayerBoundActivity() {
 
+    override val allowImageBackground: Boolean get() = false
+
     private lateinit var binding: ActivityPlayerBinding
     private lateinit var actions: SongActions
     private lateinit var lyricsAdapter: LyricsAdapter

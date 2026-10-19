@@ -38,6 +38,8 @@ object Prefs {
     private const val KEY_CORNERS = "custom_corners"
     private const val KEY_BG = "custom_background"
     private const val KEY_ICON = "custom_icon"
+    private const val KEY_BG_IMAGE = "custom_bg_image"
+    private const val KEY_BG_VISIBLE = "custom_bg_image_visible"
 
     private const val SEP_ENTRY = "\n"
     private const val SEP_FIELD = "|"
@@ -98,12 +100,22 @@ object Prefs {
         get() = sp?.getInt(KEY_ICON, 0) ?: 0
         set(value) { store().edit().putInt(KEY_ICON, value).apply() }
 
+    /** Time the gallery background image was saved (0 = none). Changes whenever a new image is set. */
+    var bgImageStamp: Long
+        get() = sp?.getLong(KEY_BG_IMAGE, 0L) ?: 0L
+        set(value) { store().edit().putLong(KEY_BG_IMAGE, value).apply() }
+
+    /** How much of the gallery image shows through the background color, 10..100 (%). */
+    var bgImageVisible: Int
+        get() = sp?.getInt(KEY_BG_VISIBLE, 55) ?: 55
+        set(value) { store().edit().putInt(KEY_BG_VISIBLE, value.coerceIn(10, 100)).apply() }
+
     /** Changes whenever a look setting changes, so open screens know to redraw. */
-    fun customSignature(): String = "$accent|$fontStyle|$cornerStyle|$backgroundStyle"
+    fun customSignature(): String = "$accent|$fontStyle|$cornerStyle|$backgroundStyle|$bgImageStamp|$bgImageVisible"
 
     fun resetCustomization() {
         store().edit().putInt(KEY_ACCENT, -1).putInt(KEY_FONT, 0).putInt(KEY_CORNERS, 0)
-            .putInt(KEY_BG, 0).apply()
+            .putInt(KEY_BG, 0).putLong(KEY_BG_IMAGE, 0L).putInt(KEY_BG_VISIBLE, 55).apply()
     }
 
     /** Sort order chosen inside albums / folders / artists / playlists (-1 = their own order). */

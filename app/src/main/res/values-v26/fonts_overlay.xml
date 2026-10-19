@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Bundled fonts (SIL Open Font License), API 26+ -->
+    <style name="Widget.Font15" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/fredoka_one</item>
+    </style>
+    <style name="Overlay.Font15" parent="">
+        <item name="android:fontFamily">@font/fredoka_one</item>
+        <item name="android:textViewStyle">@style/Widget.Font15</item>
+    </style>
+    <style name="Widget.Font16" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/amatic_sc</item>
+    </style>
+    <style name="Overlay.Font16" parent="">
+        <item name="android:fontFamily">@font/amatic_sc</item>
+        <item name="android:textViewStyle">@style/Widget.Font16</item>
+    </style>
+    <style name="Widget.Font17" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/intuitive</item>
+    </style>
+    <style name="Overlay.Font17" parent="">
+        <item name="android:fontFamily">@font/intuitive</item>
+        <item name="android:textViewStyle">@style/Widget.Font17</item>
+    </style>
+    <style name="Widget.Font18" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/source_serif</item>
+    </style>
+    <style name="Overlay.Font18" parent="">
+        <item name="android:fontFamily">@font/source_serif</item>
+        <item name="android:textViewStyle">@style/Widget.Font18</item>
+    </style>
+    <style name="Widget.Font19" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/hanken_grotesk</item>
+    </style>
+    <style name="Overlay.Font19" parent="">
+        <item name="android:fontFamily">@font/hanken_grotesk</item>
+        <item name="android:textViewStyle">@style/Widget.Font19</item>
+    </style>
+</resources>

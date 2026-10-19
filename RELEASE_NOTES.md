@@ -1,23 +1,22 @@
-## MissionPlayer v2.8.0 — Barra alfabética nas pastas, ordenação e personalização avançada
+## MissionPlayer v2.9.0 — Configurações, roda de cores, imagem de fundo e mais fontes
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.8.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.9.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
 
 ### Novidades
-- **Barra alfabética (# A–Z) dentro de álbuns, pastas, artistas, gêneros e playlists**, com a letra em destaque no centro. Aparece em listas com mais de 12 músicas quando a ordem é A a Z, Artista ou Álbum.
-- **Ordenar dentro das listas:** novo botão de ordenar no topo de cada álbum/pasta/artista/playlist, com *Ordem padrão* e as mesmas opções da lista de Músicas (A a Z, Z a A, Mais recentes, Mais tocadas, Artista, Álbum, Duração). A escolha fica salva por tipo de lista e *Tocar tudo* / *Aleatório* seguem a ordem escolhida.
-- **Personalização avançada** (menu ⋮ → *Personalização avançada*):
-  - **Ícone do app:** 9 opções (Original, Verde, Azul, Violeta, Dourado, Rosa, Vinil, Ondas e Fones), com versão monocromática para o Android 13+.
-  - **Cor de destaque:** 16 cores no lugar da cor do tema.
-  - **Cor do fundo:** Padrão, Puro, Grafite, Azul-noite, Sépia e Musgo, cada um claro e escuro.
-  - **Fonte:** 9 opções, aplicadas em todo o app.
-  - **Cantos:** Padrão, Retos, Suaves ou Redondos.
-  - **Restaurar padrões** (volta inclusive o ícone original).
+- **Tela de Configurações:** o menu flutuante da tela inicial foi substituído por uma engrenagem que abre uma tela própria, com tudo organizado em seções: *Aparência* (Temas e Personalização avançada), *Biblioteca* (Organizar abas e Itens ocultos), *Áudio e letras* (Equalizador e a chave de Letras automáticas) e *Mais* (Estatísticas e Sobre).
+- **Roda de cores** na cor de destaque: arraste no círculo para escolher qualquer tom e toque numa das 5 intensidades (pastel, suave, vivo, forte e escuro). Cada escolha tem versão clara e escura. As 16 cores prontas e *Usar a cor do tema* continuam disponíveis.
+- **Imagem da galeria como fundo:** em *Cor do fundo* agora dá para escolher uma foto da galeria, ajustar a visibilidade (ela se mistura com a cor do fundo para o texto continuar legível), trocar ou remover. A tela *Tocando agora* mantém o visual liquid glass da capa.
+- **Mais fontes:** de 9 para 19 opções. Novas do sistema: *Padrão do sistema, Fina, Versalete, Condensada leve, Condensada média* e *Serifa mono*. Novas embutidas (SIL Open Font License): *Arredondada (Fredoka), Manuscrita (Amatic), Rabisco (Intuitive), Serifa elegante (Source Serif)* e *Moderna (Hanken Grotesk)*.
+- **Usar a fonte do tema:** nova opção na fonte, igual à da cor, que mantém a fonte própria de cada tema (a opção *Padrão* virou *Padrão do sistema*, uma fonte explícita).
 
-### Observação sobre o ícone
-Ao atualizar para esta versão, alguns launchers podem tirar o atalho do app da tela inicial (a entrada de lançamento agora é um alias). O app continua na gaveta de apps; basta arrastar o ícone de volta.
+### Correção
+- **A fonte não mudava com alguns temas** (os temas completos T8 a T14 definem a própria fonte no estilo dos textos e ela vencia a escolha do usuário). Agora a fonte escolhida vale em qualquer tema.
+
+### Outras mudanças
+- README atualizado (a seção de compilação foi removida).
+- Restaurar padrões também remove a imagem de fundo.
 
 ### Alterações técnicas
-- `CustomizeActivity` e `IconManager` (novos); alias de lançador por ícone no manifesto (`activity-alias`).
-- Estilos `Overlay.*` (cor, fonte, cantos, fundo) aplicados sobre o tema em `BaseActivity`; versões `values-night` para o modo escuro.
-- `DetailActivity`: `AlphaIndexBar` e ordenação por tipo de lista (`Prefs.detailSort`).
-- Versão: 2.7.0 → 2.8.0 (versionCode 22).
+- `SettingsActivity`, `ColorWheelView` e `BgImage` (novos); `Themes` com catálogo de fontes (`FontOption`) e 360 overlays gerados para a roda de cores (`accent_wheel.xml`, claro e escuro).
+- `Overlay.Font*` agora também substituem `android:textViewStyle`; fontes embutidas em `res/font` e estilos em `values-v26`.
+- `Prefs`: `bgImageStamp` e `bgImageVisible`; versão 2.8.0 → 2.9.0 (versionCode 23).

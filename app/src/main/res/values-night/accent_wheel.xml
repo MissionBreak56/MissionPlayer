@@ -1,0 +1,3244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Generated: 72 hues x 5 tones for the accent color wheel -->
+    <style name="Overlay_Wheel_0_0" parent="">
+        <item name="colorPrimary">#FDA8A8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B1B</item>
+        <item name="colorOnPrimaryContainer">#FADCDC</item>
+        <item name="colorSecondary">#FDA8A8</item>
+        <item name="colorSecondaryContainer">#4C1B1B</item>
+        <item name="colorOnSecondaryContainer">#FADCDC</item>
+    </style>
+    <style name="Overlay_Wheel_0_1" parent="">
+        <item name="colorPrimary">#F97E7E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B1B</item>
+        <item name="colorOnPrimaryContainer">#FADCDC</item>
+        <item name="colorSecondary">#F97E7E</item>
+        <item name="colorSecondaryContainer">#4C1B1B</item>
+        <item name="colorOnSecondaryContainer">#FADCDC</item>
+    </style>
+    <style name="Overlay_Wheel_0_2" parent="">
+        <item name="colorPrimary">#F45858</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B1B</item>
+        <item name="colorOnPrimaryContainer">#FADCDC</item>
+        <item name="colorSecondary">#F45858</item>
+        <item name="colorSecondaryContainer">#4C1B1B</item>
+        <item name="colorOnSecondaryContainer">#FADCDC</item>
+    </style>
+    <style name="Overlay_Wheel_0_3" parent="">
+        <item name="colorPrimary">#E13B3B</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B1B</item>
+        <item name="colorOnPrimaryContainer">#FADCDC</item>
+        <item name="colorSecondary">#E13B3B</item>
+        <item name="colorSecondaryContainer">#4C1B1B</item>
+        <item name="colorOnSecondaryContainer">#FADCDC</item>
+    </style>
+    <style name="Overlay_Wheel_0_4" parent="">
+        <item name="colorPrimary">#CB3131</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B1B</item>
+        <item name="colorOnPrimaryContainer">#FADCDC</item>
+        <item name="colorSecondary">#CB3131</item>
+        <item name="colorSecondaryContainer">#4C1B1B</item>
+        <item name="colorOnSecondaryContainer">#FADCDC</item>
+    </style>
+    <style name="Overlay_Wheel_1_0" parent="">
+        <item name="colorPrimary">#FDAFA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1F1B</item>
+        <item name="colorOnPrimaryContainer">#FADEDC</item>
+        <item name="colorSecondary">#FDAFA8</item>
+        <item name="colorSecondaryContainer">#4C1F1B</item>
+        <item name="colorOnSecondaryContainer">#FADEDC</item>
+    </style>
+    <style name="Overlay_Wheel_1_1" parent="">
+        <item name="colorPrimary">#F9887E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1F1B</item>
+        <item name="colorOnPrimaryContainer">#FADEDC</item>
+        <item name="colorSecondary">#F9887E</item>
+        <item name="colorSecondaryContainer">#4C1F1B</item>
+        <item name="colorOnSecondaryContainer">#FADEDC</item>
+    </style>
+    <style name="Overlay_Wheel_1_2" parent="">
+        <item name="colorPrimary">#F46558</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1F1B</item>
+        <item name="colorOnPrimaryContainer">#FADEDC</item>
+        <item name="colorSecondary">#F46558</item>
+        <item name="colorSecondaryContainer">#4C1F1B</item>
+        <item name="colorOnSecondaryContainer">#FADEDC</item>
+    </style>
+    <style name="Overlay_Wheel_1_3" parent="">
+        <item name="colorPrimary">#E1493B</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1F1B</item>
+        <item name="colorOnPrimaryContainer">#FADEDC</item>
+        <item name="colorSecondary">#E1493B</item>
+        <item name="colorSecondaryContainer">#4C1F1B</item>
+        <item name="colorOnSecondaryContainer">#FADEDC</item>
+    </style>
+    <style name="Overlay_Wheel_1_4" parent="">
+        <item name="colorPrimary">#CB3E31</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1F1B</item>
+        <item name="colorOnPrimaryContainer">#FADEDC</item>
+        <item name="colorSecondary">#CB3E31</item>
+        <item name="colorSecondaryContainer">#4C1F1B</item>
+        <item name="colorOnSecondaryContainer">#FADEDC</item>
+    </style>
+    <style name="Overlay_Wheel_2_0" parent="">
+        <item name="colorPrimary">#FDB6A8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C231B</item>
+        <item name="colorOnPrimaryContainer">#FAE1DC</item>
+        <item name="colorSecondary">#FDB6A8</item>
+        <item name="colorSecondaryContainer">#4C231B</item>
+        <item name="colorOnSecondaryContainer">#FAE1DC</item>
+    </style>
+    <style name="Overlay_Wheel_2_1" parent="">
+        <item name="colorPrimary">#F9927E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C231B</item>
+        <item name="colorOnPrimaryContainer">#FAE1DC</item>
+        <item name="colorSecondary">#F9927E</item>
+        <item name="colorSecondaryContainer">#4C231B</item>
+        <item name="colorOnSecondaryContainer">#FAE1DC</item>
+    </style>
+    <style name="Overlay_Wheel_2_2" parent="">
+        <item name="colorPrimary">#F47258</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C231B</item>
+        <item name="colorOnPrimaryContainer">#FAE1DC</item>
+        <item name="colorSecondary">#F47258</item>
+        <item name="colorSecondaryContainer">#4C231B</item>
+        <item name="colorOnSecondaryContainer">#FAE1DC</item>
+    </style>
+    <style name="Overlay_Wheel_2_3" parent="">
+        <item name="colorPrimary">#E1573B</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C231B</item>
+        <item name="colorOnPrimaryContainer">#FAE1DC</item>
+        <item name="colorSecondary">#E1573B</item>
+        <item name="colorSecondaryContainer">#4C231B</item>
+        <item name="colorOnSecondaryContainer">#FAE1DC</item>
+    </style>
+    <style name="Overlay_Wheel_2_4" parent="">
+        <item name="colorPrimary">#CB4B31</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C231B</item>
+        <item name="colorOnPrimaryContainer">#FAE1DC</item>
+        <item name="colorSecondary">#CB4B31</item>
+        <item name="colorSecondaryContainer">#4C231B</item>
+        <item name="colorOnSecondaryContainer">#FAE1DC</item>
+    </style>
+    <style name="Overlay_Wheel_3_0" parent="">
+        <item name="colorPrimary">#FDBDA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C271B</item>
+        <item name="colorOnPrimaryContainer">#FAE3DC</item>
+        <item name="colorSecondary">#FDBDA8</item>
+        <item name="colorSecondaryContainer">#4C271B</item>
+        <item name="colorOnSecondaryContainer">#FAE3DC</item>
+    </style>
+    <style name="Overlay_Wheel_3_1" parent="">
+        <item name="colorPrimary">#F99D7E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C271B</item>
+        <item name="colorOnPrimaryContainer">#FAE3DC</item>
+        <item name="colorSecondary">#F99D7E</item>
+        <item name="colorSecondaryContainer">#4C271B</item>
+        <item name="colorOnSecondaryContainer">#FAE3DC</item>
+    </style>
+    <style name="Overlay_Wheel_3_2" parent="">
+        <item name="colorPrimary">#F47F58</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C271B</item>
+        <item name="colorOnPrimaryContainer">#FAE3DC</item>
+        <item name="colorSecondary">#F47F58</item>
+        <item name="colorSecondaryContainer">#4C271B</item>
+        <item name="colorOnSecondaryContainer">#FAE3DC</item>
+    </style>
+    <style name="Overlay_Wheel_3_3" parent="">
+        <item name="colorPrimary">#E1653B</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C271B</item>
+        <item name="colorOnPrimaryContainer">#FAE3DC</item>
+        <item name="colorSecondary">#E1653B</item>
+        <item name="colorSecondaryContainer">#4C271B</item>
+        <item name="colorOnSecondaryContainer">#FAE3DC</item>
+    </style>
+    <style name="Overlay_Wheel_3_4" parent="">
+        <item name="colorPrimary">#CB5731</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C271B</item>
+        <item name="colorOnPrimaryContainer">#FAE3DC</item>
+        <item name="colorSecondary">#CB5731</item>
+        <item name="colorSecondaryContainer">#4C271B</item>
+        <item name="colorOnSecondaryContainer">#FAE3DC</item>
+    </style>
+    <style name="Overlay_Wheel_4_0" parent="">
+        <item name="colorPrimary">#FDC4A8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C2B1B</item>
+        <item name="colorOnPrimaryContainer">#FAE6DC</item>
+        <item name="colorSecondary">#FDC4A8</item>
+        <item name="colorSecondaryContainer">#4C2B1B</item>
+        <item name="colorOnSecondaryContainer">#FAE6DC</item>
+    </style>
+    <style name="Overlay_Wheel_4_1" parent="">
+        <item name="colorPrimary">#F9A77E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C2B1B</item>
+        <item name="colorOnPrimaryContainer">#FAE6DC</item>
+        <item name="colorSecondary">#F9A77E</item>
+        <item name="colorSecondaryContainer">#4C2B1B</item>
+        <item name="colorOnSecondaryContainer">#FAE6DC</item>
+    </style>
+    <style name="Overlay_Wheel_4_2" parent="">
+        <item name="colorPrimary">#F48C58</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C2B1B</item>
+        <item name="colorOnPrimaryContainer">#FAE6DC</item>
+        <item name="colorSecondary">#F48C58</item>
+        <item name="colorSecondaryContainer">#4C2B1B</item>
+        <item name="colorOnSecondaryContainer">#FAE6DC</item>
+    </style>
+    <style name="Overlay_Wheel_4_3" parent="">
+        <item name="colorPrimary">#E1733B</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C2B1B</item>
+        <item name="colorOnPrimaryContainer">#FAE6DC</item>
+        <item name="colorSecondary">#E1733B</item>
+        <item name="colorSecondaryContainer">#4C2B1B</item>
+        <item name="colorOnSecondaryContainer">#FAE6DC</item>
+    </style>
+    <style name="Overlay_Wheel_4_4" parent="">
+        <item name="colorPrimary">#CB6431</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C2B1B</item>
+        <item name="colorOnPrimaryContainer">#FAE6DC</item>
+        <item name="colorSecondary">#CB6431</item>
+        <item name="colorSecondaryContainer">#4C2B1B</item>
+        <item name="colorOnSecondaryContainer">#FAE6DC</item>
+    </style>
+    <style name="Overlay_Wheel_5_0" parent="">
+        <item name="colorPrimary">#FDCBA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C2F1B</item>
+        <item name="colorOnPrimaryContainer">#FAE8DC</item>
+        <item name="colorSecondary">#FDCBA8</item>
+        <item name="colorSecondaryContainer">#4C2F1B</item>
+        <item name="colorOnSecondaryContainer">#FAE8DC</item>
+    </style>
+    <style name="Overlay_Wheel_5_1" parent="">
+        <item name="colorPrimary">#F9B17E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C2F1B</item>
+        <item name="colorOnPrimaryContainer">#FAE8DC</item>
+        <item name="colorSecondary">#F9B17E</item>
+        <item name="colorSecondaryContainer">#4C2F1B</item>
+        <item name="colorOnSecondaryContainer">#FAE8DC</item>
+    </style>
+    <style name="Overlay_Wheel_5_2" parent="">
+        <item name="colorPrimary">#F49958</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C2F1B</item>
+        <item name="colorOnPrimaryContainer">#FAE8DC</item>
+        <item name="colorSecondary">#F49958</item>
+        <item name="colorSecondaryContainer">#4C2F1B</item>
+        <item name="colorOnSecondaryContainer">#FAE8DC</item>
+    </style>
+    <style name="Overlay_Wheel_5_3" parent="">
+        <item name="colorPrimary">#E1803B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C2F1B</item>
+        <item name="colorOnPrimaryContainer">#FAE8DC</item>
+        <item name="colorSecondary">#E1803B</item>
+        <item name="colorSecondaryContainer">#4C2F1B</item>
+        <item name="colorOnSecondaryContainer">#FAE8DC</item>
+    </style>
+    <style name="Overlay_Wheel_5_4" parent="">
+        <item name="colorPrimary">#CB7131</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C2F1B</item>
+        <item name="colorOnPrimaryContainer">#FAE8DC</item>
+        <item name="colorSecondary">#CB7131</item>
+        <item name="colorSecondaryContainer">#4C2F1B</item>
+        <item name="colorOnSecondaryContainer">#FAE8DC</item>
+    </style>
+    <style name="Overlay_Wheel_6_0" parent="">
+        <item name="colorPrimary">#FDD2A8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C341B</item>
+        <item name="colorOnPrimaryContainer">#FAEBDC</item>
+        <item name="colorSecondary">#FDD2A8</item>
+        <item name="colorSecondaryContainer">#4C341B</item>
+        <item name="colorOnSecondaryContainer">#FAEBDC</item>
+    </style>
+    <style name="Overlay_Wheel_6_1" parent="">
+        <item name="colorPrimary">#F9BB7E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C341B</item>
+        <item name="colorOnPrimaryContainer">#FAEBDC</item>
+        <item name="colorSecondary">#F9BB7E</item>
+        <item name="colorSecondaryContainer">#4C341B</item>
+        <item name="colorOnSecondaryContainer">#FAEBDC</item>
+    </style>
+    <style name="Overlay_Wheel_6_2" parent="">
+        <item name="colorPrimary">#F4A658</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C341B</item>
+        <item name="colorOnPrimaryContainer">#FAEBDC</item>
+        <item name="colorSecondary">#F4A658</item>
+        <item name="colorSecondaryContainer">#4C341B</item>
+        <item name="colorOnSecondaryContainer">#FAEBDC</item>
+    </style>
+    <style name="Overlay_Wheel_6_3" parent="">
+        <item name="colorPrimary">#E18E3B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C341B</item>
+        <item name="colorOnPrimaryContainer">#FAEBDC</item>
+        <item name="colorSecondary">#E18E3B</item>
+        <item name="colorSecondaryContainer">#4C341B</item>
+        <item name="colorOnSecondaryContainer">#FAEBDC</item>
+    </style>
+    <style name="Overlay_Wheel_6_4" parent="">
+        <item name="colorPrimary">#CB7E31</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C341B</item>
+        <item name="colorOnPrimaryContainer">#FAEBDC</item>
+        <item name="colorSecondary">#CB7E31</item>
+        <item name="colorSecondaryContainer">#4C341B</item>
+        <item name="colorOnSecondaryContainer">#FAEBDC</item>
+    </style>
+    <style name="Overlay_Wheel_7_0" parent="">
+        <item name="colorPrimary">#FDD9A8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C381B</item>
+        <item name="colorOnPrimaryContainer">#FAEDDC</item>
+        <item name="colorSecondary">#FDD9A8</item>
+        <item name="colorSecondaryContainer">#4C381B</item>
+        <item name="colorOnSecondaryContainer">#FAEDDC</item>
+    </style>
+    <style name="Overlay_Wheel_7_1" parent="">
+        <item name="colorPrimary">#F9C67E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C381B</item>
+        <item name="colorOnPrimaryContainer">#FAEDDC</item>
+        <item name="colorSecondary">#F9C67E</item>
+        <item name="colorSecondaryContainer">#4C381B</item>
+        <item name="colorOnSecondaryContainer">#FAEDDC</item>
+    </style>
+    <style name="Overlay_Wheel_7_2" parent="">
+        <item name="colorPrimary">#F4B358</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C381B</item>
+        <item name="colorOnPrimaryContainer">#FAEDDC</item>
+        <item name="colorSecondary">#F4B358</item>
+        <item name="colorSecondaryContainer">#4C381B</item>
+        <item name="colorOnSecondaryContainer">#FAEDDC</item>
+    </style>
+    <style name="Overlay_Wheel_7_3" parent="">
+        <item name="colorPrimary">#E19C3B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C381B</item>
+        <item name="colorOnPrimaryContainer">#FAEDDC</item>
+        <item name="colorSecondary">#E19C3B</item>
+        <item name="colorSecondaryContainer">#4C381B</item>
+        <item name="colorOnSecondaryContainer">#FAEDDC</item>
+    </style>
+    <style name="Overlay_Wheel_7_4" parent="">
+        <item name="colorPrimary">#CB8B31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C381B</item>
+        <item name="colorOnPrimaryContainer">#FAEDDC</item>
+        <item name="colorSecondary">#CB8B31</item>
+        <item name="colorSecondaryContainer">#4C381B</item>
+        <item name="colorOnSecondaryContainer">#FAEDDC</item>
+    </style>
+    <style name="Overlay_Wheel_8_0" parent="">
+        <item name="colorPrimary">#FDE0A8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C3C1B</item>
+        <item name="colorOnPrimaryContainer">#FAF0DC</item>
+        <item name="colorSecondary">#FDE0A8</item>
+        <item name="colorSecondaryContainer">#4C3C1B</item>
+        <item name="colorOnSecondaryContainer">#FAF0DC</item>
+    </style>
+    <style name="Overlay_Wheel_8_1" parent="">
+        <item name="colorPrimary">#F9D07E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C3C1B</item>
+        <item name="colorOnPrimaryContainer">#FAF0DC</item>
+        <item name="colorSecondary">#F9D07E</item>
+        <item name="colorSecondaryContainer">#4C3C1B</item>
+        <item name="colorOnSecondaryContainer">#FAF0DC</item>
+    </style>
+    <style name="Overlay_Wheel_8_2" parent="">
+        <item name="colorPrimary">#F4C058</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C3C1B</item>
+        <item name="colorOnPrimaryContainer">#FAF0DC</item>
+        <item name="colorSecondary">#F4C058</item>
+        <item name="colorSecondaryContainer">#4C3C1B</item>
+        <item name="colorOnSecondaryContainer">#FAF0DC</item>
+    </style>
+    <style name="Overlay_Wheel_8_3" parent="">
+        <item name="colorPrimary">#E1AA3B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C3C1B</item>
+        <item name="colorOnPrimaryContainer">#FAF0DC</item>
+        <item name="colorSecondary">#E1AA3B</item>
+        <item name="colorSecondaryContainer">#4C3C1B</item>
+        <item name="colorOnSecondaryContainer">#FAF0DC</item>
+    </style>
+    <style name="Overlay_Wheel_8_4" parent="">
+        <item name="colorPrimary">#CB9831</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C3C1B</item>
+        <item name="colorOnPrimaryContainer">#FAF0DC</item>
+        <item name="colorSecondary">#CB9831</item>
+        <item name="colorSecondaryContainer">#4C3C1B</item>
+        <item name="colorOnSecondaryContainer">#FAF0DC</item>
+    </style>
+    <style name="Overlay_Wheel_9_0" parent="">
+        <item name="colorPrimary">#FDE7A8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C401B</item>
+        <item name="colorOnPrimaryContainer">#FAF2DC</item>
+        <item name="colorSecondary">#FDE7A8</item>
+        <item name="colorSecondaryContainer">#4C401B</item>
+        <item name="colorOnSecondaryContainer">#FAF2DC</item>
+    </style>
+    <style name="Overlay_Wheel_9_1" parent="">
+        <item name="colorPrimary">#F9DA7E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C401B</item>
+        <item name="colorOnPrimaryContainer">#FAF2DC</item>
+        <item name="colorSecondary">#F9DA7E</item>
+        <item name="colorSecondaryContainer">#4C401B</item>
+        <item name="colorOnSecondaryContainer">#FAF2DC</item>
+    </style>
+    <style name="Overlay_Wheel_9_2" parent="">
+        <item name="colorPrimary">#F4CD58</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C401B</item>
+        <item name="colorOnPrimaryContainer">#FAF2DC</item>
+        <item name="colorSecondary">#F4CD58</item>
+        <item name="colorSecondaryContainer">#4C401B</item>
+        <item name="colorOnSecondaryContainer">#FAF2DC</item>
+    </style>
+    <style name="Overlay_Wheel_9_3" parent="">
+        <item name="colorPrimary">#E1B83B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C401B</item>
+        <item name="colorOnPrimaryContainer">#FAF2DC</item>
+        <item name="colorSecondary">#E1B83B</item>
+        <item name="colorSecondaryContainer">#4C401B</item>
+        <item name="colorOnSecondaryContainer">#FAF2DC</item>
+    </style>
+    <style name="Overlay_Wheel_9_4" parent="">
+        <item name="colorPrimary">#CBA531</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C401B</item>
+        <item name="colorOnPrimaryContainer">#FAF2DC</item>
+        <item name="colorSecondary">#CBA531</item>
+        <item name="colorSecondaryContainer">#4C401B</item>
+        <item name="colorOnSecondaryContainer">#FAF2DC</item>
+    </style>
+    <style name="Overlay_Wheel_10_0" parent="">
+        <item name="colorPrimary">#FDEFA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C441B</item>
+        <item name="colorOnPrimaryContainer">#FAF5DC</item>
+        <item name="colorSecondary">#FDEFA8</item>
+        <item name="colorSecondaryContainer">#4C441B</item>
+        <item name="colorOnSecondaryContainer">#FAF5DC</item>
+    </style>
+    <style name="Overlay_Wheel_10_1" parent="">
+        <item name="colorPrimary">#F9E57E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C441B</item>
+        <item name="colorOnPrimaryContainer">#FAF5DC</item>
+        <item name="colorSecondary">#F9E57E</item>
+        <item name="colorSecondaryContainer">#4C441B</item>
+        <item name="colorOnSecondaryContainer">#FAF5DC</item>
+    </style>
+    <style name="Overlay_Wheel_10_2" parent="">
+        <item name="colorPrimary">#F4DA58</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C441B</item>
+        <item name="colorOnPrimaryContainer">#FAF5DC</item>
+        <item name="colorSecondary">#F4DA58</item>
+        <item name="colorSecondaryContainer">#4C441B</item>
+        <item name="colorOnSecondaryContainer">#FAF5DC</item>
+    </style>
+    <style name="Overlay_Wheel_10_3" parent="">
+        <item name="colorPrimary">#E1C63B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C441B</item>
+        <item name="colorOnPrimaryContainer">#FAF5DC</item>
+        <item name="colorSecondary">#E1C63B</item>
+        <item name="colorSecondaryContainer">#4C441B</item>
+        <item name="colorOnSecondaryContainer">#FAF5DC</item>
+    </style>
+    <style name="Overlay_Wheel_10_4" parent="">
+        <item name="colorPrimary">#CBB231</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C441B</item>
+        <item name="colorOnPrimaryContainer">#FAF5DC</item>
+        <item name="colorSecondary">#CBB231</item>
+        <item name="colorSecondaryContainer">#4C441B</item>
+        <item name="colorOnSecondaryContainer">#FAF5DC</item>
+    </style>
+    <style name="Overlay_Wheel_11_0" parent="">
+        <item name="colorPrimary">#FDF6A8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C481B</item>
+        <item name="colorOnPrimaryContainer">#FAF7DC</item>
+        <item name="colorSecondary">#FDF6A8</item>
+        <item name="colorSecondaryContainer">#4C481B</item>
+        <item name="colorOnSecondaryContainer">#FAF7DC</item>
+    </style>
+    <style name="Overlay_Wheel_11_1" parent="">
+        <item name="colorPrimary">#F9EF7E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C481B</item>
+        <item name="colorOnPrimaryContainer">#FAF7DC</item>
+        <item name="colorSecondary">#F9EF7E</item>
+        <item name="colorSecondaryContainer">#4C481B</item>
+        <item name="colorOnSecondaryContainer">#FAF7DC</item>
+    </style>
+    <style name="Overlay_Wheel_11_2" parent="">
+        <item name="colorPrimary">#F4E758</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C481B</item>
+        <item name="colorOnPrimaryContainer">#FAF7DC</item>
+        <item name="colorSecondary">#F4E758</item>
+        <item name="colorSecondaryContainer">#4C481B</item>
+        <item name="colorOnSecondaryContainer">#FAF7DC</item>
+    </style>
+    <style name="Overlay_Wheel_11_3" parent="">
+        <item name="colorPrimary">#E1D33B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C481B</item>
+        <item name="colorOnPrimaryContainer">#FAF7DC</item>
+        <item name="colorSecondary">#E1D33B</item>
+        <item name="colorSecondaryContainer">#4C481B</item>
+        <item name="colorOnSecondaryContainer">#FAF7DC</item>
+    </style>
+    <style name="Overlay_Wheel_11_4" parent="">
+        <item name="colorPrimary">#CBBE31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C481B</item>
+        <item name="colorOnPrimaryContainer">#FAF7DC</item>
+        <item name="colorSecondary">#CBBE31</item>
+        <item name="colorSecondaryContainer">#4C481B</item>
+        <item name="colorOnSecondaryContainer">#FAF7DC</item>
+    </style>
+    <style name="Overlay_Wheel_12_0" parent="">
+        <item name="colorPrimary">#FDFDA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C4C1B</item>
+        <item name="colorOnPrimaryContainer">#FAFADC</item>
+        <item name="colorSecondary">#FDFDA8</item>
+        <item name="colorSecondaryContainer">#4C4C1B</item>
+        <item name="colorOnSecondaryContainer">#FAFADC</item>
+    </style>
+    <style name="Overlay_Wheel_12_1" parent="">
+        <item name="colorPrimary">#F9F97E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C4C1B</item>
+        <item name="colorOnPrimaryContainer">#FAFADC</item>
+        <item name="colorSecondary">#F9F97E</item>
+        <item name="colorSecondaryContainer">#4C4C1B</item>
+        <item name="colorOnSecondaryContainer">#FAFADC</item>
+    </style>
+    <style name="Overlay_Wheel_12_2" parent="">
+        <item name="colorPrimary">#F4F458</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C4C1B</item>
+        <item name="colorOnPrimaryContainer">#FAFADC</item>
+        <item name="colorSecondary">#F4F458</item>
+        <item name="colorSecondaryContainer">#4C4C1B</item>
+        <item name="colorOnSecondaryContainer">#FAFADC</item>
+    </style>
+    <style name="Overlay_Wheel_12_3" parent="">
+        <item name="colorPrimary">#E1E13B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C4C1B</item>
+        <item name="colorOnPrimaryContainer">#FAFADC</item>
+        <item name="colorSecondary">#E1E13B</item>
+        <item name="colorSecondaryContainer">#4C4C1B</item>
+        <item name="colorOnSecondaryContainer">#FAFADC</item>
+    </style>
+    <style name="Overlay_Wheel_12_4" parent="">
+        <item name="colorPrimary">#CBCB31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C4C1B</item>
+        <item name="colorOnPrimaryContainer">#FAFADC</item>
+        <item name="colorSecondary">#CBCB31</item>
+        <item name="colorSecondaryContainer">#4C4C1B</item>
+        <item name="colorOnSecondaryContainer">#FAFADC</item>
+    </style>
+    <style name="Overlay_Wheel_13_0" parent="">
+        <item name="colorPrimary">#F6FDA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#484C1B</item>
+        <item name="colorOnPrimaryContainer">#F7FADC</item>
+        <item name="colorSecondary">#F6FDA8</item>
+        <item name="colorSecondaryContainer">#484C1B</item>
+        <item name="colorOnSecondaryContainer">#F7FADC</item>
+    </style>
+    <style name="Overlay_Wheel_13_1" parent="">
+        <item name="colorPrimary">#EFF97E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#484C1B</item>
+        <item name="colorOnPrimaryContainer">#F7FADC</item>
+        <item name="colorSecondary">#EFF97E</item>
+        <item name="colorSecondaryContainer">#484C1B</item>
+        <item name="colorOnSecondaryContainer">#F7FADC</item>
+    </style>
+    <style name="Overlay_Wheel_13_2" parent="">
+        <item name="colorPrimary">#E7F458</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#484C1B</item>
+        <item name="colorOnPrimaryContainer">#F7FADC</item>
+        <item name="colorSecondary">#E7F458</item>
+        <item name="colorSecondaryContainer">#484C1B</item>
+        <item name="colorOnSecondaryContainer">#F7FADC</item>
+    </style>
+    <style name="Overlay_Wheel_13_3" parent="">
+        <item name="colorPrimary">#D3E13B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#484C1B</item>
+        <item name="colorOnPrimaryContainer">#F7FADC</item>
+        <item name="colorSecondary">#D3E13B</item>
+        <item name="colorSecondaryContainer">#484C1B</item>
+        <item name="colorOnSecondaryContainer">#F7FADC</item>
+    </style>
+    <style name="Overlay_Wheel_13_4" parent="">
+        <item name="colorPrimary">#BECB31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#484C1B</item>
+        <item name="colorOnPrimaryContainer">#F7FADC</item>
+        <item name="colorSecondary">#BECB31</item>
+        <item name="colorSecondaryContainer">#484C1B</item>
+        <item name="colorOnSecondaryContainer">#F7FADC</item>
+    </style>
+    <style name="Overlay_Wheel_14_0" parent="">
+        <item name="colorPrimary">#EFFDA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#444C1B</item>
+        <item name="colorOnPrimaryContainer">#F5FADC</item>
+        <item name="colorSecondary">#EFFDA8</item>
+        <item name="colorSecondaryContainer">#444C1B</item>
+        <item name="colorOnSecondaryContainer">#F5FADC</item>
+    </style>
+    <style name="Overlay_Wheel_14_1" parent="">
+        <item name="colorPrimary">#E5F97E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#444C1B</item>
+        <item name="colorOnPrimaryContainer">#F5FADC</item>
+        <item name="colorSecondary">#E5F97E</item>
+        <item name="colorSecondaryContainer">#444C1B</item>
+        <item name="colorOnSecondaryContainer">#F5FADC</item>
+    </style>
+    <style name="Overlay_Wheel_14_2" parent="">
+        <item name="colorPrimary">#DAF458</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#444C1B</item>
+        <item name="colorOnPrimaryContainer">#F5FADC</item>
+        <item name="colorSecondary">#DAF458</item>
+        <item name="colorSecondaryContainer">#444C1B</item>
+        <item name="colorOnSecondaryContainer">#F5FADC</item>
+    </style>
+    <style name="Overlay_Wheel_14_3" parent="">
+        <item name="colorPrimary">#C6E13B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#444C1B</item>
+        <item name="colorOnPrimaryContainer">#F5FADC</item>
+        <item name="colorSecondary">#C6E13B</item>
+        <item name="colorSecondaryContainer">#444C1B</item>
+        <item name="colorOnSecondaryContainer">#F5FADC</item>
+    </style>
+    <style name="Overlay_Wheel_14_4" parent="">
+        <item name="colorPrimary">#B2CB31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#444C1B</item>
+        <item name="colorOnPrimaryContainer">#F5FADC</item>
+        <item name="colorSecondary">#B2CB31</item>
+        <item name="colorSecondaryContainer">#444C1B</item>
+        <item name="colorOnSecondaryContainer">#F5FADC</item>
+    </style>
+    <style name="Overlay_Wheel_15_0" parent="">
+        <item name="colorPrimary">#E7FDA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#404C1B</item>
+        <item name="colorOnPrimaryContainer">#F2FADC</item>
+        <item name="colorSecondary">#E7FDA8</item>
+        <item name="colorSecondaryContainer">#404C1B</item>
+        <item name="colorOnSecondaryContainer">#F2FADC</item>
+    </style>
+    <style name="Overlay_Wheel_15_1" parent="">
+        <item name="colorPrimary">#DAF97E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#404C1B</item>
+        <item name="colorOnPrimaryContainer">#F2FADC</item>
+        <item name="colorSecondary">#DAF97E</item>
+        <item name="colorSecondaryContainer">#404C1B</item>
+        <item name="colorOnSecondaryContainer">#F2FADC</item>
+    </style>
+    <style name="Overlay_Wheel_15_2" parent="">
+        <item name="colorPrimary">#CDF458</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#404C1B</item>
+        <item name="colorOnPrimaryContainer">#F2FADC</item>
+        <item name="colorSecondary">#CDF458</item>
+        <item name="colorSecondaryContainer">#404C1B</item>
+        <item name="colorOnSecondaryContainer">#F2FADC</item>
+    </style>
+    <style name="Overlay_Wheel_15_3" parent="">
+        <item name="colorPrimary">#B8E13B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#404C1B</item>
+        <item name="colorOnPrimaryContainer">#F2FADC</item>
+        <item name="colorSecondary">#B8E13B</item>
+        <item name="colorSecondaryContainer">#404C1B</item>
+        <item name="colorOnSecondaryContainer">#F2FADC</item>
+    </style>
+    <style name="Overlay_Wheel_15_4" parent="">
+        <item name="colorPrimary">#A5CB31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#404C1B</item>
+        <item name="colorOnPrimaryContainer">#F2FADC</item>
+        <item name="colorSecondary">#A5CB31</item>
+        <item name="colorSecondaryContainer">#404C1B</item>
+        <item name="colorOnSecondaryContainer">#F2FADC</item>
+    </style>
+    <style name="Overlay_Wheel_16_0" parent="">
+        <item name="colorPrimary">#E0FDA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#3C4C1B</item>
+        <item name="colorOnPrimaryContainer">#F0FADC</item>
+        <item name="colorSecondary">#E0FDA8</item>
+        <item name="colorSecondaryContainer">#3C4C1B</item>
+        <item name="colorOnSecondaryContainer">#F0FADC</item>
+    </style>
+    <style name="Overlay_Wheel_16_1" parent="">
+        <item name="colorPrimary">#D0F97E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#3C4C1B</item>
+        <item name="colorOnPrimaryContainer">#F0FADC</item>
+        <item name="colorSecondary">#D0F97E</item>
+        <item name="colorSecondaryContainer">#3C4C1B</item>
+        <item name="colorOnSecondaryContainer">#F0FADC</item>
+    </style>
+    <style name="Overlay_Wheel_16_2" parent="">
+        <item name="colorPrimary">#C0F458</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#3C4C1B</item>
+        <item name="colorOnPrimaryContainer">#F0FADC</item>
+        <item name="colorSecondary">#C0F458</item>
+        <item name="colorSecondaryContainer">#3C4C1B</item>
+        <item name="colorOnSecondaryContainer">#F0FADC</item>
+    </style>
+    <style name="Overlay_Wheel_16_3" parent="">
+        <item name="colorPrimary">#AAE13B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#3C4C1B</item>
+        <item name="colorOnPrimaryContainer">#F0FADC</item>
+        <item name="colorSecondary">#AAE13B</item>
+        <item name="colorSecondaryContainer">#3C4C1B</item>
+        <item name="colorOnSecondaryContainer">#F0FADC</item>
+    </style>
+    <style name="Overlay_Wheel_16_4" parent="">
+        <item name="colorPrimary">#98CB31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#3C4C1B</item>
+        <item name="colorOnPrimaryContainer">#F0FADC</item>
+        <item name="colorSecondary">#98CB31</item>
+        <item name="colorSecondaryContainer">#3C4C1B</item>
+        <item name="colorOnSecondaryContainer">#F0FADC</item>
+    </style>
+    <style name="Overlay_Wheel_17_0" parent="">
+        <item name="colorPrimary">#D9FDA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#384C1B</item>
+        <item name="colorOnPrimaryContainer">#EDFADC</item>
+        <item name="colorSecondary">#D9FDA8</item>
+        <item name="colorSecondaryContainer">#384C1B</item>
+        <item name="colorOnSecondaryContainer">#EDFADC</item>
+    </style>
+    <style name="Overlay_Wheel_17_1" parent="">
+        <item name="colorPrimary">#C6F97E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#384C1B</item>
+        <item name="colorOnPrimaryContainer">#EDFADC</item>
+        <item name="colorSecondary">#C6F97E</item>
+        <item name="colorSecondaryContainer">#384C1B</item>
+        <item name="colorOnSecondaryContainer">#EDFADC</item>
+    </style>
+    <style name="Overlay_Wheel_17_2" parent="">
+        <item name="colorPrimary">#B3F458</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#384C1B</item>
+        <item name="colorOnPrimaryContainer">#EDFADC</item>
+        <item name="colorSecondary">#B3F458</item>
+        <item name="colorSecondaryContainer">#384C1B</item>
+        <item name="colorOnSecondaryContainer">#EDFADC</item>
+    </style>
+    <style name="Overlay_Wheel_17_3" parent="">
+        <item name="colorPrimary">#9CE13B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#384C1B</item>
+        <item name="colorOnPrimaryContainer">#EDFADC</item>
+        <item name="colorSecondary">#9CE13B</item>
+        <item name="colorSecondaryContainer">#384C1B</item>
+        <item name="colorOnSecondaryContainer">#EDFADC</item>
+    </style>
+    <style name="Overlay_Wheel_17_4" parent="">
+        <item name="colorPrimary">#8BCB31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#384C1B</item>
+        <item name="colorOnPrimaryContainer">#EDFADC</item>
+        <item name="colorSecondary">#8BCB31</item>
+        <item name="colorSecondaryContainer">#384C1B</item>
+        <item name="colorOnSecondaryContainer">#EDFADC</item>
+    </style>
+    <style name="Overlay_Wheel_18_0" parent="">
+        <item name="colorPrimary">#D2FDA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#344C1B</item>
+        <item name="colorOnPrimaryContainer">#EBFADC</item>
+        <item name="colorSecondary">#D2FDA8</item>
+        <item name="colorSecondaryContainer">#344C1B</item>
+        <item name="colorOnSecondaryContainer">#EBFADC</item>
+    </style>
+    <style name="Overlay_Wheel_18_1" parent="">
+        <item name="colorPrimary">#BBF97E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#344C1B</item>
+        <item name="colorOnPrimaryContainer">#EBFADC</item>
+        <item name="colorSecondary">#BBF97E</item>
+        <item name="colorSecondaryContainer">#344C1B</item>
+        <item name="colorOnSecondaryContainer">#EBFADC</item>
+    </style>
+    <style name="Overlay_Wheel_18_2" parent="">
+        <item name="colorPrimary">#A6F458</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#344C1B</item>
+        <item name="colorOnPrimaryContainer">#EBFADC</item>
+        <item name="colorSecondary">#A6F458</item>
+        <item name="colorSecondaryContainer">#344C1B</item>
+        <item name="colorOnSecondaryContainer">#EBFADC</item>
+    </style>
+    <style name="Overlay_Wheel_18_3" parent="">
+        <item name="colorPrimary">#8EE13B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#344C1B</item>
+        <item name="colorOnPrimaryContainer">#EBFADC</item>
+        <item name="colorSecondary">#8EE13B</item>
+        <item name="colorSecondaryContainer">#344C1B</item>
+        <item name="colorOnSecondaryContainer">#EBFADC</item>
+    </style>
+    <style name="Overlay_Wheel_18_4" parent="">
+        <item name="colorPrimary">#7ECB31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#344C1B</item>
+        <item name="colorOnPrimaryContainer">#EBFADC</item>
+        <item name="colorSecondary">#7ECB31</item>
+        <item name="colorSecondaryContainer">#344C1B</item>
+        <item name="colorOnSecondaryContainer">#EBFADC</item>
+    </style>
+    <style name="Overlay_Wheel_19_0" parent="">
+        <item name="colorPrimary">#CBFDA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#2F4C1B</item>
+        <item name="colorOnPrimaryContainer">#E8FADC</item>
+        <item name="colorSecondary">#CBFDA8</item>
+        <item name="colorSecondaryContainer">#2F4C1B</item>
+        <item name="colorOnSecondaryContainer">#E8FADC</item>
+    </style>
+    <style name="Overlay_Wheel_19_1" parent="">
+        <item name="colorPrimary">#B1F97E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#2F4C1B</item>
+        <item name="colorOnPrimaryContainer">#E8FADC</item>
+        <item name="colorSecondary">#B1F97E</item>
+        <item name="colorSecondaryContainer">#2F4C1B</item>
+        <item name="colorOnSecondaryContainer">#E8FADC</item>
+    </style>
+    <style name="Overlay_Wheel_19_2" parent="">
+        <item name="colorPrimary">#99F458</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#2F4C1B</item>
+        <item name="colorOnPrimaryContainer">#E8FADC</item>
+        <item name="colorSecondary">#99F458</item>
+        <item name="colorSecondaryContainer">#2F4C1B</item>
+        <item name="colorOnSecondaryContainer">#E8FADC</item>
+    </style>
+    <style name="Overlay_Wheel_19_3" parent="">
+        <item name="colorPrimary">#80E13B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#2F4C1B</item>
+        <item name="colorOnPrimaryContainer">#E8FADC</item>
+        <item name="colorSecondary">#80E13B</item>
+        <item name="colorSecondaryContainer">#2F4C1B</item>
+        <item name="colorOnSecondaryContainer">#E8FADC</item>
+    </style>
+    <style name="Overlay_Wheel_19_4" parent="">
+        <item name="colorPrimary">#71CB31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#2F4C1B</item>
+        <item name="colorOnPrimaryContainer">#E8FADC</item>
+        <item name="colorSecondary">#71CB31</item>
+        <item name="colorSecondaryContainer">#2F4C1B</item>
+        <item name="colorOnSecondaryContainer">#E8FADC</item>
+    </style>
+    <style name="Overlay_Wheel_20_0" parent="">
+        <item name="colorPrimary">#C4FDA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#2B4C1B</item>
+        <item name="colorOnPrimaryContainer">#E6FADC</item>
+        <item name="colorSecondary">#C4FDA8</item>
+        <item name="colorSecondaryContainer">#2B4C1B</item>
+        <item name="colorOnSecondaryContainer">#E6FADC</item>
+    </style>
+    <style name="Overlay_Wheel_20_1" parent="">
+        <item name="colorPrimary">#A7F97E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#2B4C1B</item>
+        <item name="colorOnPrimaryContainer">#E6FADC</item>
+        <item name="colorSecondary">#A7F97E</item>
+        <item name="colorSecondaryContainer">#2B4C1B</item>
+        <item name="colorOnSecondaryContainer">#E6FADC</item>
+    </style>
+    <style name="Overlay_Wheel_20_2" parent="">
+        <item name="colorPrimary">#8CF458</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#2B4C1B</item>
+        <item name="colorOnPrimaryContainer">#E6FADC</item>
+        <item name="colorSecondary">#8CF458</item>
+        <item name="colorSecondaryContainer">#2B4C1B</item>
+        <item name="colorOnSecondaryContainer">#E6FADC</item>
+    </style>
+    <style name="Overlay_Wheel_20_3" parent="">
+        <item name="colorPrimary">#73E13B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#2B4C1B</item>
+        <item name="colorOnPrimaryContainer">#E6FADC</item>
+        <item name="colorSecondary">#73E13B</item>
+        <item name="colorSecondaryContainer">#2B4C1B</item>
+        <item name="colorOnSecondaryContainer">#E6FADC</item>
+    </style>
+    <style name="Overlay_Wheel_20_4" parent="">
+        <item name="colorPrimary">#64CB31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#2B4C1B</item>
+        <item name="colorOnPrimaryContainer">#E6FADC</item>
+        <item name="colorSecondary">#64CB31</item>
+        <item name="colorSecondaryContainer">#2B4C1B</item>
+        <item name="colorOnSecondaryContainer">#E6FADC</item>
+    </style>
+    <style name="Overlay_Wheel_21_0" parent="">
+        <item name="colorPrimary">#BDFDA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#274C1B</item>
+        <item name="colorOnPrimaryContainer">#E3FADC</item>
+        <item name="colorSecondary">#BDFDA8</item>
+        <item name="colorSecondaryContainer">#274C1B</item>
+        <item name="colorOnSecondaryContainer">#E3FADC</item>
+    </style>
+    <style name="Overlay_Wheel_21_1" parent="">
+        <item name="colorPrimary">#9DF97E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#274C1B</item>
+        <item name="colorOnPrimaryContainer">#E3FADC</item>
+        <item name="colorSecondary">#9DF97E</item>
+        <item name="colorSecondaryContainer">#274C1B</item>
+        <item name="colorOnSecondaryContainer">#E3FADC</item>
+    </style>
+    <style name="Overlay_Wheel_21_2" parent="">
+        <item name="colorPrimary">#7FF458</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#274C1B</item>
+        <item name="colorOnPrimaryContainer">#E3FADC</item>
+        <item name="colorSecondary">#7FF458</item>
+        <item name="colorSecondaryContainer">#274C1B</item>
+        <item name="colorOnSecondaryContainer">#E3FADC</item>
+    </style>
+    <style name="Overlay_Wheel_21_3" parent="">
+        <item name="colorPrimary">#65E13B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#274C1B</item>
+        <item name="colorOnPrimaryContainer">#E3FADC</item>
+        <item name="colorSecondary">#65E13B</item>
+        <item name="colorSecondaryContainer">#274C1B</item>
+        <item name="colorOnSecondaryContainer">#E3FADC</item>
+    </style>
+    <style name="Overlay_Wheel_21_4" parent="">
+        <item name="colorPrimary">#57CB31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#274C1B</item>
+        <item name="colorOnPrimaryContainer">#E3FADC</item>
+        <item name="colorSecondary">#57CB31</item>
+        <item name="colorSecondaryContainer">#274C1B</item>
+        <item name="colorOnSecondaryContainer">#E3FADC</item>
+    </style>
+    <style name="Overlay_Wheel_22_0" parent="">
+        <item name="colorPrimary">#B6FDA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#234C1B</item>
+        <item name="colorOnPrimaryContainer">#E1FADC</item>
+        <item name="colorSecondary">#B6FDA8</item>
+        <item name="colorSecondaryContainer">#234C1B</item>
+        <item name="colorOnSecondaryContainer">#E1FADC</item>
+    </style>
+    <style name="Overlay_Wheel_22_1" parent="">
+        <item name="colorPrimary">#92F97E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#234C1B</item>
+        <item name="colorOnPrimaryContainer">#E1FADC</item>
+        <item name="colorSecondary">#92F97E</item>
+        <item name="colorSecondaryContainer">#234C1B</item>
+        <item name="colorOnSecondaryContainer">#E1FADC</item>
+    </style>
+    <style name="Overlay_Wheel_22_2" parent="">
+        <item name="colorPrimary">#72F458</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#234C1B</item>
+        <item name="colorOnPrimaryContainer">#E1FADC</item>
+        <item name="colorSecondary">#72F458</item>
+        <item name="colorSecondaryContainer">#234C1B</item>
+        <item name="colorOnSecondaryContainer">#E1FADC</item>
+    </style>
+    <style name="Overlay_Wheel_22_3" parent="">
+        <item name="colorPrimary">#57E13B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#234C1B</item>
+        <item name="colorOnPrimaryContainer">#E1FADC</item>
+        <item name="colorSecondary">#57E13B</item>
+        <item name="colorSecondaryContainer">#234C1B</item>
+        <item name="colorOnSecondaryContainer">#E1FADC</item>
+    </style>
+    <style name="Overlay_Wheel_22_4" parent="">
+        <item name="colorPrimary">#4BCB31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#234C1B</item>
+        <item name="colorOnPrimaryContainer">#E1FADC</item>
+        <item name="colorSecondary">#4BCB31</item>
+        <item name="colorSecondaryContainer">#234C1B</item>
+        <item name="colorOnSecondaryContainer">#E1FADC</item>
+    </style>
+    <style name="Overlay_Wheel_23_0" parent="">
+        <item name="colorPrimary">#AFFDA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1F4C1B</item>
+        <item name="colorOnPrimaryContainer">#DEFADC</item>
+        <item name="colorSecondary">#AFFDA8</item>
+        <item name="colorSecondaryContainer">#1F4C1B</item>
+        <item name="colorOnSecondaryContainer">#DEFADC</item>
+    </style>
+    <style name="Overlay_Wheel_23_1" parent="">
+        <item name="colorPrimary">#88F97E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1F4C1B</item>
+        <item name="colorOnPrimaryContainer">#DEFADC</item>
+        <item name="colorSecondary">#88F97E</item>
+        <item name="colorSecondaryContainer">#1F4C1B</item>
+        <item name="colorOnSecondaryContainer">#DEFADC</item>
+    </style>
+    <style name="Overlay_Wheel_23_2" parent="">
+        <item name="colorPrimary">#65F458</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1F4C1B</item>
+        <item name="colorOnPrimaryContainer">#DEFADC</item>
+        <item name="colorSecondary">#65F458</item>
+        <item name="colorSecondaryContainer">#1F4C1B</item>
+        <item name="colorOnSecondaryContainer">#DEFADC</item>
+    </style>
+    <style name="Overlay_Wheel_23_3" parent="">
+        <item name="colorPrimary">#49E13B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1F4C1B</item>
+        <item name="colorOnPrimaryContainer">#DEFADC</item>
+        <item name="colorSecondary">#49E13B</item>
+        <item name="colorSecondaryContainer">#1F4C1B</item>
+        <item name="colorOnSecondaryContainer">#DEFADC</item>
+    </style>
+    <style name="Overlay_Wheel_23_4" parent="">
+        <item name="colorPrimary">#3ECB31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1F4C1B</item>
+        <item name="colorOnPrimaryContainer">#DEFADC</item>
+        <item name="colorSecondary">#3ECB31</item>
+        <item name="colorSecondaryContainer">#1F4C1B</item>
+        <item name="colorOnSecondaryContainer">#DEFADC</item>
+    </style>
+    <style name="Overlay_Wheel_24_0" parent="">
+        <item name="colorPrimary">#A8FDA8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C1B</item>
+        <item name="colorOnPrimaryContainer">#DCFADC</item>
+        <item name="colorSecondary">#A8FDA8</item>
+        <item name="colorSecondaryContainer">#1B4C1B</item>
+        <item name="colorOnSecondaryContainer">#DCFADC</item>
+    </style>
+    <style name="Overlay_Wheel_24_1" parent="">
+        <item name="colorPrimary">#7EF97E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C1B</item>
+        <item name="colorOnPrimaryContainer">#DCFADC</item>
+        <item name="colorSecondary">#7EF97E</item>
+        <item name="colorSecondaryContainer">#1B4C1B</item>
+        <item name="colorOnSecondaryContainer">#DCFADC</item>
+    </style>
+    <style name="Overlay_Wheel_24_2" parent="">
+        <item name="colorPrimary">#58F458</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C1B</item>
+        <item name="colorOnPrimaryContainer">#DCFADC</item>
+        <item name="colorSecondary">#58F458</item>
+        <item name="colorSecondaryContainer">#1B4C1B</item>
+        <item name="colorOnSecondaryContainer">#DCFADC</item>
+    </style>
+    <style name="Overlay_Wheel_24_3" parent="">
+        <item name="colorPrimary">#3BE13B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C1B</item>
+        <item name="colorOnPrimaryContainer">#DCFADC</item>
+        <item name="colorSecondary">#3BE13B</item>
+        <item name="colorSecondaryContainer">#1B4C1B</item>
+        <item name="colorOnSecondaryContainer">#DCFADC</item>
+    </style>
+    <style name="Overlay_Wheel_24_4" parent="">
+        <item name="colorPrimary">#31CB31</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C1B</item>
+        <item name="colorOnPrimaryContainer">#DCFADC</item>
+        <item name="colorSecondary">#31CB31</item>
+        <item name="colorSecondaryContainer">#1B4C1B</item>
+        <item name="colorOnSecondaryContainer">#DCFADC</item>
+    </style>
+    <style name="Overlay_Wheel_25_0" parent="">
+        <item name="colorPrimary">#A8FDAF</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C1F</item>
+        <item name="colorOnPrimaryContainer">#DCFADE</item>
+        <item name="colorSecondary">#A8FDAF</item>
+        <item name="colorSecondaryContainer">#1B4C1F</item>
+        <item name="colorOnSecondaryContainer">#DCFADE</item>
+    </style>
+    <style name="Overlay_Wheel_25_1" parent="">
+        <item name="colorPrimary">#7EF988</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C1F</item>
+        <item name="colorOnPrimaryContainer">#DCFADE</item>
+        <item name="colorSecondary">#7EF988</item>
+        <item name="colorSecondaryContainer">#1B4C1F</item>
+        <item name="colorOnSecondaryContainer">#DCFADE</item>
+    </style>
+    <style name="Overlay_Wheel_25_2" parent="">
+        <item name="colorPrimary">#58F465</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C1F</item>
+        <item name="colorOnPrimaryContainer">#DCFADE</item>
+        <item name="colorSecondary">#58F465</item>
+        <item name="colorSecondaryContainer">#1B4C1F</item>
+        <item name="colorOnSecondaryContainer">#DCFADE</item>
+    </style>
+    <style name="Overlay_Wheel_25_3" parent="">
+        <item name="colorPrimary">#3BE149</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C1F</item>
+        <item name="colorOnPrimaryContainer">#DCFADE</item>
+        <item name="colorSecondary">#3BE149</item>
+        <item name="colorSecondaryContainer">#1B4C1F</item>
+        <item name="colorOnSecondaryContainer">#DCFADE</item>
+    </style>
+    <style name="Overlay_Wheel_25_4" parent="">
+        <item name="colorPrimary">#31CB3E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C1F</item>
+        <item name="colorOnPrimaryContainer">#DCFADE</item>
+        <item name="colorSecondary">#31CB3E</item>
+        <item name="colorSecondaryContainer">#1B4C1F</item>
+        <item name="colorOnSecondaryContainer">#DCFADE</item>
+    </style>
+    <style name="Overlay_Wheel_26_0" parent="">
+        <item name="colorPrimary">#A8FDB6</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C23</item>
+        <item name="colorOnPrimaryContainer">#DCFAE1</item>
+        <item name="colorSecondary">#A8FDB6</item>
+        <item name="colorSecondaryContainer">#1B4C23</item>
+        <item name="colorOnSecondaryContainer">#DCFAE1</item>
+    </style>
+    <style name="Overlay_Wheel_26_1" parent="">
+        <item name="colorPrimary">#7EF992</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C23</item>
+        <item name="colorOnPrimaryContainer">#DCFAE1</item>
+        <item name="colorSecondary">#7EF992</item>
+        <item name="colorSecondaryContainer">#1B4C23</item>
+        <item name="colorOnSecondaryContainer">#DCFAE1</item>
+    </style>
+    <style name="Overlay_Wheel_26_2" parent="">
+        <item name="colorPrimary">#58F472</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C23</item>
+        <item name="colorOnPrimaryContainer">#DCFAE1</item>
+        <item name="colorSecondary">#58F472</item>
+        <item name="colorSecondaryContainer">#1B4C23</item>
+        <item name="colorOnSecondaryContainer">#DCFAE1</item>
+    </style>
+    <style name="Overlay_Wheel_26_3" parent="">
+        <item name="colorPrimary">#3BE157</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C23</item>
+        <item name="colorOnPrimaryContainer">#DCFAE1</item>
+        <item name="colorSecondary">#3BE157</item>
+        <item name="colorSecondaryContainer">#1B4C23</item>
+        <item name="colorOnSecondaryContainer">#DCFAE1</item>
+    </style>
+    <style name="Overlay_Wheel_26_4" parent="">
+        <item name="colorPrimary">#31CB4B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C23</item>
+        <item name="colorOnPrimaryContainer">#DCFAE1</item>
+        <item name="colorSecondary">#31CB4B</item>
+        <item name="colorSecondaryContainer">#1B4C23</item>
+        <item name="colorOnSecondaryContainer">#DCFAE1</item>
+    </style>
+    <style name="Overlay_Wheel_27_0" parent="">
+        <item name="colorPrimary">#A8FDBD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C27</item>
+        <item name="colorOnPrimaryContainer">#DCFAE3</item>
+        <item name="colorSecondary">#A8FDBD</item>
+        <item name="colorSecondaryContainer">#1B4C27</item>
+        <item name="colorOnSecondaryContainer">#DCFAE3</item>
+    </style>
+    <style name="Overlay_Wheel_27_1" parent="">
+        <item name="colorPrimary">#7EF99D</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C27</item>
+        <item name="colorOnPrimaryContainer">#DCFAE3</item>
+        <item name="colorSecondary">#7EF99D</item>
+        <item name="colorSecondaryContainer">#1B4C27</item>
+        <item name="colorOnSecondaryContainer">#DCFAE3</item>
+    </style>
+    <style name="Overlay_Wheel_27_2" parent="">
+        <item name="colorPrimary">#58F47F</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C27</item>
+        <item name="colorOnPrimaryContainer">#DCFAE3</item>
+        <item name="colorSecondary">#58F47F</item>
+        <item name="colorSecondaryContainer">#1B4C27</item>
+        <item name="colorOnSecondaryContainer">#DCFAE3</item>
+    </style>
+    <style name="Overlay_Wheel_27_3" parent="">
+        <item name="colorPrimary">#3BE165</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C27</item>
+        <item name="colorOnPrimaryContainer">#DCFAE3</item>
+        <item name="colorSecondary">#3BE165</item>
+        <item name="colorSecondaryContainer">#1B4C27</item>
+        <item name="colorOnSecondaryContainer">#DCFAE3</item>
+    </style>
+    <style name="Overlay_Wheel_27_4" parent="">
+        <item name="colorPrimary">#31CB57</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C27</item>
+        <item name="colorOnPrimaryContainer">#DCFAE3</item>
+        <item name="colorSecondary">#31CB57</item>
+        <item name="colorSecondaryContainer">#1B4C27</item>
+        <item name="colorOnSecondaryContainer">#DCFAE3</item>
+    </style>
+    <style name="Overlay_Wheel_28_0" parent="">
+        <item name="colorPrimary">#A8FDC4</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C2B</item>
+        <item name="colorOnPrimaryContainer">#DCFAE6</item>
+        <item name="colorSecondary">#A8FDC4</item>
+        <item name="colorSecondaryContainer">#1B4C2B</item>
+        <item name="colorOnSecondaryContainer">#DCFAE6</item>
+    </style>
+    <style name="Overlay_Wheel_28_1" parent="">
+        <item name="colorPrimary">#7EF9A7</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C2B</item>
+        <item name="colorOnPrimaryContainer">#DCFAE6</item>
+        <item name="colorSecondary">#7EF9A7</item>
+        <item name="colorSecondaryContainer">#1B4C2B</item>
+        <item name="colorOnSecondaryContainer">#DCFAE6</item>
+    </style>
+    <style name="Overlay_Wheel_28_2" parent="">
+        <item name="colorPrimary">#58F48C</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C2B</item>
+        <item name="colorOnPrimaryContainer">#DCFAE6</item>
+        <item name="colorSecondary">#58F48C</item>
+        <item name="colorSecondaryContainer">#1B4C2B</item>
+        <item name="colorOnSecondaryContainer">#DCFAE6</item>
+    </style>
+    <style name="Overlay_Wheel_28_3" parent="">
+        <item name="colorPrimary">#3BE173</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C2B</item>
+        <item name="colorOnPrimaryContainer">#DCFAE6</item>
+        <item name="colorSecondary">#3BE173</item>
+        <item name="colorSecondaryContainer">#1B4C2B</item>
+        <item name="colorOnSecondaryContainer">#DCFAE6</item>
+    </style>
+    <style name="Overlay_Wheel_28_4" parent="">
+        <item name="colorPrimary">#31CB64</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C2B</item>
+        <item name="colorOnPrimaryContainer">#DCFAE6</item>
+        <item name="colorSecondary">#31CB64</item>
+        <item name="colorSecondaryContainer">#1B4C2B</item>
+        <item name="colorOnSecondaryContainer">#DCFAE6</item>
+    </style>
+    <style name="Overlay_Wheel_29_0" parent="">
+        <item name="colorPrimary">#A8FDCB</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C2F</item>
+        <item name="colorOnPrimaryContainer">#DCFAE8</item>
+        <item name="colorSecondary">#A8FDCB</item>
+        <item name="colorSecondaryContainer">#1B4C2F</item>
+        <item name="colorOnSecondaryContainer">#DCFAE8</item>
+    </style>
+    <style name="Overlay_Wheel_29_1" parent="">
+        <item name="colorPrimary">#7EF9B1</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C2F</item>
+        <item name="colorOnPrimaryContainer">#DCFAE8</item>
+        <item name="colorSecondary">#7EF9B1</item>
+        <item name="colorSecondaryContainer">#1B4C2F</item>
+        <item name="colorOnSecondaryContainer">#DCFAE8</item>
+    </style>
+    <style name="Overlay_Wheel_29_2" parent="">
+        <item name="colorPrimary">#58F499</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C2F</item>
+        <item name="colorOnPrimaryContainer">#DCFAE8</item>
+        <item name="colorSecondary">#58F499</item>
+        <item name="colorSecondaryContainer">#1B4C2F</item>
+        <item name="colorOnSecondaryContainer">#DCFAE8</item>
+    </style>
+    <style name="Overlay_Wheel_29_3" parent="">
+        <item name="colorPrimary">#3BE180</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C2F</item>
+        <item name="colorOnPrimaryContainer">#DCFAE8</item>
+        <item name="colorSecondary">#3BE180</item>
+        <item name="colorSecondaryContainer">#1B4C2F</item>
+        <item name="colorOnSecondaryContainer">#DCFAE8</item>
+    </style>
+    <style name="Overlay_Wheel_29_4" parent="">
+        <item name="colorPrimary">#31CB71</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C2F</item>
+        <item name="colorOnPrimaryContainer">#DCFAE8</item>
+        <item name="colorSecondary">#31CB71</item>
+        <item name="colorSecondaryContainer">#1B4C2F</item>
+        <item name="colorOnSecondaryContainer">#DCFAE8</item>
+    </style>
+    <style name="Overlay_Wheel_30_0" parent="">
+        <item name="colorPrimary">#A8FDD2</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C34</item>
+        <item name="colorOnPrimaryContainer">#DCFAEB</item>
+        <item name="colorSecondary">#A8FDD2</item>
+        <item name="colorSecondaryContainer">#1B4C34</item>
+        <item name="colorOnSecondaryContainer">#DCFAEB</item>
+    </style>
+    <style name="Overlay_Wheel_30_1" parent="">
+        <item name="colorPrimary">#7EF9BB</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C34</item>
+        <item name="colorOnPrimaryContainer">#DCFAEB</item>
+        <item name="colorSecondary">#7EF9BB</item>
+        <item name="colorSecondaryContainer">#1B4C34</item>
+        <item name="colorOnSecondaryContainer">#DCFAEB</item>
+    </style>
+    <style name="Overlay_Wheel_30_2" parent="">
+        <item name="colorPrimary">#58F4A6</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C34</item>
+        <item name="colorOnPrimaryContainer">#DCFAEB</item>
+        <item name="colorSecondary">#58F4A6</item>
+        <item name="colorSecondaryContainer">#1B4C34</item>
+        <item name="colorOnSecondaryContainer">#DCFAEB</item>
+    </style>
+    <style name="Overlay_Wheel_30_3" parent="">
+        <item name="colorPrimary">#3BE18E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C34</item>
+        <item name="colorOnPrimaryContainer">#DCFAEB</item>
+        <item name="colorSecondary">#3BE18E</item>
+        <item name="colorSecondaryContainer">#1B4C34</item>
+        <item name="colorOnSecondaryContainer">#DCFAEB</item>
+    </style>
+    <style name="Overlay_Wheel_30_4" parent="">
+        <item name="colorPrimary">#31CB7E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C34</item>
+        <item name="colorOnPrimaryContainer">#DCFAEB</item>
+        <item name="colorSecondary">#31CB7E</item>
+        <item name="colorSecondaryContainer">#1B4C34</item>
+        <item name="colorOnSecondaryContainer">#DCFAEB</item>
+    </style>
+    <style name="Overlay_Wheel_31_0" parent="">
+        <item name="colorPrimary">#A8FDD9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C38</item>
+        <item name="colorOnPrimaryContainer">#DCFAED</item>
+        <item name="colorSecondary">#A8FDD9</item>
+        <item name="colorSecondaryContainer">#1B4C38</item>
+        <item name="colorOnSecondaryContainer">#DCFAED</item>
+    </style>
+    <style name="Overlay_Wheel_31_1" parent="">
+        <item name="colorPrimary">#7EF9C6</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C38</item>
+        <item name="colorOnPrimaryContainer">#DCFAED</item>
+        <item name="colorSecondary">#7EF9C6</item>
+        <item name="colorSecondaryContainer">#1B4C38</item>
+        <item name="colorOnSecondaryContainer">#DCFAED</item>
+    </style>
+    <style name="Overlay_Wheel_31_2" parent="">
+        <item name="colorPrimary">#58F4B3</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C38</item>
+        <item name="colorOnPrimaryContainer">#DCFAED</item>
+        <item name="colorSecondary">#58F4B3</item>
+        <item name="colorSecondaryContainer">#1B4C38</item>
+        <item name="colorOnSecondaryContainer">#DCFAED</item>
+    </style>
+    <style name="Overlay_Wheel_31_3" parent="">
+        <item name="colorPrimary">#3BE19C</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C38</item>
+        <item name="colorOnPrimaryContainer">#DCFAED</item>
+        <item name="colorSecondary">#3BE19C</item>
+        <item name="colorSecondaryContainer">#1B4C38</item>
+        <item name="colorOnSecondaryContainer">#DCFAED</item>
+    </style>
+    <style name="Overlay_Wheel_31_4" parent="">
+        <item name="colorPrimary">#31CB8B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C38</item>
+        <item name="colorOnPrimaryContainer">#DCFAED</item>
+        <item name="colorSecondary">#31CB8B</item>
+        <item name="colorSecondaryContainer">#1B4C38</item>
+        <item name="colorOnSecondaryContainer">#DCFAED</item>
+    </style>
+    <style name="Overlay_Wheel_32_0" parent="">
+        <item name="colorPrimary">#A8FDE0</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C3C</item>
+        <item name="colorOnPrimaryContainer">#DCFAF0</item>
+        <item name="colorSecondary">#A8FDE0</item>
+        <item name="colorSecondaryContainer">#1B4C3C</item>
+        <item name="colorOnSecondaryContainer">#DCFAF0</item>
+    </style>
+    <style name="Overlay_Wheel_32_1" parent="">
+        <item name="colorPrimary">#7EF9D0</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C3C</item>
+        <item name="colorOnPrimaryContainer">#DCFAF0</item>
+        <item name="colorSecondary">#7EF9D0</item>
+        <item name="colorSecondaryContainer">#1B4C3C</item>
+        <item name="colorOnSecondaryContainer">#DCFAF0</item>
+    </style>
+    <style name="Overlay_Wheel_32_2" parent="">
+        <item name="colorPrimary">#58F4C0</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C3C</item>
+        <item name="colorOnPrimaryContainer">#DCFAF0</item>
+        <item name="colorSecondary">#58F4C0</item>
+        <item name="colorSecondaryContainer">#1B4C3C</item>
+        <item name="colorOnSecondaryContainer">#DCFAF0</item>
+    </style>
+    <style name="Overlay_Wheel_32_3" parent="">
+        <item name="colorPrimary">#3BE1AA</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C3C</item>
+        <item name="colorOnPrimaryContainer">#DCFAF0</item>
+        <item name="colorSecondary">#3BE1AA</item>
+        <item name="colorSecondaryContainer">#1B4C3C</item>
+        <item name="colorOnSecondaryContainer">#DCFAF0</item>
+    </style>
+    <style name="Overlay_Wheel_32_4" parent="">
+        <item name="colorPrimary">#31CB98</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C3C</item>
+        <item name="colorOnPrimaryContainer">#DCFAF0</item>
+        <item name="colorSecondary">#31CB98</item>
+        <item name="colorSecondaryContainer">#1B4C3C</item>
+        <item name="colorOnSecondaryContainer">#DCFAF0</item>
+    </style>
+    <style name="Overlay_Wheel_33_0" parent="">
+        <item name="colorPrimary">#A8FDE7</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C40</item>
+        <item name="colorOnPrimaryContainer">#DCFAF2</item>
+        <item name="colorSecondary">#A8FDE7</item>
+        <item name="colorSecondaryContainer">#1B4C40</item>
+        <item name="colorOnSecondaryContainer">#DCFAF2</item>
+    </style>
+    <style name="Overlay_Wheel_33_1" parent="">
+        <item name="colorPrimary">#7EF9DA</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C40</item>
+        <item name="colorOnPrimaryContainer">#DCFAF2</item>
+        <item name="colorSecondary">#7EF9DA</item>
+        <item name="colorSecondaryContainer">#1B4C40</item>
+        <item name="colorOnSecondaryContainer">#DCFAF2</item>
+    </style>
+    <style name="Overlay_Wheel_33_2" parent="">
+        <item name="colorPrimary">#58F4CD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C40</item>
+        <item name="colorOnPrimaryContainer">#DCFAF2</item>
+        <item name="colorSecondary">#58F4CD</item>
+        <item name="colorSecondaryContainer">#1B4C40</item>
+        <item name="colorOnSecondaryContainer">#DCFAF2</item>
+    </style>
+    <style name="Overlay_Wheel_33_3" parent="">
+        <item name="colorPrimary">#3BE1B8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C40</item>
+        <item name="colorOnPrimaryContainer">#DCFAF2</item>
+        <item name="colorSecondary">#3BE1B8</item>
+        <item name="colorSecondaryContainer">#1B4C40</item>
+        <item name="colorOnSecondaryContainer">#DCFAF2</item>
+    </style>
+    <style name="Overlay_Wheel_33_4" parent="">
+        <item name="colorPrimary">#31CBA5</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C40</item>
+        <item name="colorOnPrimaryContainer">#DCFAF2</item>
+        <item name="colorSecondary">#31CBA5</item>
+        <item name="colorSecondaryContainer">#1B4C40</item>
+        <item name="colorOnSecondaryContainer">#DCFAF2</item>
+    </style>
+    <style name="Overlay_Wheel_34_0" parent="">
+        <item name="colorPrimary">#A8FDEF</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C44</item>
+        <item name="colorOnPrimaryContainer">#DCFAF5</item>
+        <item name="colorSecondary">#A8FDEF</item>
+        <item name="colorSecondaryContainer">#1B4C44</item>
+        <item name="colorOnSecondaryContainer">#DCFAF5</item>
+    </style>
+    <style name="Overlay_Wheel_34_1" parent="">
+        <item name="colorPrimary">#7EF9E5</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C44</item>
+        <item name="colorOnPrimaryContainer">#DCFAF5</item>
+        <item name="colorSecondary">#7EF9E5</item>
+        <item name="colorSecondaryContainer">#1B4C44</item>
+        <item name="colorOnSecondaryContainer">#DCFAF5</item>
+    </style>
+    <style name="Overlay_Wheel_34_2" parent="">
+        <item name="colorPrimary">#58F4DA</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C44</item>
+        <item name="colorOnPrimaryContainer">#DCFAF5</item>
+        <item name="colorSecondary">#58F4DA</item>
+        <item name="colorSecondaryContainer">#1B4C44</item>
+        <item name="colorOnSecondaryContainer">#DCFAF5</item>
+    </style>
+    <style name="Overlay_Wheel_34_3" parent="">
+        <item name="colorPrimary">#3BE1C6</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C44</item>
+        <item name="colorOnPrimaryContainer">#DCFAF5</item>
+        <item name="colorSecondary">#3BE1C6</item>
+        <item name="colorSecondaryContainer">#1B4C44</item>
+        <item name="colorOnSecondaryContainer">#DCFAF5</item>
+    </style>
+    <style name="Overlay_Wheel_34_4" parent="">
+        <item name="colorPrimary">#31CBB2</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C44</item>
+        <item name="colorOnPrimaryContainer">#DCFAF5</item>
+        <item name="colorSecondary">#31CBB2</item>
+        <item name="colorSecondaryContainer">#1B4C44</item>
+        <item name="colorOnSecondaryContainer">#DCFAF5</item>
+    </style>
+    <style name="Overlay_Wheel_35_0" parent="">
+        <item name="colorPrimary">#A8FDF6</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C48</item>
+        <item name="colorOnPrimaryContainer">#DCFAF7</item>
+        <item name="colorSecondary">#A8FDF6</item>
+        <item name="colorSecondaryContainer">#1B4C48</item>
+        <item name="colorOnSecondaryContainer">#DCFAF7</item>
+    </style>
+    <style name="Overlay_Wheel_35_1" parent="">
+        <item name="colorPrimary">#7EF9EF</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C48</item>
+        <item name="colorOnPrimaryContainer">#DCFAF7</item>
+        <item name="colorSecondary">#7EF9EF</item>
+        <item name="colorSecondaryContainer">#1B4C48</item>
+        <item name="colorOnSecondaryContainer">#DCFAF7</item>
+    </style>
+    <style name="Overlay_Wheel_35_2" parent="">
+        <item name="colorPrimary">#58F4E7</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C48</item>
+        <item name="colorOnPrimaryContainer">#DCFAF7</item>
+        <item name="colorSecondary">#58F4E7</item>
+        <item name="colorSecondaryContainer">#1B4C48</item>
+        <item name="colorOnSecondaryContainer">#DCFAF7</item>
+    </style>
+    <style name="Overlay_Wheel_35_3" parent="">
+        <item name="colorPrimary">#3BE1D3</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C48</item>
+        <item name="colorOnPrimaryContainer">#DCFAF7</item>
+        <item name="colorSecondary">#3BE1D3</item>
+        <item name="colorSecondaryContainer">#1B4C48</item>
+        <item name="colorOnSecondaryContainer">#DCFAF7</item>
+    </style>
+    <style name="Overlay_Wheel_35_4" parent="">
+        <item name="colorPrimary">#31CBBE</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C48</item>
+        <item name="colorOnPrimaryContainer">#DCFAF7</item>
+        <item name="colorSecondary">#31CBBE</item>
+        <item name="colorSecondaryContainer">#1B4C48</item>
+        <item name="colorOnSecondaryContainer">#DCFAF7</item>
+    </style>
+    <style name="Overlay_Wheel_36_0" parent="">
+        <item name="colorPrimary">#A8FDFD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C4C</item>
+        <item name="colorOnPrimaryContainer">#DCFAFA</item>
+        <item name="colorSecondary">#A8FDFD</item>
+        <item name="colorSecondaryContainer">#1B4C4C</item>
+        <item name="colorOnSecondaryContainer">#DCFAFA</item>
+    </style>
+    <style name="Overlay_Wheel_36_1" parent="">
+        <item name="colorPrimary">#7EF9F9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C4C</item>
+        <item name="colorOnPrimaryContainer">#DCFAFA</item>
+        <item name="colorSecondary">#7EF9F9</item>
+        <item name="colorSecondaryContainer">#1B4C4C</item>
+        <item name="colorOnSecondaryContainer">#DCFAFA</item>
+    </style>
+    <style name="Overlay_Wheel_36_2" parent="">
+        <item name="colorPrimary">#58F4F4</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C4C</item>
+        <item name="colorOnPrimaryContainer">#DCFAFA</item>
+        <item name="colorSecondary">#58F4F4</item>
+        <item name="colorSecondaryContainer">#1B4C4C</item>
+        <item name="colorOnSecondaryContainer">#DCFAFA</item>
+    </style>
+    <style name="Overlay_Wheel_36_3" parent="">
+        <item name="colorPrimary">#3BE1E1</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C4C</item>
+        <item name="colorOnPrimaryContainer">#DCFAFA</item>
+        <item name="colorSecondary">#3BE1E1</item>
+        <item name="colorSecondaryContainer">#1B4C4C</item>
+        <item name="colorOnSecondaryContainer">#DCFAFA</item>
+    </style>
+    <style name="Overlay_Wheel_36_4" parent="">
+        <item name="colorPrimary">#31CBCB</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B4C4C</item>
+        <item name="colorOnPrimaryContainer">#DCFAFA</item>
+        <item name="colorSecondary">#31CBCB</item>
+        <item name="colorSecondaryContainer">#1B4C4C</item>
+        <item name="colorOnSecondaryContainer">#DCFAFA</item>
+    </style>
+    <style name="Overlay_Wheel_37_0" parent="">
+        <item name="colorPrimary">#A8F6FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B484C</item>
+        <item name="colorOnPrimaryContainer">#DCF7FA</item>
+        <item name="colorSecondary">#A8F6FD</item>
+        <item name="colorSecondaryContainer">#1B484C</item>
+        <item name="colorOnSecondaryContainer">#DCF7FA</item>
+    </style>
+    <style name="Overlay_Wheel_37_1" parent="">
+        <item name="colorPrimary">#7EEFF9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B484C</item>
+        <item name="colorOnPrimaryContainer">#DCF7FA</item>
+        <item name="colorSecondary">#7EEFF9</item>
+        <item name="colorSecondaryContainer">#1B484C</item>
+        <item name="colorOnSecondaryContainer">#DCF7FA</item>
+    </style>
+    <style name="Overlay_Wheel_37_2" parent="">
+        <item name="colorPrimary">#58E7F4</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B484C</item>
+        <item name="colorOnPrimaryContainer">#DCF7FA</item>
+        <item name="colorSecondary">#58E7F4</item>
+        <item name="colorSecondaryContainer">#1B484C</item>
+        <item name="colorOnSecondaryContainer">#DCF7FA</item>
+    </style>
+    <style name="Overlay_Wheel_37_3" parent="">
+        <item name="colorPrimary">#3BD3E1</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B484C</item>
+        <item name="colorOnPrimaryContainer">#DCF7FA</item>
+        <item name="colorSecondary">#3BD3E1</item>
+        <item name="colorSecondaryContainer">#1B484C</item>
+        <item name="colorOnSecondaryContainer">#DCF7FA</item>
+    </style>
+    <style name="Overlay_Wheel_37_4" parent="">
+        <item name="colorPrimary">#31BECB</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B484C</item>
+        <item name="colorOnPrimaryContainer">#DCF7FA</item>
+        <item name="colorSecondary">#31BECB</item>
+        <item name="colorSecondaryContainer">#1B484C</item>
+        <item name="colorOnSecondaryContainer">#DCF7FA</item>
+    </style>
+    <style name="Overlay_Wheel_38_0" parent="">
+        <item name="colorPrimary">#A8EFFD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B444C</item>
+        <item name="colorOnPrimaryContainer">#DCF5FA</item>
+        <item name="colorSecondary">#A8EFFD</item>
+        <item name="colorSecondaryContainer">#1B444C</item>
+        <item name="colorOnSecondaryContainer">#DCF5FA</item>
+    </style>
+    <style name="Overlay_Wheel_38_1" parent="">
+        <item name="colorPrimary">#7EE5F9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B444C</item>
+        <item name="colorOnPrimaryContainer">#DCF5FA</item>
+        <item name="colorSecondary">#7EE5F9</item>
+        <item name="colorSecondaryContainer">#1B444C</item>
+        <item name="colorOnSecondaryContainer">#DCF5FA</item>
+    </style>
+    <style name="Overlay_Wheel_38_2" parent="">
+        <item name="colorPrimary">#58DAF4</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B444C</item>
+        <item name="colorOnPrimaryContainer">#DCF5FA</item>
+        <item name="colorSecondary">#58DAF4</item>
+        <item name="colorSecondaryContainer">#1B444C</item>
+        <item name="colorOnSecondaryContainer">#DCF5FA</item>
+    </style>
+    <style name="Overlay_Wheel_38_3" parent="">
+        <item name="colorPrimary">#3BC6E1</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B444C</item>
+        <item name="colorOnPrimaryContainer">#DCF5FA</item>
+        <item name="colorSecondary">#3BC6E1</item>
+        <item name="colorSecondaryContainer">#1B444C</item>
+        <item name="colorOnSecondaryContainer">#DCF5FA</item>
+    </style>
+    <style name="Overlay_Wheel_38_4" parent="">
+        <item name="colorPrimary">#31B2CB</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B444C</item>
+        <item name="colorOnPrimaryContainer">#DCF5FA</item>
+        <item name="colorSecondary">#31B2CB</item>
+        <item name="colorSecondaryContainer">#1B444C</item>
+        <item name="colorOnSecondaryContainer">#DCF5FA</item>
+    </style>
+    <style name="Overlay_Wheel_39_0" parent="">
+        <item name="colorPrimary">#A8E7FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B404C</item>
+        <item name="colorOnPrimaryContainer">#DCF2FA</item>
+        <item name="colorSecondary">#A8E7FD</item>
+        <item name="colorSecondaryContainer">#1B404C</item>
+        <item name="colorOnSecondaryContainer">#DCF2FA</item>
+    </style>
+    <style name="Overlay_Wheel_39_1" parent="">
+        <item name="colorPrimary">#7EDAF9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B404C</item>
+        <item name="colorOnPrimaryContainer">#DCF2FA</item>
+        <item name="colorSecondary">#7EDAF9</item>
+        <item name="colorSecondaryContainer">#1B404C</item>
+        <item name="colorOnSecondaryContainer">#DCF2FA</item>
+    </style>
+    <style name="Overlay_Wheel_39_2" parent="">
+        <item name="colorPrimary">#58CDF4</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B404C</item>
+        <item name="colorOnPrimaryContainer">#DCF2FA</item>
+        <item name="colorSecondary">#58CDF4</item>
+        <item name="colorSecondaryContainer">#1B404C</item>
+        <item name="colorOnSecondaryContainer">#DCF2FA</item>
+    </style>
+    <style name="Overlay_Wheel_39_3" parent="">
+        <item name="colorPrimary">#3BB8E1</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B404C</item>
+        <item name="colorOnPrimaryContainer">#DCF2FA</item>
+        <item name="colorSecondary">#3BB8E1</item>
+        <item name="colorSecondaryContainer">#1B404C</item>
+        <item name="colorOnSecondaryContainer">#DCF2FA</item>
+    </style>
+    <style name="Overlay_Wheel_39_4" parent="">
+        <item name="colorPrimary">#31A5CB</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B404C</item>
+        <item name="colorOnPrimaryContainer">#DCF2FA</item>
+        <item name="colorSecondary">#31A5CB</item>
+        <item name="colorSecondaryContainer">#1B404C</item>
+        <item name="colorOnSecondaryContainer">#DCF2FA</item>
+    </style>
+    <style name="Overlay_Wheel_40_0" parent="">
+        <item name="colorPrimary">#A8E0FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B3C4C</item>
+        <item name="colorOnPrimaryContainer">#DCF0FA</item>
+        <item name="colorSecondary">#A8E0FD</item>
+        <item name="colorSecondaryContainer">#1B3C4C</item>
+        <item name="colorOnSecondaryContainer">#DCF0FA</item>
+    </style>
+    <style name="Overlay_Wheel_40_1" parent="">
+        <item name="colorPrimary">#7ED0F9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B3C4C</item>
+        <item name="colorOnPrimaryContainer">#DCF0FA</item>
+        <item name="colorSecondary">#7ED0F9</item>
+        <item name="colorSecondaryContainer">#1B3C4C</item>
+        <item name="colorOnSecondaryContainer">#DCF0FA</item>
+    </style>
+    <style name="Overlay_Wheel_40_2" parent="">
+        <item name="colorPrimary">#58C0F4</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B3C4C</item>
+        <item name="colorOnPrimaryContainer">#DCF0FA</item>
+        <item name="colorSecondary">#58C0F4</item>
+        <item name="colorSecondaryContainer">#1B3C4C</item>
+        <item name="colorOnSecondaryContainer">#DCF0FA</item>
+    </style>
+    <style name="Overlay_Wheel_40_3" parent="">
+        <item name="colorPrimary">#3BAAE1</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B3C4C</item>
+        <item name="colorOnPrimaryContainer">#DCF0FA</item>
+        <item name="colorSecondary">#3BAAE1</item>
+        <item name="colorSecondaryContainer">#1B3C4C</item>
+        <item name="colorOnSecondaryContainer">#DCF0FA</item>
+    </style>
+    <style name="Overlay_Wheel_40_4" parent="">
+        <item name="colorPrimary">#3198CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B3C4C</item>
+        <item name="colorOnPrimaryContainer">#DCF0FA</item>
+        <item name="colorSecondary">#3198CB</item>
+        <item name="colorSecondaryContainer">#1B3C4C</item>
+        <item name="colorOnSecondaryContainer">#DCF0FA</item>
+    </style>
+    <style name="Overlay_Wheel_41_0" parent="">
+        <item name="colorPrimary">#A8D9FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B384C</item>
+        <item name="colorOnPrimaryContainer">#DCEDFA</item>
+        <item name="colorSecondary">#A8D9FD</item>
+        <item name="colorSecondaryContainer">#1B384C</item>
+        <item name="colorOnSecondaryContainer">#DCEDFA</item>
+    </style>
+    <style name="Overlay_Wheel_41_1" parent="">
+        <item name="colorPrimary">#7EC6F9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B384C</item>
+        <item name="colorOnPrimaryContainer">#DCEDFA</item>
+        <item name="colorSecondary">#7EC6F9</item>
+        <item name="colorSecondaryContainer">#1B384C</item>
+        <item name="colorOnSecondaryContainer">#DCEDFA</item>
+    </style>
+    <style name="Overlay_Wheel_41_2" parent="">
+        <item name="colorPrimary">#58B3F4</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B384C</item>
+        <item name="colorOnPrimaryContainer">#DCEDFA</item>
+        <item name="colorSecondary">#58B3F4</item>
+        <item name="colorSecondaryContainer">#1B384C</item>
+        <item name="colorOnSecondaryContainer">#DCEDFA</item>
+    </style>
+    <style name="Overlay_Wheel_41_3" parent="">
+        <item name="colorPrimary">#3B9CE1</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B384C</item>
+        <item name="colorOnPrimaryContainer">#DCEDFA</item>
+        <item name="colorSecondary">#3B9CE1</item>
+        <item name="colorSecondaryContainer">#1B384C</item>
+        <item name="colorOnSecondaryContainer">#DCEDFA</item>
+    </style>
+    <style name="Overlay_Wheel_41_4" parent="">
+        <item name="colorPrimary">#318BCB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B384C</item>
+        <item name="colorOnPrimaryContainer">#DCEDFA</item>
+        <item name="colorSecondary">#318BCB</item>
+        <item name="colorSecondaryContainer">#1B384C</item>
+        <item name="colorOnSecondaryContainer">#DCEDFA</item>
+    </style>
+    <style name="Overlay_Wheel_42_0" parent="">
+        <item name="colorPrimary">#A8D2FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B344C</item>
+        <item name="colorOnPrimaryContainer">#DCEBFA</item>
+        <item name="colorSecondary">#A8D2FD</item>
+        <item name="colorSecondaryContainer">#1B344C</item>
+        <item name="colorOnSecondaryContainer">#DCEBFA</item>
+    </style>
+    <style name="Overlay_Wheel_42_1" parent="">
+        <item name="colorPrimary">#7EBBF9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B344C</item>
+        <item name="colorOnPrimaryContainer">#DCEBFA</item>
+        <item name="colorSecondary">#7EBBF9</item>
+        <item name="colorSecondaryContainer">#1B344C</item>
+        <item name="colorOnSecondaryContainer">#DCEBFA</item>
+    </style>
+    <style name="Overlay_Wheel_42_2" parent="">
+        <item name="colorPrimary">#58A6F4</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B344C</item>
+        <item name="colorOnPrimaryContainer">#DCEBFA</item>
+        <item name="colorSecondary">#58A6F4</item>
+        <item name="colorSecondaryContainer">#1B344C</item>
+        <item name="colorOnSecondaryContainer">#DCEBFA</item>
+    </style>
+    <style name="Overlay_Wheel_42_3" parent="">
+        <item name="colorPrimary">#3B8EE1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B344C</item>
+        <item name="colorOnPrimaryContainer">#DCEBFA</item>
+        <item name="colorSecondary">#3B8EE1</item>
+        <item name="colorSecondaryContainer">#1B344C</item>
+        <item name="colorOnSecondaryContainer">#DCEBFA</item>
+    </style>
+    <style name="Overlay_Wheel_42_4" parent="">
+        <item name="colorPrimary">#317ECB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B344C</item>
+        <item name="colorOnPrimaryContainer">#DCEBFA</item>
+        <item name="colorSecondary">#317ECB</item>
+        <item name="colorSecondaryContainer">#1B344C</item>
+        <item name="colorOnSecondaryContainer">#DCEBFA</item>
+    </style>
+    <style name="Overlay_Wheel_43_0" parent="">
+        <item name="colorPrimary">#A8CBFD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B2F4C</item>
+        <item name="colorOnPrimaryContainer">#DCE8FA</item>
+        <item name="colorSecondary">#A8CBFD</item>
+        <item name="colorSecondaryContainer">#1B2F4C</item>
+        <item name="colorOnSecondaryContainer">#DCE8FA</item>
+    </style>
+    <style name="Overlay_Wheel_43_1" parent="">
+        <item name="colorPrimary">#7EB1F9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B2F4C</item>
+        <item name="colorOnPrimaryContainer">#DCE8FA</item>
+        <item name="colorSecondary">#7EB1F9</item>
+        <item name="colorSecondaryContainer">#1B2F4C</item>
+        <item name="colorOnSecondaryContainer">#DCE8FA</item>
+    </style>
+    <style name="Overlay_Wheel_43_2" parent="">
+        <item name="colorPrimary">#5899F4</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B2F4C</item>
+        <item name="colorOnPrimaryContainer">#DCE8FA</item>
+        <item name="colorSecondary">#5899F4</item>
+        <item name="colorSecondaryContainer">#1B2F4C</item>
+        <item name="colorOnSecondaryContainer">#DCE8FA</item>
+    </style>
+    <style name="Overlay_Wheel_43_3" parent="">
+        <item name="colorPrimary">#3B80E1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B2F4C</item>
+        <item name="colorOnPrimaryContainer">#DCE8FA</item>
+        <item name="colorSecondary">#3B80E1</item>
+        <item name="colorSecondaryContainer">#1B2F4C</item>
+        <item name="colorOnSecondaryContainer">#DCE8FA</item>
+    </style>
+    <style name="Overlay_Wheel_43_4" parent="">
+        <item name="colorPrimary">#3171CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B2F4C</item>
+        <item name="colorOnPrimaryContainer">#DCE8FA</item>
+        <item name="colorSecondary">#3171CB</item>
+        <item name="colorSecondaryContainer">#1B2F4C</item>
+        <item name="colorOnSecondaryContainer">#DCE8FA</item>
+    </style>
+    <style name="Overlay_Wheel_44_0" parent="">
+        <item name="colorPrimary">#A8C4FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B2B4C</item>
+        <item name="colorOnPrimaryContainer">#DCE6FA</item>
+        <item name="colorSecondary">#A8C4FD</item>
+        <item name="colorSecondaryContainer">#1B2B4C</item>
+        <item name="colorOnSecondaryContainer">#DCE6FA</item>
+    </style>
+    <style name="Overlay_Wheel_44_1" parent="">
+        <item name="colorPrimary">#7EA7F9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B2B4C</item>
+        <item name="colorOnPrimaryContainer">#DCE6FA</item>
+        <item name="colorSecondary">#7EA7F9</item>
+        <item name="colorSecondaryContainer">#1B2B4C</item>
+        <item name="colorOnSecondaryContainer">#DCE6FA</item>
+    </style>
+    <style name="Overlay_Wheel_44_2" parent="">
+        <item name="colorPrimary">#588CF4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B2B4C</item>
+        <item name="colorOnPrimaryContainer">#DCE6FA</item>
+        <item name="colorSecondary">#588CF4</item>
+        <item name="colorSecondaryContainer">#1B2B4C</item>
+        <item name="colorOnSecondaryContainer">#DCE6FA</item>
+    </style>
+    <style name="Overlay_Wheel_44_3" parent="">
+        <item name="colorPrimary">#3B73E1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B2B4C</item>
+        <item name="colorOnPrimaryContainer">#DCE6FA</item>
+        <item name="colorSecondary">#3B73E1</item>
+        <item name="colorSecondaryContainer">#1B2B4C</item>
+        <item name="colorOnSecondaryContainer">#DCE6FA</item>
+    </style>
+    <style name="Overlay_Wheel_44_4" parent="">
+        <item name="colorPrimary">#3164CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B2B4C</item>
+        <item name="colorOnPrimaryContainer">#DCE6FA</item>
+        <item name="colorSecondary">#3164CB</item>
+        <item name="colorSecondaryContainer">#1B2B4C</item>
+        <item name="colorOnSecondaryContainer">#DCE6FA</item>
+    </style>
+    <style name="Overlay_Wheel_45_0" parent="">
+        <item name="colorPrimary">#A8BDFD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B274C</item>
+        <item name="colorOnPrimaryContainer">#DCE3FA</item>
+        <item name="colorSecondary">#A8BDFD</item>
+        <item name="colorSecondaryContainer">#1B274C</item>
+        <item name="colorOnSecondaryContainer">#DCE3FA</item>
+    </style>
+    <style name="Overlay_Wheel_45_1" parent="">
+        <item name="colorPrimary">#7E9DF9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B274C</item>
+        <item name="colorOnPrimaryContainer">#DCE3FA</item>
+        <item name="colorSecondary">#7E9DF9</item>
+        <item name="colorSecondaryContainer">#1B274C</item>
+        <item name="colorOnSecondaryContainer">#DCE3FA</item>
+    </style>
+    <style name="Overlay_Wheel_45_2" parent="">
+        <item name="colorPrimary">#587FF4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B274C</item>
+        <item name="colorOnPrimaryContainer">#DCE3FA</item>
+        <item name="colorSecondary">#587FF4</item>
+        <item name="colorSecondaryContainer">#1B274C</item>
+        <item name="colorOnSecondaryContainer">#DCE3FA</item>
+    </style>
+    <style name="Overlay_Wheel_45_3" parent="">
+        <item name="colorPrimary">#3B65E1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B274C</item>
+        <item name="colorOnPrimaryContainer">#DCE3FA</item>
+        <item name="colorSecondary">#3B65E1</item>
+        <item name="colorSecondaryContainer">#1B274C</item>
+        <item name="colorOnSecondaryContainer">#DCE3FA</item>
+    </style>
+    <style name="Overlay_Wheel_45_4" parent="">
+        <item name="colorPrimary">#3157CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B274C</item>
+        <item name="colorOnPrimaryContainer">#DCE3FA</item>
+        <item name="colorSecondary">#3157CB</item>
+        <item name="colorSecondaryContainer">#1B274C</item>
+        <item name="colorOnSecondaryContainer">#DCE3FA</item>
+    </style>
+    <style name="Overlay_Wheel_46_0" parent="">
+        <item name="colorPrimary">#A8B6FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B234C</item>
+        <item name="colorOnPrimaryContainer">#DCE1FA</item>
+        <item name="colorSecondary">#A8B6FD</item>
+        <item name="colorSecondaryContainer">#1B234C</item>
+        <item name="colorOnSecondaryContainer">#DCE1FA</item>
+    </style>
+    <style name="Overlay_Wheel_46_1" parent="">
+        <item name="colorPrimary">#7E92F9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B234C</item>
+        <item name="colorOnPrimaryContainer">#DCE1FA</item>
+        <item name="colorSecondary">#7E92F9</item>
+        <item name="colorSecondaryContainer">#1B234C</item>
+        <item name="colorOnSecondaryContainer">#DCE1FA</item>
+    </style>
+    <style name="Overlay_Wheel_46_2" parent="">
+        <item name="colorPrimary">#5872F4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B234C</item>
+        <item name="colorOnPrimaryContainer">#DCE1FA</item>
+        <item name="colorSecondary">#5872F4</item>
+        <item name="colorSecondaryContainer">#1B234C</item>
+        <item name="colorOnSecondaryContainer">#DCE1FA</item>
+    </style>
+    <style name="Overlay_Wheel_46_3" parent="">
+        <item name="colorPrimary">#3B57E1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B234C</item>
+        <item name="colorOnPrimaryContainer">#DCE1FA</item>
+        <item name="colorSecondary">#3B57E1</item>
+        <item name="colorSecondaryContainer">#1B234C</item>
+        <item name="colorOnSecondaryContainer">#DCE1FA</item>
+    </style>
+    <style name="Overlay_Wheel_46_4" parent="">
+        <item name="colorPrimary">#314BCB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B234C</item>
+        <item name="colorOnPrimaryContainer">#DCE1FA</item>
+        <item name="colorSecondary">#314BCB</item>
+        <item name="colorSecondaryContainer">#1B234C</item>
+        <item name="colorOnSecondaryContainer">#DCE1FA</item>
+    </style>
+    <style name="Overlay_Wheel_47_0" parent="">
+        <item name="colorPrimary">#A8AFFD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B1F4C</item>
+        <item name="colorOnPrimaryContainer">#DCDEFA</item>
+        <item name="colorSecondary">#A8AFFD</item>
+        <item name="colorSecondaryContainer">#1B1F4C</item>
+        <item name="colorOnSecondaryContainer">#DCDEFA</item>
+    </style>
+    <style name="Overlay_Wheel_47_1" parent="">
+        <item name="colorPrimary">#7E88F9</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B1F4C</item>
+        <item name="colorOnPrimaryContainer">#DCDEFA</item>
+        <item name="colorSecondary">#7E88F9</item>
+        <item name="colorSecondaryContainer">#1B1F4C</item>
+        <item name="colorOnSecondaryContainer">#DCDEFA</item>
+    </style>
+    <style name="Overlay_Wheel_47_2" parent="">
+        <item name="colorPrimary">#5865F4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B1F4C</item>
+        <item name="colorOnPrimaryContainer">#DCDEFA</item>
+        <item name="colorSecondary">#5865F4</item>
+        <item name="colorSecondaryContainer">#1B1F4C</item>
+        <item name="colorOnSecondaryContainer">#DCDEFA</item>
+    </style>
+    <style name="Overlay_Wheel_47_3" parent="">
+        <item name="colorPrimary">#3B49E1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B1F4C</item>
+        <item name="colorOnPrimaryContainer">#DCDEFA</item>
+        <item name="colorSecondary">#3B49E1</item>
+        <item name="colorSecondaryContainer">#1B1F4C</item>
+        <item name="colorOnSecondaryContainer">#DCDEFA</item>
+    </style>
+    <style name="Overlay_Wheel_47_4" parent="">
+        <item name="colorPrimary">#313ECB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B1F4C</item>
+        <item name="colorOnPrimaryContainer">#DCDEFA</item>
+        <item name="colorSecondary">#313ECB</item>
+        <item name="colorSecondaryContainer">#1B1F4C</item>
+        <item name="colorOnSecondaryContainer">#DCDEFA</item>
+    </style>
+    <style name="Overlay_Wheel_48_0" parent="">
+        <item name="colorPrimary">#A8A8FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1B1B4C</item>
+        <item name="colorOnPrimaryContainer">#DCDCFA</item>
+        <item name="colorSecondary">#A8A8FD</item>
+        <item name="colorSecondaryContainer">#1B1B4C</item>
+        <item name="colorOnSecondaryContainer">#DCDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_48_1" parent="">
+        <item name="colorPrimary">#7E7EF9</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B1B4C</item>
+        <item name="colorOnPrimaryContainer">#DCDCFA</item>
+        <item name="colorSecondary">#7E7EF9</item>
+        <item name="colorSecondaryContainer">#1B1B4C</item>
+        <item name="colorOnSecondaryContainer">#DCDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_48_2" parent="">
+        <item name="colorPrimary">#5858F4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B1B4C</item>
+        <item name="colorOnPrimaryContainer">#DCDCFA</item>
+        <item name="colorSecondary">#5858F4</item>
+        <item name="colorSecondaryContainer">#1B1B4C</item>
+        <item name="colorOnSecondaryContainer">#DCDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_48_3" parent="">
+        <item name="colorPrimary">#3B3BE1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B1B4C</item>
+        <item name="colorOnPrimaryContainer">#DCDCFA</item>
+        <item name="colorSecondary">#3B3BE1</item>
+        <item name="colorSecondaryContainer">#1B1B4C</item>
+        <item name="colorOnSecondaryContainer">#DCDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_48_4" parent="">
+        <item name="colorPrimary">#3131CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1B1B4C</item>
+        <item name="colorOnPrimaryContainer">#DCDCFA</item>
+        <item name="colorSecondary">#3131CB</item>
+        <item name="colorSecondaryContainer">#1B1B4C</item>
+        <item name="colorOnSecondaryContainer">#DCDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_49_0" parent="">
+        <item name="colorPrimary">#AFA8FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#1F1B4C</item>
+        <item name="colorOnPrimaryContainer">#DEDCFA</item>
+        <item name="colorSecondary">#AFA8FD</item>
+        <item name="colorSecondaryContainer">#1F1B4C</item>
+        <item name="colorOnSecondaryContainer">#DEDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_49_1" parent="">
+        <item name="colorPrimary">#887EF9</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1F1B4C</item>
+        <item name="colorOnPrimaryContainer">#DEDCFA</item>
+        <item name="colorSecondary">#887EF9</item>
+        <item name="colorSecondaryContainer">#1F1B4C</item>
+        <item name="colorOnSecondaryContainer">#DEDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_49_2" parent="">
+        <item name="colorPrimary">#6558F4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1F1B4C</item>
+        <item name="colorOnPrimaryContainer">#DEDCFA</item>
+        <item name="colorSecondary">#6558F4</item>
+        <item name="colorSecondaryContainer">#1F1B4C</item>
+        <item name="colorOnSecondaryContainer">#DEDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_49_3" parent="">
+        <item name="colorPrimary">#493BE1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1F1B4C</item>
+        <item name="colorOnPrimaryContainer">#DEDCFA</item>
+        <item name="colorSecondary">#493BE1</item>
+        <item name="colorSecondaryContainer">#1F1B4C</item>
+        <item name="colorOnSecondaryContainer">#DEDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_49_4" parent="">
+        <item name="colorPrimary">#3E31CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1F1B4C</item>
+        <item name="colorOnPrimaryContainer">#DEDCFA</item>
+        <item name="colorSecondary">#3E31CB</item>
+        <item name="colorSecondaryContainer">#1F1B4C</item>
+        <item name="colorOnSecondaryContainer">#DEDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_50_0" parent="">
+        <item name="colorPrimary">#B6A8FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#231B4C</item>
+        <item name="colorOnPrimaryContainer">#E1DCFA</item>
+        <item name="colorSecondary">#B6A8FD</item>
+        <item name="colorSecondaryContainer">#231B4C</item>
+        <item name="colorOnSecondaryContainer">#E1DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_50_1" parent="">
+        <item name="colorPrimary">#927EF9</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#231B4C</item>
+        <item name="colorOnPrimaryContainer">#E1DCFA</item>
+        <item name="colorSecondary">#927EF9</item>
+        <item name="colorSecondaryContainer">#231B4C</item>
+        <item name="colorOnSecondaryContainer">#E1DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_50_2" parent="">
+        <item name="colorPrimary">#7258F4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#231B4C</item>
+        <item name="colorOnPrimaryContainer">#E1DCFA</item>
+        <item name="colorSecondary">#7258F4</item>
+        <item name="colorSecondaryContainer">#231B4C</item>
+        <item name="colorOnSecondaryContainer">#E1DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_50_3" parent="">
+        <item name="colorPrimary">#573BE1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#231B4C</item>
+        <item name="colorOnPrimaryContainer">#E1DCFA</item>
+        <item name="colorSecondary">#573BE1</item>
+        <item name="colorSecondaryContainer">#231B4C</item>
+        <item name="colorOnSecondaryContainer">#E1DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_50_4" parent="">
+        <item name="colorPrimary">#4B31CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#231B4C</item>
+        <item name="colorOnPrimaryContainer">#E1DCFA</item>
+        <item name="colorSecondary">#4B31CB</item>
+        <item name="colorSecondaryContainer">#231B4C</item>
+        <item name="colorOnSecondaryContainer">#E1DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_51_0" parent="">
+        <item name="colorPrimary">#BDA8FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#271B4C</item>
+        <item name="colorOnPrimaryContainer">#E3DCFA</item>
+        <item name="colorSecondary">#BDA8FD</item>
+        <item name="colorSecondaryContainer">#271B4C</item>
+        <item name="colorOnSecondaryContainer">#E3DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_51_1" parent="">
+        <item name="colorPrimary">#9D7EF9</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#271B4C</item>
+        <item name="colorOnPrimaryContainer">#E3DCFA</item>
+        <item name="colorSecondary">#9D7EF9</item>
+        <item name="colorSecondaryContainer">#271B4C</item>
+        <item name="colorOnSecondaryContainer">#E3DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_51_2" parent="">
+        <item name="colorPrimary">#7F58F4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#271B4C</item>
+        <item name="colorOnPrimaryContainer">#E3DCFA</item>
+        <item name="colorSecondary">#7F58F4</item>
+        <item name="colorSecondaryContainer">#271B4C</item>
+        <item name="colorOnSecondaryContainer">#E3DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_51_3" parent="">
+        <item name="colorPrimary">#653BE1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#271B4C</item>
+        <item name="colorOnPrimaryContainer">#E3DCFA</item>
+        <item name="colorSecondary">#653BE1</item>
+        <item name="colorSecondaryContainer">#271B4C</item>
+        <item name="colorOnSecondaryContainer">#E3DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_51_4" parent="">
+        <item name="colorPrimary">#5731CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#271B4C</item>
+        <item name="colorOnPrimaryContainer">#E3DCFA</item>
+        <item name="colorSecondary">#5731CB</item>
+        <item name="colorSecondaryContainer">#271B4C</item>
+        <item name="colorOnSecondaryContainer">#E3DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_52_0" parent="">
+        <item name="colorPrimary">#C4A8FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#2B1B4C</item>
+        <item name="colorOnPrimaryContainer">#E6DCFA</item>
+        <item name="colorSecondary">#C4A8FD</item>
+        <item name="colorSecondaryContainer">#2B1B4C</item>
+        <item name="colorOnSecondaryContainer">#E6DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_52_1" parent="">
+        <item name="colorPrimary">#A77EF9</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#2B1B4C</item>
+        <item name="colorOnPrimaryContainer">#E6DCFA</item>
+        <item name="colorSecondary">#A77EF9</item>
+        <item name="colorSecondaryContainer">#2B1B4C</item>
+        <item name="colorOnSecondaryContainer">#E6DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_52_2" parent="">
+        <item name="colorPrimary">#8C58F4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#2B1B4C</item>
+        <item name="colorOnPrimaryContainer">#E6DCFA</item>
+        <item name="colorSecondary">#8C58F4</item>
+        <item name="colorSecondaryContainer">#2B1B4C</item>
+        <item name="colorOnSecondaryContainer">#E6DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_52_3" parent="">
+        <item name="colorPrimary">#733BE1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#2B1B4C</item>
+        <item name="colorOnPrimaryContainer">#E6DCFA</item>
+        <item name="colorSecondary">#733BE1</item>
+        <item name="colorSecondaryContainer">#2B1B4C</item>
+        <item name="colorOnSecondaryContainer">#E6DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_52_4" parent="">
+        <item name="colorPrimary">#6431CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#2B1B4C</item>
+        <item name="colorOnPrimaryContainer">#E6DCFA</item>
+        <item name="colorSecondary">#6431CB</item>
+        <item name="colorSecondaryContainer">#2B1B4C</item>
+        <item name="colorOnSecondaryContainer">#E6DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_53_0" parent="">
+        <item name="colorPrimary">#CBA8FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#2F1B4C</item>
+        <item name="colorOnPrimaryContainer">#E8DCFA</item>
+        <item name="colorSecondary">#CBA8FD</item>
+        <item name="colorSecondaryContainer">#2F1B4C</item>
+        <item name="colorOnSecondaryContainer">#E8DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_53_1" parent="">
+        <item name="colorPrimary">#B17EF9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#2F1B4C</item>
+        <item name="colorOnPrimaryContainer">#E8DCFA</item>
+        <item name="colorSecondary">#B17EF9</item>
+        <item name="colorSecondaryContainer">#2F1B4C</item>
+        <item name="colorOnSecondaryContainer">#E8DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_53_2" parent="">
+        <item name="colorPrimary">#9958F4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#2F1B4C</item>
+        <item name="colorOnPrimaryContainer">#E8DCFA</item>
+        <item name="colorSecondary">#9958F4</item>
+        <item name="colorSecondaryContainer">#2F1B4C</item>
+        <item name="colorOnSecondaryContainer">#E8DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_53_3" parent="">
+        <item name="colorPrimary">#803BE1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#2F1B4C</item>
+        <item name="colorOnPrimaryContainer">#E8DCFA</item>
+        <item name="colorSecondary">#803BE1</item>
+        <item name="colorSecondaryContainer">#2F1B4C</item>
+        <item name="colorOnSecondaryContainer">#E8DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_53_4" parent="">
+        <item name="colorPrimary">#7131CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#2F1B4C</item>
+        <item name="colorOnPrimaryContainer">#E8DCFA</item>
+        <item name="colorSecondary">#7131CB</item>
+        <item name="colorSecondaryContainer">#2F1B4C</item>
+        <item name="colorOnSecondaryContainer">#E8DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_54_0" parent="">
+        <item name="colorPrimary">#D2A8FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#341B4C</item>
+        <item name="colorOnPrimaryContainer">#EBDCFA</item>
+        <item name="colorSecondary">#D2A8FD</item>
+        <item name="colorSecondaryContainer">#341B4C</item>
+        <item name="colorOnSecondaryContainer">#EBDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_54_1" parent="">
+        <item name="colorPrimary">#BB7EF9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#341B4C</item>
+        <item name="colorOnPrimaryContainer">#EBDCFA</item>
+        <item name="colorSecondary">#BB7EF9</item>
+        <item name="colorSecondaryContainer">#341B4C</item>
+        <item name="colorOnSecondaryContainer">#EBDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_54_2" parent="">
+        <item name="colorPrimary">#A658F4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#341B4C</item>
+        <item name="colorOnPrimaryContainer">#EBDCFA</item>
+        <item name="colorSecondary">#A658F4</item>
+        <item name="colorSecondaryContainer">#341B4C</item>
+        <item name="colorOnSecondaryContainer">#EBDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_54_3" parent="">
+        <item name="colorPrimary">#8E3BE1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#341B4C</item>
+        <item name="colorOnPrimaryContainer">#EBDCFA</item>
+        <item name="colorSecondary">#8E3BE1</item>
+        <item name="colorSecondaryContainer">#341B4C</item>
+        <item name="colorOnSecondaryContainer">#EBDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_54_4" parent="">
+        <item name="colorPrimary">#7E31CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#341B4C</item>
+        <item name="colorOnPrimaryContainer">#EBDCFA</item>
+        <item name="colorSecondary">#7E31CB</item>
+        <item name="colorSecondaryContainer">#341B4C</item>
+        <item name="colorOnSecondaryContainer">#EBDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_55_0" parent="">
+        <item name="colorPrimary">#D9A8FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#381B4C</item>
+        <item name="colorOnPrimaryContainer">#EDDCFA</item>
+        <item name="colorSecondary">#D9A8FD</item>
+        <item name="colorSecondaryContainer">#381B4C</item>
+        <item name="colorOnSecondaryContainer">#EDDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_55_1" parent="">
+        <item name="colorPrimary">#C67EF9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#381B4C</item>
+        <item name="colorOnPrimaryContainer">#EDDCFA</item>
+        <item name="colorSecondary">#C67EF9</item>
+        <item name="colorSecondaryContainer">#381B4C</item>
+        <item name="colorOnSecondaryContainer">#EDDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_55_2" parent="">
+        <item name="colorPrimary">#B358F4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#381B4C</item>
+        <item name="colorOnPrimaryContainer">#EDDCFA</item>
+        <item name="colorSecondary">#B358F4</item>
+        <item name="colorSecondaryContainer">#381B4C</item>
+        <item name="colorOnSecondaryContainer">#EDDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_55_3" parent="">
+        <item name="colorPrimary">#9C3BE1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#381B4C</item>
+        <item name="colorOnPrimaryContainer">#EDDCFA</item>
+        <item name="colorSecondary">#9C3BE1</item>
+        <item name="colorSecondaryContainer">#381B4C</item>
+        <item name="colorOnSecondaryContainer">#EDDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_55_4" parent="">
+        <item name="colorPrimary">#8B31CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#381B4C</item>
+        <item name="colorOnPrimaryContainer">#EDDCFA</item>
+        <item name="colorSecondary">#8B31CB</item>
+        <item name="colorSecondaryContainer">#381B4C</item>
+        <item name="colorOnSecondaryContainer">#EDDCFA</item>
+    </style>
+    <style name="Overlay_Wheel_56_0" parent="">
+        <item name="colorPrimary">#E0A8FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#3C1B4C</item>
+        <item name="colorOnPrimaryContainer">#F0DCFA</item>
+        <item name="colorSecondary">#E0A8FD</item>
+        <item name="colorSecondaryContainer">#3C1B4C</item>
+        <item name="colorOnSecondaryContainer">#F0DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_56_1" parent="">
+        <item name="colorPrimary">#D07EF9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#3C1B4C</item>
+        <item name="colorOnPrimaryContainer">#F0DCFA</item>
+        <item name="colorSecondary">#D07EF9</item>
+        <item name="colorSecondaryContainer">#3C1B4C</item>
+        <item name="colorOnSecondaryContainer">#F0DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_56_2" parent="">
+        <item name="colorPrimary">#C058F4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#3C1B4C</item>
+        <item name="colorOnPrimaryContainer">#F0DCFA</item>
+        <item name="colorSecondary">#C058F4</item>
+        <item name="colorSecondaryContainer">#3C1B4C</item>
+        <item name="colorOnSecondaryContainer">#F0DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_56_3" parent="">
+        <item name="colorPrimary">#AA3BE1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#3C1B4C</item>
+        <item name="colorOnPrimaryContainer">#F0DCFA</item>
+        <item name="colorSecondary">#AA3BE1</item>
+        <item name="colorSecondaryContainer">#3C1B4C</item>
+        <item name="colorOnSecondaryContainer">#F0DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_56_4" parent="">
+        <item name="colorPrimary">#9831CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#3C1B4C</item>
+        <item name="colorOnPrimaryContainer">#F0DCFA</item>
+        <item name="colorSecondary">#9831CB</item>
+        <item name="colorSecondaryContainer">#3C1B4C</item>
+        <item name="colorOnSecondaryContainer">#F0DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_57_0" parent="">
+        <item name="colorPrimary">#E7A8FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#401B4C</item>
+        <item name="colorOnPrimaryContainer">#F2DCFA</item>
+        <item name="colorSecondary">#E7A8FD</item>
+        <item name="colorSecondaryContainer">#401B4C</item>
+        <item name="colorOnSecondaryContainer">#F2DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_57_1" parent="">
+        <item name="colorPrimary">#DA7EF9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#401B4C</item>
+        <item name="colorOnPrimaryContainer">#F2DCFA</item>
+        <item name="colorSecondary">#DA7EF9</item>
+        <item name="colorSecondaryContainer">#401B4C</item>
+        <item name="colorOnSecondaryContainer">#F2DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_57_2" parent="">
+        <item name="colorPrimary">#CD58F4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#401B4C</item>
+        <item name="colorOnPrimaryContainer">#F2DCFA</item>
+        <item name="colorSecondary">#CD58F4</item>
+        <item name="colorSecondaryContainer">#401B4C</item>
+        <item name="colorOnSecondaryContainer">#F2DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_57_3" parent="">
+        <item name="colorPrimary">#B83BE1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#401B4C</item>
+        <item name="colorOnPrimaryContainer">#F2DCFA</item>
+        <item name="colorSecondary">#B83BE1</item>
+        <item name="colorSecondaryContainer">#401B4C</item>
+        <item name="colorOnSecondaryContainer">#F2DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_57_4" parent="">
+        <item name="colorPrimary">#A531CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#401B4C</item>
+        <item name="colorOnPrimaryContainer">#F2DCFA</item>
+        <item name="colorSecondary">#A531CB</item>
+        <item name="colorSecondaryContainer">#401B4C</item>
+        <item name="colorOnSecondaryContainer">#F2DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_58_0" parent="">
+        <item name="colorPrimary">#EFA8FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#441B4C</item>
+        <item name="colorOnPrimaryContainer">#F5DCFA</item>
+        <item name="colorSecondary">#EFA8FD</item>
+        <item name="colorSecondaryContainer">#441B4C</item>
+        <item name="colorOnSecondaryContainer">#F5DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_58_1" parent="">
+        <item name="colorPrimary">#E57EF9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#441B4C</item>
+        <item name="colorOnPrimaryContainer">#F5DCFA</item>
+        <item name="colorSecondary">#E57EF9</item>
+        <item name="colorSecondaryContainer">#441B4C</item>
+        <item name="colorOnSecondaryContainer">#F5DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_58_2" parent="">
+        <item name="colorPrimary">#DA58F4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#441B4C</item>
+        <item name="colorOnPrimaryContainer">#F5DCFA</item>
+        <item name="colorSecondary">#DA58F4</item>
+        <item name="colorSecondaryContainer">#441B4C</item>
+        <item name="colorOnSecondaryContainer">#F5DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_58_3" parent="">
+        <item name="colorPrimary">#C63BE1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#441B4C</item>
+        <item name="colorOnPrimaryContainer">#F5DCFA</item>
+        <item name="colorSecondary">#C63BE1</item>
+        <item name="colorSecondaryContainer">#441B4C</item>
+        <item name="colorOnSecondaryContainer">#F5DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_58_4" parent="">
+        <item name="colorPrimary">#B231CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#441B4C</item>
+        <item name="colorOnPrimaryContainer">#F5DCFA</item>
+        <item name="colorSecondary">#B231CB</item>
+        <item name="colorSecondaryContainer">#441B4C</item>
+        <item name="colorOnSecondaryContainer">#F5DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_59_0" parent="">
+        <item name="colorPrimary">#F6A8FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#481B4C</item>
+        <item name="colorOnPrimaryContainer">#F7DCFA</item>
+        <item name="colorSecondary">#F6A8FD</item>
+        <item name="colorSecondaryContainer">#481B4C</item>
+        <item name="colorOnSecondaryContainer">#F7DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_59_1" parent="">
+        <item name="colorPrimary">#EF7EF9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#481B4C</item>
+        <item name="colorOnPrimaryContainer">#F7DCFA</item>
+        <item name="colorSecondary">#EF7EF9</item>
+        <item name="colorSecondaryContainer">#481B4C</item>
+        <item name="colorOnSecondaryContainer">#F7DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_59_2" parent="">
+        <item name="colorPrimary">#E758F4</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#481B4C</item>
+        <item name="colorOnPrimaryContainer">#F7DCFA</item>
+        <item name="colorSecondary">#E758F4</item>
+        <item name="colorSecondaryContainer">#481B4C</item>
+        <item name="colorOnSecondaryContainer">#F7DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_59_3" parent="">
+        <item name="colorPrimary">#D33BE1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#481B4C</item>
+        <item name="colorOnPrimaryContainer">#F7DCFA</item>
+        <item name="colorSecondary">#D33BE1</item>
+        <item name="colorSecondaryContainer">#481B4C</item>
+        <item name="colorOnSecondaryContainer">#F7DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_59_4" parent="">
+        <item name="colorPrimary">#BE31CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#481B4C</item>
+        <item name="colorOnPrimaryContainer">#F7DCFA</item>
+        <item name="colorSecondary">#BE31CB</item>
+        <item name="colorSecondaryContainer">#481B4C</item>
+        <item name="colorOnSecondaryContainer">#F7DCFA</item>
+    </style>
+    <style name="Overlay_Wheel_60_0" parent="">
+        <item name="colorPrimary">#FDA8FD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B4C</item>
+        <item name="colorOnPrimaryContainer">#FADCFA</item>
+        <item name="colorSecondary">#FDA8FD</item>
+        <item name="colorSecondaryContainer">#4C1B4C</item>
+        <item name="colorOnSecondaryContainer">#FADCFA</item>
+    </style>
+    <style name="Overlay_Wheel_60_1" parent="">
+        <item name="colorPrimary">#F97EF9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B4C</item>
+        <item name="colorOnPrimaryContainer">#FADCFA</item>
+        <item name="colorSecondary">#F97EF9</item>
+        <item name="colorSecondaryContainer">#4C1B4C</item>
+        <item name="colorOnSecondaryContainer">#FADCFA</item>
+    </style>
+    <style name="Overlay_Wheel_60_2" parent="">
+        <item name="colorPrimary">#F458F4</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B4C</item>
+        <item name="colorOnPrimaryContainer">#FADCFA</item>
+        <item name="colorSecondary">#F458F4</item>
+        <item name="colorSecondaryContainer">#4C1B4C</item>
+        <item name="colorOnSecondaryContainer">#FADCFA</item>
+    </style>
+    <style name="Overlay_Wheel_60_3" parent="">
+        <item name="colorPrimary">#E13BE1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B4C</item>
+        <item name="colorOnPrimaryContainer">#FADCFA</item>
+        <item name="colorSecondary">#E13BE1</item>
+        <item name="colorSecondaryContainer">#4C1B4C</item>
+        <item name="colorOnSecondaryContainer">#FADCFA</item>
+    </style>
+    <style name="Overlay_Wheel_60_4" parent="">
+        <item name="colorPrimary">#CB31CB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B4C</item>
+        <item name="colorOnPrimaryContainer">#FADCFA</item>
+        <item name="colorSecondary">#CB31CB</item>
+        <item name="colorSecondaryContainer">#4C1B4C</item>
+        <item name="colorOnSecondaryContainer">#FADCFA</item>
+    </style>
+    <style name="Overlay_Wheel_61_0" parent="">
+        <item name="colorPrimary">#FDA8F6</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B48</item>
+        <item name="colorOnPrimaryContainer">#FADCF7</item>
+        <item name="colorSecondary">#FDA8F6</item>
+        <item name="colorSecondaryContainer">#4C1B48</item>
+        <item name="colorOnSecondaryContainer">#FADCF7</item>
+    </style>
+    <style name="Overlay_Wheel_61_1" parent="">
+        <item name="colorPrimary">#F97EEF</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B48</item>
+        <item name="colorOnPrimaryContainer">#FADCF7</item>
+        <item name="colorSecondary">#F97EEF</item>
+        <item name="colorSecondaryContainer">#4C1B48</item>
+        <item name="colorOnSecondaryContainer">#FADCF7</item>
+    </style>
+    <style name="Overlay_Wheel_61_2" parent="">
+        <item name="colorPrimary">#F458E7</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B48</item>
+        <item name="colorOnPrimaryContainer">#FADCF7</item>
+        <item name="colorSecondary">#F458E7</item>
+        <item name="colorSecondaryContainer">#4C1B48</item>
+        <item name="colorOnSecondaryContainer">#FADCF7</item>
+    </style>
+    <style name="Overlay_Wheel_61_3" parent="">
+        <item name="colorPrimary">#E13BD3</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B48</item>
+        <item name="colorOnPrimaryContainer">#FADCF7</item>
+        <item name="colorSecondary">#E13BD3</item>
+        <item name="colorSecondaryContainer">#4C1B48</item>
+        <item name="colorOnSecondaryContainer">#FADCF7</item>
+    </style>
+    <style name="Overlay_Wheel_61_4" parent="">
+        <item name="colorPrimary">#CB31BE</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B48</item>
+        <item name="colorOnPrimaryContainer">#FADCF7</item>
+        <item name="colorSecondary">#CB31BE</item>
+        <item name="colorSecondaryContainer">#4C1B48</item>
+        <item name="colorOnSecondaryContainer">#FADCF7</item>
+    </style>
+    <style name="Overlay_Wheel_62_0" parent="">
+        <item name="colorPrimary">#FDA8EF</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B44</item>
+        <item name="colorOnPrimaryContainer">#FADCF5</item>
+        <item name="colorSecondary">#FDA8EF</item>
+        <item name="colorSecondaryContainer">#4C1B44</item>
+        <item name="colorOnSecondaryContainer">#FADCF5</item>
+    </style>
+    <style name="Overlay_Wheel_62_1" parent="">
+        <item name="colorPrimary">#F97EE5</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B44</item>
+        <item name="colorOnPrimaryContainer">#FADCF5</item>
+        <item name="colorSecondary">#F97EE5</item>
+        <item name="colorSecondaryContainer">#4C1B44</item>
+        <item name="colorOnSecondaryContainer">#FADCF5</item>
+    </style>
+    <style name="Overlay_Wheel_62_2" parent="">
+        <item name="colorPrimary">#F458DA</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B44</item>
+        <item name="colorOnPrimaryContainer">#FADCF5</item>
+        <item name="colorSecondary">#F458DA</item>
+        <item name="colorSecondaryContainer">#4C1B44</item>
+        <item name="colorOnSecondaryContainer">#FADCF5</item>
+    </style>
+    <style name="Overlay_Wheel_62_3" parent="">
+        <item name="colorPrimary">#E13BC6</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B44</item>
+        <item name="colorOnPrimaryContainer">#FADCF5</item>
+        <item name="colorSecondary">#E13BC6</item>
+        <item name="colorSecondaryContainer">#4C1B44</item>
+        <item name="colorOnSecondaryContainer">#FADCF5</item>
+    </style>
+    <style name="Overlay_Wheel_62_4" parent="">
+        <item name="colorPrimary">#CB31B2</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B44</item>
+        <item name="colorOnPrimaryContainer">#FADCF5</item>
+        <item name="colorSecondary">#CB31B2</item>
+        <item name="colorSecondaryContainer">#4C1B44</item>
+        <item name="colorOnSecondaryContainer">#FADCF5</item>
+    </style>
+    <style name="Overlay_Wheel_63_0" parent="">
+        <item name="colorPrimary">#FDA8E7</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B40</item>
+        <item name="colorOnPrimaryContainer">#FADCF2</item>
+        <item name="colorSecondary">#FDA8E7</item>
+        <item name="colorSecondaryContainer">#4C1B40</item>
+        <item name="colorOnSecondaryContainer">#FADCF2</item>
+    </style>
+    <style name="Overlay_Wheel_63_1" parent="">
+        <item name="colorPrimary">#F97EDA</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B40</item>
+        <item name="colorOnPrimaryContainer">#FADCF2</item>
+        <item name="colorSecondary">#F97EDA</item>
+        <item name="colorSecondaryContainer">#4C1B40</item>
+        <item name="colorOnSecondaryContainer">#FADCF2</item>
+    </style>
+    <style name="Overlay_Wheel_63_2" parent="">
+        <item name="colorPrimary">#F458CD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B40</item>
+        <item name="colorOnPrimaryContainer">#FADCF2</item>
+        <item name="colorSecondary">#F458CD</item>
+        <item name="colorSecondaryContainer">#4C1B40</item>
+        <item name="colorOnSecondaryContainer">#FADCF2</item>
+    </style>
+    <style name="Overlay_Wheel_63_3" parent="">
+        <item name="colorPrimary">#E13BB8</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B40</item>
+        <item name="colorOnPrimaryContainer">#FADCF2</item>
+        <item name="colorSecondary">#E13BB8</item>
+        <item name="colorSecondaryContainer">#4C1B40</item>
+        <item name="colorOnSecondaryContainer">#FADCF2</item>
+    </style>
+    <style name="Overlay_Wheel_63_4" parent="">
+        <item name="colorPrimary">#CB31A5</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B40</item>
+        <item name="colorOnPrimaryContainer">#FADCF2</item>
+        <item name="colorSecondary">#CB31A5</item>
+        <item name="colorSecondaryContainer">#4C1B40</item>
+        <item name="colorOnSecondaryContainer">#FADCF2</item>
+    </style>
+    <style name="Overlay_Wheel_64_0" parent="">
+        <item name="colorPrimary">#FDA8E0</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B3C</item>
+        <item name="colorOnPrimaryContainer">#FADCF0</item>
+        <item name="colorSecondary">#FDA8E0</item>
+        <item name="colorSecondaryContainer">#4C1B3C</item>
+        <item name="colorOnSecondaryContainer">#FADCF0</item>
+    </style>
+    <style name="Overlay_Wheel_64_1" parent="">
+        <item name="colorPrimary">#F97ED0</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B3C</item>
+        <item name="colorOnPrimaryContainer">#FADCF0</item>
+        <item name="colorSecondary">#F97ED0</item>
+        <item name="colorSecondaryContainer">#4C1B3C</item>
+        <item name="colorOnSecondaryContainer">#FADCF0</item>
+    </style>
+    <style name="Overlay_Wheel_64_2" parent="">
+        <item name="colorPrimary">#F458C0</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B3C</item>
+        <item name="colorOnPrimaryContainer">#FADCF0</item>
+        <item name="colorSecondary">#F458C0</item>
+        <item name="colorSecondaryContainer">#4C1B3C</item>
+        <item name="colorOnSecondaryContainer">#FADCF0</item>
+    </style>
+    <style name="Overlay_Wheel_64_3" parent="">
+        <item name="colorPrimary">#E13BAA</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B3C</item>
+        <item name="colorOnPrimaryContainer">#FADCF0</item>
+        <item name="colorSecondary">#E13BAA</item>
+        <item name="colorSecondaryContainer">#4C1B3C</item>
+        <item name="colorOnSecondaryContainer">#FADCF0</item>
+    </style>
+    <style name="Overlay_Wheel_64_4" parent="">
+        <item name="colorPrimary">#CB3198</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B3C</item>
+        <item name="colorOnPrimaryContainer">#FADCF0</item>
+        <item name="colorSecondary">#CB3198</item>
+        <item name="colorSecondaryContainer">#4C1B3C</item>
+        <item name="colorOnSecondaryContainer">#FADCF0</item>
+    </style>
+    <style name="Overlay_Wheel_65_0" parent="">
+        <item name="colorPrimary">#FDA8D9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B38</item>
+        <item name="colorOnPrimaryContainer">#FADCED</item>
+        <item name="colorSecondary">#FDA8D9</item>
+        <item name="colorSecondaryContainer">#4C1B38</item>
+        <item name="colorOnSecondaryContainer">#FADCED</item>
+    </style>
+    <style name="Overlay_Wheel_65_1" parent="">
+        <item name="colorPrimary">#F97EC6</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B38</item>
+        <item name="colorOnPrimaryContainer">#FADCED</item>
+        <item name="colorSecondary">#F97EC6</item>
+        <item name="colorSecondaryContainer">#4C1B38</item>
+        <item name="colorOnSecondaryContainer">#FADCED</item>
+    </style>
+    <style name="Overlay_Wheel_65_2" parent="">
+        <item name="colorPrimary">#F458B3</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B38</item>
+        <item name="colorOnPrimaryContainer">#FADCED</item>
+        <item name="colorSecondary">#F458B3</item>
+        <item name="colorSecondaryContainer">#4C1B38</item>
+        <item name="colorOnSecondaryContainer">#FADCED</item>
+    </style>
+    <style name="Overlay_Wheel_65_3" parent="">
+        <item name="colorPrimary">#E13B9C</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B38</item>
+        <item name="colorOnPrimaryContainer">#FADCED</item>
+        <item name="colorSecondary">#E13B9C</item>
+        <item name="colorSecondaryContainer">#4C1B38</item>
+        <item name="colorOnSecondaryContainer">#FADCED</item>
+    </style>
+    <style name="Overlay_Wheel_65_4" parent="">
+        <item name="colorPrimary">#CB318B</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B38</item>
+        <item name="colorOnPrimaryContainer">#FADCED</item>
+        <item name="colorSecondary">#CB318B</item>
+        <item name="colorSecondaryContainer">#4C1B38</item>
+        <item name="colorOnSecondaryContainer">#FADCED</item>
+    </style>
+    <style name="Overlay_Wheel_66_0" parent="">
+        <item name="colorPrimary">#FDA8D2</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B34</item>
+        <item name="colorOnPrimaryContainer">#FADCEB</item>
+        <item name="colorSecondary">#FDA8D2</item>
+        <item name="colorSecondaryContainer">#4C1B34</item>
+        <item name="colorOnSecondaryContainer">#FADCEB</item>
+    </style>
+    <style name="Overlay_Wheel_66_1" parent="">
+        <item name="colorPrimary">#F97EBB</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B34</item>
+        <item name="colorOnPrimaryContainer">#FADCEB</item>
+        <item name="colorSecondary">#F97EBB</item>
+        <item name="colorSecondaryContainer">#4C1B34</item>
+        <item name="colorOnSecondaryContainer">#FADCEB</item>
+    </style>
+    <style name="Overlay_Wheel_66_2" parent="">
+        <item name="colorPrimary">#F458A6</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B34</item>
+        <item name="colorOnPrimaryContainer">#FADCEB</item>
+        <item name="colorSecondary">#F458A6</item>
+        <item name="colorSecondaryContainer">#4C1B34</item>
+        <item name="colorOnSecondaryContainer">#FADCEB</item>
+    </style>
+    <style name="Overlay_Wheel_66_3" parent="">
+        <item name="colorPrimary">#E13B8E</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B34</item>
+        <item name="colorOnPrimaryContainer">#FADCEB</item>
+        <item name="colorSecondary">#E13B8E</item>
+        <item name="colorSecondaryContainer">#4C1B34</item>
+        <item name="colorOnSecondaryContainer">#FADCEB</item>
+    </style>
+    <style name="Overlay_Wheel_66_4" parent="">
+        <item name="colorPrimary">#CB317E</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B34</item>
+        <item name="colorOnPrimaryContainer">#FADCEB</item>
+        <item name="colorSecondary">#CB317E</item>
+        <item name="colorSecondaryContainer">#4C1B34</item>
+        <item name="colorOnSecondaryContainer">#FADCEB</item>
+    </style>
+    <style name="Overlay_Wheel_67_0" parent="">
+        <item name="colorPrimary">#FDA8CB</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B2F</item>
+        <item name="colorOnPrimaryContainer">#FADCE8</item>
+        <item name="colorSecondary">#FDA8CB</item>
+        <item name="colorSecondaryContainer">#4C1B2F</item>
+        <item name="colorOnSecondaryContainer">#FADCE8</item>
+    </style>
+    <style name="Overlay_Wheel_67_1" parent="">
+        <item name="colorPrimary">#F97EB1</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B2F</item>
+        <item name="colorOnPrimaryContainer">#FADCE8</item>
+        <item name="colorSecondary">#F97EB1</item>
+        <item name="colorSecondaryContainer">#4C1B2F</item>
+        <item name="colorOnSecondaryContainer">#FADCE8</item>
+    </style>
+    <style name="Overlay_Wheel_67_2" parent="">
+        <item name="colorPrimary">#F45899</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B2F</item>
+        <item name="colorOnPrimaryContainer">#FADCE8</item>
+        <item name="colorSecondary">#F45899</item>
+        <item name="colorSecondaryContainer">#4C1B2F</item>
+        <item name="colorOnSecondaryContainer">#FADCE8</item>
+    </style>
+    <style name="Overlay_Wheel_67_3" parent="">
+        <item name="colorPrimary">#E13B80</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B2F</item>
+        <item name="colorOnPrimaryContainer">#FADCE8</item>
+        <item name="colorSecondary">#E13B80</item>
+        <item name="colorSecondaryContainer">#4C1B2F</item>
+        <item name="colorOnSecondaryContainer">#FADCE8</item>
+    </style>
+    <style name="Overlay_Wheel_67_4" parent="">
+        <item name="colorPrimary">#CB3171</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B2F</item>
+        <item name="colorOnPrimaryContainer">#FADCE8</item>
+        <item name="colorSecondary">#CB3171</item>
+        <item name="colorSecondaryContainer">#4C1B2F</item>
+        <item name="colorOnSecondaryContainer">#FADCE8</item>
+    </style>
+    <style name="Overlay_Wheel_68_0" parent="">
+        <item name="colorPrimary">#FDA8C4</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B2B</item>
+        <item name="colorOnPrimaryContainer">#FADCE6</item>
+        <item name="colorSecondary">#FDA8C4</item>
+        <item name="colorSecondaryContainer">#4C1B2B</item>
+        <item name="colorOnSecondaryContainer">#FADCE6</item>
+    </style>
+    <style name="Overlay_Wheel_68_1" parent="">
+        <item name="colorPrimary">#F97EA7</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B2B</item>
+        <item name="colorOnPrimaryContainer">#FADCE6</item>
+        <item name="colorSecondary">#F97EA7</item>
+        <item name="colorSecondaryContainer">#4C1B2B</item>
+        <item name="colorOnSecondaryContainer">#FADCE6</item>
+    </style>
+    <style name="Overlay_Wheel_68_2" parent="">
+        <item name="colorPrimary">#F4588C</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B2B</item>
+        <item name="colorOnPrimaryContainer">#FADCE6</item>
+        <item name="colorSecondary">#F4588C</item>
+        <item name="colorSecondaryContainer">#4C1B2B</item>
+        <item name="colorOnSecondaryContainer">#FADCE6</item>
+    </style>
+    <style name="Overlay_Wheel_68_3" parent="">
+        <item name="colorPrimary">#E13B73</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B2B</item>
+        <item name="colorOnPrimaryContainer">#FADCE6</item>
+        <item name="colorSecondary">#E13B73</item>
+        <item name="colorSecondaryContainer">#4C1B2B</item>
+        <item name="colorOnSecondaryContainer">#FADCE6</item>
+    </style>
+    <style name="Overlay_Wheel_68_4" parent="">
+        <item name="colorPrimary">#CB3164</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B2B</item>
+        <item name="colorOnPrimaryContainer">#FADCE6</item>
+        <item name="colorSecondary">#CB3164</item>
+        <item name="colorSecondaryContainer">#4C1B2B</item>
+        <item name="colorOnSecondaryContainer">#FADCE6</item>
+    </style>
+    <style name="Overlay_Wheel_69_0" parent="">
+        <item name="colorPrimary">#FDA8BD</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B27</item>
+        <item name="colorOnPrimaryContainer">#FADCE3</item>
+        <item name="colorSecondary">#FDA8BD</item>
+        <item name="colorSecondaryContainer">#4C1B27</item>
+        <item name="colorOnSecondaryContainer">#FADCE3</item>
+    </style>
+    <style name="Overlay_Wheel_69_1" parent="">
+        <item name="colorPrimary">#F97E9D</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B27</item>
+        <item name="colorOnPrimaryContainer">#FADCE3</item>
+        <item name="colorSecondary">#F97E9D</item>
+        <item name="colorSecondaryContainer">#4C1B27</item>
+        <item name="colorOnSecondaryContainer">#FADCE3</item>
+    </style>
+    <style name="Overlay_Wheel_69_2" parent="">
+        <item name="colorPrimary">#F4587F</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B27</item>
+        <item name="colorOnPrimaryContainer">#FADCE3</item>
+        <item name="colorSecondary">#F4587F</item>
+        <item name="colorSecondaryContainer">#4C1B27</item>
+        <item name="colorOnSecondaryContainer">#FADCE3</item>
+    </style>
+    <style name="Overlay_Wheel_69_3" parent="">
+        <item name="colorPrimary">#E13B65</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B27</item>
+        <item name="colorOnPrimaryContainer">#FADCE3</item>
+        <item name="colorSecondary">#E13B65</item>
+        <item name="colorSecondaryContainer">#4C1B27</item>
+        <item name="colorOnSecondaryContainer">#FADCE3</item>
+    </style>
+    <style name="Overlay_Wheel_69_4" parent="">
+        <item name="colorPrimary">#CB3157</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B27</item>
+        <item name="colorOnPrimaryContainer">#FADCE3</item>
+        <item name="colorSecondary">#CB3157</item>
+        <item name="colorSecondaryContainer">#4C1B27</item>
+        <item name="colorOnSecondaryContainer">#FADCE3</item>
+    </style>
+    <style name="Overlay_Wheel_70_0" parent="">
+        <item name="colorPrimary">#FDA8B6</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B23</item>
+        <item name="colorOnPrimaryContainer">#FADCE1</item>
+        <item name="colorSecondary">#FDA8B6</item>
+        <item name="colorSecondaryContainer">#4C1B23</item>
+        <item name="colorOnSecondaryContainer">#FADCE1</item>
+    </style>
+    <style name="Overlay_Wheel_70_1" parent="">
+        <item name="colorPrimary">#F97E92</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B23</item>
+        <item name="colorOnPrimaryContainer">#FADCE1</item>
+        <item name="colorSecondary">#F97E92</item>
+        <item name="colorSecondaryContainer">#4C1B23</item>
+        <item name="colorOnSecondaryContainer">#FADCE1</item>
+    </style>
+    <style name="Overlay_Wheel_70_2" parent="">
+        <item name="colorPrimary">#F45872</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B23</item>
+        <item name="colorOnPrimaryContainer">#FADCE1</item>
+        <item name="colorSecondary">#F45872</item>
+        <item name="colorSecondaryContainer">#4C1B23</item>
+        <item name="colorOnSecondaryContainer">#FADCE1</item>
+    </style>
+    <style name="Overlay_Wheel_70_3" parent="">
+        <item name="colorPrimary">#E13B57</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B23</item>
+        <item name="colorOnPrimaryContainer">#FADCE1</item>
+        <item name="colorSecondary">#E13B57</item>
+        <item name="colorSecondaryContainer">#4C1B23</item>
+        <item name="colorOnSecondaryContainer">#FADCE1</item>
+    </style>
+    <style name="Overlay_Wheel_70_4" parent="">
+        <item name="colorPrimary">#CB314B</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B23</item>
+        <item name="colorOnPrimaryContainer">#FADCE1</item>
+        <item name="colorSecondary">#CB314B</item>
+        <item name="colorSecondaryContainer">#4C1B23</item>
+        <item name="colorOnSecondaryContainer">#FADCE1</item>
+    </style>
+    <style name="Overlay_Wheel_71_0" parent="">
+        <item name="colorPrimary">#FDA8AF</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B1F</item>
+        <item name="colorOnPrimaryContainer">#FADCDE</item>
+        <item name="colorSecondary">#FDA8AF</item>
+        <item name="colorSecondaryContainer">#4C1B1F</item>
+        <item name="colorOnSecondaryContainer">#FADCDE</item>
+    </style>
+    <style name="Overlay_Wheel_71_1" parent="">
+        <item name="colorPrimary">#F97E88</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#4C1B1F</item>
+        <item name="colorOnPrimaryContainer">#FADCDE</item>
+        <item name="colorSecondary">#F97E88</item>
+        <item name="colorSecondaryContainer">#4C1B1F</item>
+        <item name="colorOnSecondaryContainer">#FADCDE</item>
+    </style>
+    <style name="Overlay_Wheel_71_2" parent="">
+        <item name="colorPrimary">#F45865</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B1F</item>
+        <item name="colorOnPrimaryContainer">#FADCDE</item>
+        <item name="colorSecondary">#F45865</item>
+        <item name="colorSecondaryContainer">#4C1B1F</item>
+        <item name="colorOnSecondaryContainer">#FADCDE</item>
+    </style>
+    <style name="Overlay_Wheel_71_3" parent="">
+        <item name="colorPrimary">#E13B49</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B1F</item>
+        <item name="colorOnPrimaryContainer">#FADCDE</item>
+        <item name="colorSecondary">#E13B49</item>
+        <item name="colorSecondaryContainer">#4C1B1F</item>
+        <item name="colorOnSecondaryContainer">#FADCDE</item>
+    </style>
+    <style name="Overlay_Wheel_71_4" parent="">
+        <item name="colorPrimary">#CB313E</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#4C1B1F</item>
+        <item name="colorOnPrimaryContainer">#FADCDE</item>
+        <item name="colorSecondary">#CB313E</item>
+        <item name="colorSecondaryContainer">#4C1B1F</item>
+        <item name="colorOnSecondaryContainer">#FADCDE</item>
+    </style>
+</resources>
