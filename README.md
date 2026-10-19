@@ -34,7 +34,11 @@ personalização.
   ignora acentos (Á fica junto do A).
 - **Barra alfabética (# A–Z)** na lateral direita das listas: toque ou arraste para pular direto para
   uma letra, com a letra em destaque no centro da tela. Na lista de Músicas ela só aparece na ordem
-  A a Z.
+  A a Z. **Dentro de álbuns, pastas, artistas e listas** a barra também aparece (em listas com mais
+  de 12 músicas) quando a ordem é A a Z, Artista ou Álbum.
+- **Ordenar dentro de álbuns, pastas, artistas, gêneros e playlists:** botão de ordenar no topo da
+  tela, com *Ordem padrão* (a própria do álbum ou da lista) e as mesmas opções da lista de Músicas.
+  A escolha fica salva para cada tipo de lista, e *Tocar tudo* e *Aleatório* seguem a ordem escolhida.
 - **Álbuns** em grade de 3 colunas, com capas.
 - **Pastas:** navegue pelas pastas do aparelho; cada pasta mostra sua foto no cabeçalho.
 - **Ocultar** músicas e pastas (só a pasta escolhida, as subpastas continuam visíveis). Para desfazer:
@@ -99,6 +103,21 @@ trocar de música e ao fechar). Ao reabrir, o mini player mostra a última músi
 ponto. Músicas apagadas ou ocultas desde então são ignoradas. Se o Android parar o serviço de música
 (por exemplo com a música pausada), o player recoloca a última fila ao voltar ao app, em vez de
 fechar.
+
+### Personalização avançada
+Menu ⋮ → *Personalização avançada*:
+- **Ícone do app:** 9 opções — *Original*, e variações *Verde, Azul, Violeta, Dourado, Rosa*, mais
+  *Vinil, Ondas* e *Fones*. A troca é imediata (a tela inicial pode levar alguns segundos para
+  atualizar). Os ícones também têm versão monocromática para o Android 13+ (ícones temáticos).
+- **Cor de destaque:** 16 cores para usar no lugar da cor do tema (ou *Usar a cor do tema*).
+- **Cor do fundo:** *Padrão, Puro, Grafite, Azul-noite, Sépia* e *Musgo*, cada um com versão clara e
+  escura.
+- **Fonte:** *Padrão, Serifada, Monoespaçada, Condensada, Leve, Média, Casual, Cursiva* e *Pesada*,
+  aplicada em todo o app.
+- **Cantos:** *Padrão, Retos, Suaves* ou *Redondos* para botões, cartões e janelas.
+- *Restaurar padrões* volta tudo (inclusive o ícone) ao original.
+
+As escolhas valem por cima do tema escolhido em *Temas* e ficam salvas.
 
 ### Estatísticas
 Menu ⋮ → *Estatísticas*: total de músicas, reproduções, tempo ouvido, tempo da biblioteca, favoritas
@@ -166,7 +185,8 @@ app/src/main/java/com/missionbreak56/musicplayer/
 │              PlaybackState (salvar/restaurar fila), PlayerConnection, AudioFx (equalizador e aumento
 │              de volume), SleepTimer (código mantido, sem acesso na interface)
 └── ui/        MainActivity (abas), DetailActivity, SearchActivity, PlaylistsActivity, PlayerActivity,
-               EqualizerActivity, ThemesActivity, StatsActivity, AboutActivity, AlphaIndexBar (barra # A–Z),
+               EqualizerActivity, ThemesActivity, CustomizeActivity (personalização avançada), IconManager
+               (troca de ícone), StatsActivity, AboutActivity, AlphaIndexBar (barra # A–Z),
                FolderArt / FolderArtPicker (foto da pasta), BaseActivity (tela cheia), adaptadores e diálogos
 ```
 
@@ -194,6 +214,8 @@ variáveis `SIGNING_KEYSTORE_FILE`, `SIGNING_STORE_PASSWORD`, `SIGNING_KEY_ALIAS
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.8.0** | Barra alfabética e ordenação dentro de álbuns/pastas/artistas/listas; personalização avançada (9 ícones, 16 cores de destaque, 6 fundos, 9 fontes, 4 estilos de cantos) |
+| **2.7.0** | Letras automáticas (LRCLIB, NetEase, Kugou, lyrics.ovh), estatísticas e 7 novos temas |
 | **2.6.7** | Listas aparecem bem mais rápido: cópia salva da biblioteca, ordenação mais rápida e aviso "Carregando…" |
 | **2.6.6** | README completo e texto da tela *Sobre* atualizados |
 | **2.6.5** | Tela cheia (sob o entalhe); o player não fecha mais com a fila vazia; ícone de lista só com linhas |

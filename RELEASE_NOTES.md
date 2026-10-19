@@ -1,18 +1,23 @@
-## MissionPlayer v2.7.0 — Letras automáticas, estatísticas e 7 novos temas
+## MissionPlayer v2.8.0 — Barra alfabética nas pastas, ordenação e personalização avançada
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.7.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.8.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
 
 ### Novidades
-- **Letras automáticas:** o app procura sozinho as letras das músicas que não têm, em segundo plano e só quando há internet, e salva no aparelho para funcionar **offline**. Consulta **LRCLIB**, **NetEase**, **Kugou** e **lyrics.ovh**; a primeira letra sincronizada vence e o texto simples é a alternativa. Ao abrir uma música sem letra, ela é buscada na hora. As letras baixadas também entram na busca por letra. Menu ⋮ → **Letras automáticas** liga ou desliga (vem ligado).
-- **Estatísticas** (menu ⋮ → *Estatísticas*): total de músicas, reproduções, tempo ouvido, favoritas, álbuns e os mais ouvidos (músicas, artistas e álbuns).
-- **7 novos temas completos**, cada um com cores, fonte e cantos próprios: Neon, Papel, Oceano, Pôr do sol, Mono, Floresta e Rosé.
+- **Barra alfabética (# A–Z) dentro de álbuns, pastas, artistas, gêneros e playlists**, com a letra em destaque no centro. Aparece em listas com mais de 12 músicas quando a ordem é A a Z, Artista ou Álbum.
+- **Ordenar dentro das listas:** novo botão de ordenar no topo de cada álbum/pasta/artista/playlist, com *Ordem padrão* e as mesmas opções da lista de Músicas (A a Z, Z a A, Mais recentes, Mais tocadas, Artista, Álbum, Duração). A escolha fica salva por tipo de lista e *Tocar tudo* / *Aleatório* seguem a ordem escolhida.
+- **Personalização avançada** (menu ⋮ → *Personalização avançada*):
+  - **Ícone do app:** 9 opções (Original, Verde, Azul, Violeta, Dourado, Rosa, Vinil, Ondas e Fones), com versão monocromática para o Android 13+.
+  - **Cor de destaque:** 16 cores no lugar da cor do tema.
+  - **Cor do fundo:** Padrão, Puro, Grafite, Azul-noite, Sépia e Musgo, cada um claro e escuro.
+  - **Fonte:** 9 opções, aplicadas em todo o app.
+  - **Cantos:** Padrão, Retos, Suaves ou Redondos.
+  - **Restaurar padrões** (volta inclusive o ícone original).
 
-### Mudou
-- O app agora tem permissão de internet (`INTERNET` e `ACCESS_NETWORK_STATE`), usada somente para baixar letras. Título, artista, álbum e duração da música são enviados aos serviços de letras; desligue a função no menu para o app não usar a rede.
+### Observação sobre o ícone
+Ao atualizar para esta versão, alguns launchers podem tirar o atalho do app da tela inicial (a entrada de lançamento agora é um alias). O app continua na gaveta de apps; basta arrastar o ícone de volta.
 
 ### Alterações técnicas
-- `LyricsFetcher` (novo): fontes de letra com cooldown por fonte e escolha pela duração; `LyricsWorker` (novo): WorkManager a cada 15 min, 4 músicas em paralelo, só com internet.
-- `StatsActivity` (nova) e `UiHelpers.kt` (novo, auxiliares de telas feitas em código).
-- Temas T8–T14 em `themes.xml`, `colors.xml`, `arrays.xml` e `Themes.kt`.
-- Dependência nova: `androidx.work:work-runtime-ktx` 2.9.1.
-- Versão: 2.6.7 → 2.7.0 (versionCode 21).
+- `CustomizeActivity` e `IconManager` (novos); alias de lançador por ícone no manifesto (`activity-alias`).
+- Estilos `Overlay.*` (cor, fonte, cantos, fundo) aplicados sobre o tema em `BaseActivity`; versões `values-night` para o modo escuro.
+- `DetailActivity`: `AlphaIndexBar` e ordenação por tipo de lista (`Prefs.detailSort`).
+- Versão: 2.7.0 → 2.8.0 (versionCode 22).

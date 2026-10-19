@@ -38,6 +38,17 @@
             android:textStyle="bold" />
 
         <ImageButton
+            android:id="@+id/btnSort"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_sort"
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_sort"
+            app:tint="?attr/colorOnSurface" />
+
+        <ImageButton
             android:id="@+id/btnMore"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -158,6 +169,28 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingBottom="8dp" />
+
+        <com.missionbreak56.musicplayer.ui.AlphaIndexBar
+            android:id="@+id/alphaBar"
+            android:layout_width="22dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="2dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textBubble"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_circle_glass"
+            android:gravity="center"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/textEmpty"

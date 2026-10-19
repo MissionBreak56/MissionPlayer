@@ -12,6 +12,7 @@ import com.missionbreak56.musicplayer.R
 import com.missionbreak56.musicplayer.data.Kind
 import com.missionbreak56.musicplayer.data.Library
 import com.missionbreak56.musicplayer.data.Prefs
+import com.missionbreak56.musicplayer.data.Song
 import com.missionbreak56.musicplayer.databinding.ActivityDetailBinding
 import com.missionbreak56.musicplayer.playback.PlaybackQueue
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +27,9 @@ class DetailActivity : PlayerBoundActivity() {
     private lateinit var actions: SongActions
     private var kind = Kind.ALBUM
     private var key = ""
+
+    /** Sort chosen for this kind of list: -1 keeps its own order, 0.. matches R.array.sort_options. */
+    private var sortOrder = -1
 
     private val pickFolderArt = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null && kind == Kind.FOLDER) {
@@ -47,6 +51,7 @@ class DetailActivity : PlayerBoundActivity() {
             Kind.ALBUM
         }
         key = intent.getStringExtra(EXTRA_KEY).orEmpty()
+        sortOrder = Prefs.detailSort(kind.name)
 
         actions = SongActions(this) { refresh() }
         adapter = SongAdapter(
@@ -59,6 +64,7 @@ class DetailActivity : PlayerBoundActivity() {
         binding.list.adapter = adapter
 
         binding.btnBack.setOnClickListener { finish() }
+        binding.btnSort.setOnClickListener { showSortMenu(it) }
         binding.btnMore.visibility =
             if (kind == Kind.PLAYLIST || kind == Kind.FOLDER) View.VISIBLE else View.GONE
         binding.btnMore.setOnClickListener {
@@ -95,15 +101,78 @@ class DetailActivity : PlayerBoundActivity() {
         binding.textName.text = group.title
         val count = resources.getQuantityString(R.plurals.n_songs, group.songs.size, group.songs.size)
         binding.textInfo.text = if (group.extra.isNotBlank()) "${group.extra}\n$count" else count
-        adapter.submit(group.songs)
-        binding.textEmpty.visibility = if (group.songs.isEmpty()) View.VISIBLE else View.GONE
-        binding.btnPlay.isEnabled = group.songs.isNotEmpty()
-        binding.btnShuffle.isEnabled = group.songs.isNotEmpty()
+        val songs = if (sortOrder >= 0) Library.sorted(group.songs, sortOrder) else group.songs
+        adapter.submit(songs)
+        setupIndexBar(songs)
+        binding.textEmpty.visibility = if (songs.isEmpty()) View.VISIBLE else View.GONE
+        binding.btnPlay.isEnabled = songs.isNotEmpty()
+        binding.btnShuffle.isEnabled = songs.isNotEmpty()
         if (kind == Kind.FOLDER && FolderArt.has(this, key)) {
             ArtLoader.loadFolder(binding.imageArt, key, 400)
         } else {
             ArtLoader.load(binding.imageArt, group.songs.firstOrNull(), 400)
         }
+    }
+
+    /** Letters of the list in display order, or null when it is not sorted alphabetically. */
+    private fun indexLetters(songs: List<Song>): List<String>? = when (sortOrder) {
+        0 -> songs.map { Library.letterOf(it.displayTitle) }
+        1 -> songs.map { Library.letterOf(it.displayArtist) }
+        2 -> songs.map { Library.letterOf(it.displayAlbum) }
+        else -> null
+    }
+
+    /** A-Z strip on the side, shown for long lists sorted by title, artist or album. */
+    private fun setupIndexBar(songs: List<Song>) {
+        val density = resources.displayMetrics.density
+        val letters = indexLetters(songs)
+        val show = letters != null && letters.size > 12
+        binding.alphaBar.visibility = if (show) View.VISIBLE else View.GONE
+        binding.textBubble.visibility = View.GONE
+        binding.list.setPadding(0, 0, if (show) (22 * density).toInt() else 0, (8 * density).toInt())
+        if (!show || letters == null) return
+        binding.alphaBar.available = letters.toSet()
+        binding.alphaBar.onLetter = { letter ->
+            if (letter == null) {
+                binding.textBubble.visibility = View.GONE
+            } else {
+                binding.textBubble.text = letter
+                binding.textBubble.visibility = View.VISIBLE
+                // first item with this letter, else the next letter that exists
+                var pos = letters.indexOfFirst { it == letter }
+                if (pos < 0) {
+                    val all = listOf("#") + ('A'..'Z').map { it.toString() }
+                    val from = all.indexOf(letter)
+                    pos = letters.indexOfFirst { all.indexOf(it) > from }
+                    if (pos < 0) pos = letters.lastIndex
+                }
+                (binding.list.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(pos, 0)
+            }
+        }
+    }
+
+    private fun showSortMenu(anchor: View) {
+        val options = resources.getStringArray(R.array.sort_options)
+        val popup = PopupMenu(this, anchor)
+        popup.menu.add(0, DEFAULT_ORDER, 0, tr("Ordem padrão", "Default order")).apply {
+            isCheckable = true
+            isChecked = sortOrder < 0
+        }
+        options.forEachIndexed { index, label ->
+            popup.menu.add(0, index, index + 1, label).apply {
+                isCheckable = true
+                isChecked = index == sortOrder
+            }
+        }
+        popup.menu.setGroupCheckable(0, true, true)
+        popup.setOnMenuItemClickListener { item ->
+            sortOrder = if (item.itemId == DEFAULT_ORDER) -1 else item.itemId
+            Prefs.setDetailSort(kind.name, sortOrder)
+            refresh()
+            binding.list.scrollToPosition(0)
+            true
+        }
+        popup.show()
     }
 
     private fun showFolderMenu(anchor: View) {
@@ -160,5 +229,6 @@ class DetailActivity : PlayerBoundActivity() {
     companion object {
         const val EXTRA_KIND = "extra_kind"
         const val EXTRA_KEY = "extra_key"
+        private const val DEFAULT_ORDER = 100
     }
 }

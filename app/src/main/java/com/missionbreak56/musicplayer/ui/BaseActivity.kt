@@ -1,5 +1,6 @@
 package com.missionbreak56.musicplayer.ui
 
+import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -19,9 +20,11 @@ import com.missionbreak56.musicplayer.data.Prefs
 abstract class BaseActivity : AppCompatActivity() {
 
     private var appliedTheme = -1
+    private var appliedLook = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         appliedTheme = Prefs.theme
+        appliedLook = Prefs.customSignature()
         setTheme(Themes.style(appliedTheme))
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -31,6 +34,12 @@ abstract class BaseActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
             window.attributes = params
         }
+    }
+
+    /** Puts the accent / font / corner / background choices over whatever theme was just applied. */
+    override fun onApplyThemeResource(theme: Resources.Theme, resid: Int, first: Boolean) {
+        super.onApplyThemeResource(theme, resid, first)
+        Themes.applyOverlays(theme)
     }
 
     override fun setContentView(view: View?) {
@@ -71,6 +80,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (appliedTheme != Prefs.theme) recreate()
+        if (appliedTheme != Prefs.theme || appliedLook != Prefs.customSignature()) recreate()
     }
 }

@@ -194,6 +194,7 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
         popup.menu.add(0, 1, 0, R.string.menu_equalizer)
         popup.menu.add(0, 8, 1, tr("Estatísticas", "Statistics"))
         popup.menu.add(0, 3, 2, R.string.menu_themes)
+        popup.menu.add(0, 10, 2, tr("Personalização avançada", "Advanced customization"))
         popup.menu.add(
             0, 9, 2,
             if (Prefs.autoLyrics) tr("Letras automáticas: ligado", "Auto lyrics: on")
@@ -207,6 +208,7 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
                 1 -> startActivity(Intent(this, EqualizerActivity::class.java))
                 8 -> startActivity(Intent(this, StatsActivity::class.java))
                 3 -> startActivity(Intent(this, ThemesActivity::class.java))
+                10 -> startActivity(Intent(this, CustomizeActivity::class.java))
                 9 -> {
                     Prefs.autoLyrics = !Prefs.autoLyrics
                     if (Prefs.autoLyrics) LyricsWorker.schedule(this) else LyricsWorker.cancel(this)

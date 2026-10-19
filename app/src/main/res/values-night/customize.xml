@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Advanced customization overlays, applied on top of the chosen theme -->
+    <style name="Overlay.Accent0" parent="">
+        <item name="colorPrimary">#ED7472</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#571614</item>
+        <item name="colorOnPrimaryContainer">#FADBDB</item>
+        <item name="colorSecondary">#ED7472</item>
+        <item name="colorSecondaryContainer">#571614</item>
+        <item name="colorOnSecondaryContainer">#FADBDB</item>
+    </style>
+    <style name="Overlay.Accent1" parent="">
+        <item name="colorPrimary">#FCAE4C</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#5F3500</item>
+        <item name="colorOnPrimaryContainer">#FEEAD1</item>
+        <item name="colorSecondary">#FCAE4C</item>
+        <item name="colorSecondaryContainer">#5F3500</item>
+        <item name="colorOnSecondaryContainer">#FEEAD1</item>
+    </style>
+    <style name="Overlay.Accent2" parent="">
+        <item name="colorPrimary">#FFCA4C</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#614400</item>
+        <item name="colorOnPrimaryContainer">#FFF1D1</item>
+        <item name="colorSecondary">#FFCA4C</item>
+        <item name="colorSecondaryContainer">#614400</item>
+        <item name="colorOnSecondaryContainer">#FFF1D1</item>
+    </style>
+    <style name="Overlay.Accent3" parent="">
+        <item name="colorPrimary">#D3DA70</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#494D13</item>
+        <item name="colorOnPrimaryContainer">#F4F5DA</item>
+        <item name="colorSecondary">#D3DA70</item>
+        <item name="colorSecondaryContainer">#494D13</item>
+        <item name="colorOnSecondaryContainer">#F4F5DA</item>
+    </style>
+    <style name="Overlay.Accent4" parent="">
+        <item name="colorPrimary">#7BBC7E</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#193D1B</item>
+        <item name="colorOnPrimaryContainer">#DDEEDE</item>
+        <item name="colorSecondary">#7BBC7E</item>
+        <item name="colorSecondaryContainer">#193D1B</item>
+        <item name="colorOnSecondaryContainer">#DDEEDE</item>
+    </style>
+    <style name="Overlay.Accent5" parent="">
+        <item name="colorPrimary">#67D7BE</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#0E4B3E</item>
+        <item name="colorOnPrimaryContainer">#D8F5EE</item>
+        <item name="colorSecondary">#67D7BE</item>
+        <item name="colorSecondaryContainer">#0E4B3E</item>
+        <item name="colorOnSecondaryContainer">#D8F5EE</item>
+    </style>
+    <style name="Overlay.Accent6" parent="">
+        <item name="colorPrimary">#4CC5D4</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#004149</item>
+        <item name="colorOnPrimaryContainer">#D1F0F4</item>
+        <item name="colorSecondary">#4CC5D4</item>
+        <item name="colorSecondaryContainer">#004149</item>
+        <item name="colorOnSecondaryContainer">#D1F0F4</item>
+    </style>
+    <style name="Overlay.Accent7" parent="">
+        <item name="colorPrimary">#69CCF9</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#10455D</item>
+        <item name="colorOnPrimaryContainer">#D8F2FD</item>
+        <item name="colorSecondary">#69CCF9</item>
+        <item name="colorSecondaryContainer">#10455D</item>
+        <item name="colorOnSecondaryContainer">#D8F2FD</item>
+    </style>
+    <style name="Overlay.Accent8" parent="">
+        <item name="colorPrimary">#62ACED</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#0B3457</item>
+        <item name="colorOnPrimaryContainer">#D6EAFA</item>
+        <item name="colorSecondary">#62ACED</item>
+        <item name="colorSecondaryContainer">#0B3457</item>
+        <item name="colorOnSecondaryContainer">#D6EAFA</item>
+    </style>
+    <style name="Overlay.Accent9" parent="">
+        <item name="colorPrimary">#7985CB</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#181F45</item>
+        <item name="colorOnPrimaryContainer">#DCE0F2</item>
+        <item name="colorSecondary">#7985CB</item>
+        <item name="colorSecondaryContainer">#181F45</item>
+        <item name="colorOnSecondaryContainer">#DCE0F2</item>
+    </style>
+    <style name="Overlay.Accent10" parent="">
+        <item name="colorPrimary">#A589D4</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#30214A</item>
+        <item name="colorOnPrimaryContainer">#E8E1F4</item>
+        <item name="colorSecondary">#A589D4</item>
+        <item name="colorSecondaryContainer">#30214A</item>
+        <item name="colorOnSecondaryContainer">#E8E1F4</item>
+    </style>
+    <style name="Overlay.Accent11" parent="">
+        <item name="colorPrimary">#C47ED0</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#411B47</item>
+        <item name="colorOnPrimaryContainer">#F0DEF3</item>
+        <item name="colorSecondary">#C47ED0</item>
+        <item name="colorSecondaryContainer">#411B47</item>
+        <item name="colorOnSecondaryContainer">#F0DEF3</item>
+    </style>
+    <style name="Overlay.Accent12" parent="">
+        <item name="colorPrimary">#F279A2</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#5A182E</item>
+        <item name="colorOnPrimaryContainer">#FCDDE7</item>
+        <item name="colorSecondary">#F279A2</item>
+        <item name="colorSecondaryContainer">#5A182E</item>
+        <item name="colorOnSecondaryContainer">#FCDDE7</item>
+    </style>
+    <style name="Overlay.Accent13" parent="">
+        <item name="colorPrimary">#B0667B</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#360E19</item>
+        <item name="colorOnPrimaryContainer">#EBD8DD</item>
+        <item name="colorSecondary">#B0667B</item>
+        <item name="colorSecondaryContainer">#360E19</item>
+        <item name="colorOnSecondaryContainer">#EBD8DD</item>
+    </style>
+    <style name="Overlay.Accent14" parent="">
+        <item name="colorPrimary">#AF9A92</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#362A26</item>
+        <item name="colorOnPrimaryContainer">#EAE5E3</item>
+        <item name="colorSecondary">#AF9A92</item>
+        <item name="colorSecondaryContainer">#362A26</item>
+        <item name="colorOnSecondaryContainer">#EAE5E3</item>
+    </style>
+    <style name="Overlay.Accent15" parent="">
+        <item name="colorPrimary">#A0B1B8</item>
+        <item name="colorOnPrimary">#101014</item>
+        <item name="colorPrimaryContainer">#2E373B</item>
+        <item name="colorOnPrimaryContainer">#E7EBED</item>
+        <item name="colorSecondary">#A0B1B8</item>
+        <item name="colorSecondaryContainer">#2E373B</item>
+        <item name="colorOnSecondaryContainer">#E7EBED</item>
+    </style>
+    <style name="Overlay.Bg1" parent="">
+        <item name="android:colorBackground">#000000</item>
+        <item name="android:windowBackground">#000000</item>
+        <item name="colorSurface">#0A0A0A</item>
+        <item name="colorSurfaceVariant">#1A1A1A</item>
+        <item name="colorSurfaceContainerLowest">#000000</item>
+        <item name="colorSurfaceContainerLow">#0A0A0A</item>
+        <item name="colorSurfaceContainer">#1A1A1A</item>
+        <item name="colorSurfaceContainerHigh">#1A1A1A</item>
+        <item name="colorSurfaceContainerHighest">#1A1A1A</item>
+    </style>
+    <style name="Overlay.Bg2" parent="">
+        <item name="android:colorBackground">#121316</item>
+        <item name="android:windowBackground">#121316</item>
+        <item name="colorSurface">#1A1C20</item>
+        <item name="colorSurfaceVariant">#272A30</item>
+        <item name="colorSurfaceContainerLowest">#121316</item>
+        <item name="colorSurfaceContainerLow">#1A1C20</item>
+        <item name="colorSurfaceContainer">#272A30</item>
+        <item name="colorSurfaceContainerHigh">#272A30</item>
+        <item name="colorSurfaceContainerHighest">#272A30</item>
+    </style>
+    <style name="Overlay.Bg3" parent="">
+        <item name="android:colorBackground">#0A1020</item>
+        <item name="android:windowBackground">#0A1020</item>
+        <item name="colorSurface">#111A30</item>
+        <item name="colorSurfaceVariant">#1C2A4A</item>
+        <item name="colorSurfaceContainerLowest">#0A1020</item>
+        <item name="colorSurfaceContainerLow">#111A30</item>
+        <item name="colorSurfaceContainer">#1C2A4A</item>
+        <item name="colorSurfaceContainerHigh">#1C2A4A</item>
+        <item name="colorSurfaceContainerHighest">#1C2A4A</item>
+    </style>
+    <style name="Overlay.Bg4" parent="">
+        <item name="android:colorBackground">#17120D</item>
+        <item name="android:windowBackground">#17120D</item>
+        <item name="colorSurface">#201912</item>
+        <item name="colorSurfaceVariant">#302619</item>
+        <item name="colorSurfaceContainerLowest">#17120D</item>
+        <item name="colorSurfaceContainerLow">#201912</item>
+        <item name="colorSurfaceContainer">#302619</item>
+        <item name="colorSurfaceContainerHigh">#302619</item>
+        <item name="colorSurfaceContainerHighest">#302619</item>
+    </style>
+    <style name="Overlay.Bg5" parent="">
+        <item name="android:colorBackground">#0B140D</item>
+        <item name="android:windowBackground">#0B140D</item>
+        <item name="colorSurface">#121E15</item>
+        <item name="colorSurfaceVariant">#1D3022</item>
+        <item name="colorSurfaceContainerLowest">#0B140D</item>
+        <item name="colorSurfaceContainerLow">#121E15</item>
+        <item name="colorSurfaceContainer">#1D3022</item>
+        <item name="colorSurfaceContainerHigh">#1D3022</item>
+        <item name="colorSurfaceContainerHighest">#1D3022</item>
+    </style>
+</resources>

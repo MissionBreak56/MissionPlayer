@@ -33,6 +33,11 @@ object Prefs {
     private const val KEY_LAST_INDEX = "last_index"
     private const val KEY_LAST_POS = "last_position"
     private const val KEY_AUTO_LYRICS = "auto_lyrics"
+    private const val KEY_ACCENT = "custom_accent"
+    private const val KEY_FONT = "custom_font"
+    private const val KEY_CORNERS = "custom_corners"
+    private const val KEY_BG = "custom_background"
+    private const val KEY_ICON = "custom_icon"
 
     private const val SEP_ENTRY = "\n"
     private const val SEP_FIELD = "|"
@@ -68,6 +73,45 @@ object Prefs {
     var autoLyrics: Boolean
         get() = sp?.getBoolean(KEY_AUTO_LYRICS, true) ?: true
         set(value) { store().edit().putBoolean(KEY_AUTO_LYRICS, value).apply() }
+
+    // ----- Advanced customization (0 / -1 = the theme's own look) -----
+
+    /** Accent color override: -1 follows the theme, 0.. picks one of the palette colors. */
+    var accent: Int
+        get() = sp?.getInt(KEY_ACCENT, -1) ?: -1
+        set(value) { store().edit().putInt(KEY_ACCENT, value).apply() }
+
+    var fontStyle: Int
+        get() = sp?.getInt(KEY_FONT, 0) ?: 0
+        set(value) { store().edit().putInt(KEY_FONT, value).apply() }
+
+    var cornerStyle: Int
+        get() = sp?.getInt(KEY_CORNERS, 0) ?: 0
+        set(value) { store().edit().putInt(KEY_CORNERS, value).apply() }
+
+    var backgroundStyle: Int
+        get() = sp?.getInt(KEY_BG, 0) ?: 0
+        set(value) { store().edit().putInt(KEY_BG, value).apply() }
+
+    /** Which launcher icon is active (0 = original). */
+    var iconVariant: Int
+        get() = sp?.getInt(KEY_ICON, 0) ?: 0
+        set(value) { store().edit().putInt(KEY_ICON, value).apply() }
+
+    /** Changes whenever a look setting changes, so open screens know to redraw. */
+    fun customSignature(): String = "$accent|$fontStyle|$cornerStyle|$backgroundStyle"
+
+    fun resetCustomization() {
+        store().edit().putInt(KEY_ACCENT, -1).putInt(KEY_FONT, 0).putInt(KEY_CORNERS, 0)
+            .putInt(KEY_BG, 0).apply()
+    }
+
+    /** Sort order chosen inside albums / folders / artists / playlists (-1 = their own order). */
+    fun detailSort(kind: String): Int = sp?.getInt("detail_sort_$kind", -1) ?: -1
+
+    fun setDetailSort(kind: String, order: Int) {
+        store().edit().putInt("detail_sort_$kind", order).apply()
+    }
 
     var sortOrder: Int
         get() = sp?.getInt(KEY_SORT, 0) ?: 0
