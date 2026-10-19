@@ -54,17 +54,6 @@
                 app:tint="?attr/colorOnSurface" />
 
         <ImageButton
-                android:id="@+id/btnThemes"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/menu_themes"
-                android:padding="12dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_shirt"
-                app:tint="?attr/colorOnSurface" />
-
-        <ImageButton
                 android:id="@+id/btnMore"
                 android:layout_width="48dp"
                 android:layout_height="48dp"

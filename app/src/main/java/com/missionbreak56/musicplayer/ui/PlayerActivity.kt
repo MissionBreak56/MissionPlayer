@@ -114,7 +114,6 @@ class PlayerActivity : PlayerBoundActivity() {
         binding.btnQueue.setOnClickListener { showQueue() }
         binding.btnAddLyrics.setOnClickListener { pickLyrics.launch(arrayOf("*/*")) }
         binding.btnAddLyricsPanel.setOnClickListener { pickLyrics.launch(arrayOf("*/*")) }
-        binding.btnThemes.setOnClickListener { startActivity(Intent(this, ThemesActivity::class.java)) }
 
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -380,7 +379,7 @@ class PlayerActivity : PlayerBoundActivity() {
     private fun applySkinForeground() {
         val white = ColorStateList.valueOf(fgActive)
         listOf(
-            binding.btnBack, binding.btnPlaylistAdd, binding.btnThemes, binding.btnMore,
+            binding.btnBack, binding.btnPlaylistAdd, binding.btnMore,
             binding.btnFavorite, binding.btnPrev, binding.btnNext, binding.btnQueue,
             binding.btnEqualizer, binding.btnPlayPause
         ).forEach { it.imageTintList = white }
@@ -507,13 +506,11 @@ class PlayerActivity : PlayerBoundActivity() {
         val popup = PopupMenu(this, anchor)
         popup.menu.add(0, 2, 1, R.string.set_ringtone)
         popup.menu.add(0, 3, 2, R.string.share)
-        popup.menu.add(0, 4, 3, R.string.add_lyrics)
         if (LyricsStore.has(this, song.id)) popup.menu.add(0, 5, 4, R.string.remove_lyrics)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 2 -> actions.setRingtone(song)
                 3 -> actions.share(song)
-                4 -> pickLyrics.launch(arrayOf("*/*"))
                 5 -> {
                     LyricsStore.delete(this, song.id)
                     loadLyrics(song.id)

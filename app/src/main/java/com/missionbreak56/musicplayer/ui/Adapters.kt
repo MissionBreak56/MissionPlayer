@@ -118,14 +118,16 @@ class GroupAdapter(
                 else -> 0
             }
             if (iconRes != 0) {
-                val pad = (res.displayMetrics.density * 14).toInt()
+                val pad = (res.displayMetrics.density * 6).toInt()
                 art.setTag(R.id.tag_art, null)
+                art.setBackgroundColor(android.graphics.Color.TRANSPARENT)
                 art.scaleType = ImageView.ScaleType.CENTER_INSIDE
                 art.setPadding(pad, pad, pad, pad)
                 art.imageTintList = ColorStateList.valueOf(itemView.primaryColor())
                 art.setImageResource(iconRes)
             } else {
                 art.scaleType = ImageView.ScaleType.CENTER_CROP
+                art.setBackgroundResource(R.color.surface_high)
                 art.setPadding(0, 0, 0, 0)
                 art.imageTintList = null
                 ArtLoader.load(art, group.songs.firstOrNull(), 320)

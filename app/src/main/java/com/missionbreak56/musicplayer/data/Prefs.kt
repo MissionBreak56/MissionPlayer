@@ -15,6 +15,7 @@ object Prefs {
     private const val KEY_PLAYLISTS = "playlists"
     private const val KEY_COUNTS = "play_counts"
     private const val KEY_RECENT = "recent"
+    private const val KEY_LISTEN = "listen_ms"
     private const val KEY_THEME = "theme"
     private const val KEY_NIGHT = "night_mode"
     private const val KEY_SORT = "sort_order"
@@ -275,6 +276,34 @@ object Prefs {
         val raw = sp?.getString(KEY_RECENT, "") ?: ""
         if (raw.isBlank()) return emptyList()
         return raw.split(",").mapNotNull { it.toLongOrNull() }
+    }
+
+    /** Exact time heard per song, in milliseconds. */
+    fun listenedMs(): Map<Long, Long> {
+        val raw = sp?.getString(KEY_LISTEN, "") ?: ""
+        if (raw.isBlank()) return emptyMap()
+        val map = HashMap<Long, Long>()
+        raw.split(",").forEach { entry ->
+            val parts = entry.split(":")
+            val id = parts.getOrNull(0)?.toLongOrNull()
+            val ms = parts.getOrNull(1)?.toLongOrNull()
+            if (id != null && ms != null) map[id] = ms
+        }
+        return map
+    }
+
+    fun addListened(delta: Map<Long, Long>) {
+        if (delta.isEmpty()) return
+        val map = listenedMs().toMutableMap()
+        delta.forEach { (id, ms) -> map[id] = (map[id] ?: 0L) + ms }
+        store().edit()
+            .putString(KEY_LISTEN, map.entries.joinToString(",") { "${it.key}:${it.value}" })
+            .apply()
+    }
+
+    /** Clears play counts and listening time (the "recently played" list is kept). */
+    fun resetStats() {
+        store().edit().remove(KEY_COUNTS).remove(KEY_LISTEN).apply()
     }
 
     fun recordPlay(songId: Long) {

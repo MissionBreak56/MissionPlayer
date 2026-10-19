@@ -46,6 +46,14 @@ class PlaybackService : MediaSessionService() {
         }
     }
 
+    /** Counts the exact time each song is heard (for the statistics screen). */
+    private val listenTick = object : Runnable {
+        override fun run() {
+            exo?.let { ListenTracker.tick(it) }
+            handler.postDelayed(this, 1000L)
+        }
+    }
+
     /**
      * Saves shuffle / repeat / queue, and keeps the shuffle order fair: every song plays once
      * (current one first) before any song is repeated.
@@ -228,6 +236,7 @@ class PlaybackService : MediaSessionService() {
         player.addListener(statsListener)
         player.addListener(stateListener)
         handler.postDelayed(positionTick, 5000L)
+        handler.postDelayed(listenTick, 1000L)
         AudioFx.attach(player.audioSessionId)
         SleepTimer.onFinish = { player.pause() }
 
@@ -259,6 +268,8 @@ class PlaybackService : MediaSessionService() {
 
     override fun onDestroy() {
         handler.removeCallbacks(positionTick)
+        handler.removeCallbacks(listenTick)
+        ListenTracker.stop()
         mediaSession?.player?.let { PlaybackState.saveQueue(it) }
         exo = null
         SleepTimer.cancel()

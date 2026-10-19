@@ -9,6 +9,7 @@ import android.widget.TextView
 import com.google.android.material.color.MaterialColors
 import com.missionbreak56.musicplayer.data.Library
 import com.missionbreak56.musicplayer.data.Prefs
+import com.missionbreak56.musicplayer.playback.ListenTracker
 
 /** Listening statistics: totals, favourites and your top songs, artists and albums. */
 class StatsActivity : BaseActivity() {
@@ -28,19 +29,19 @@ class StatsActivity : BaseActivity() {
         root.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
         setContentView(root)
 
+        ListenTracker.flush()
         val counts = Prefs.playCounts()
+        val listened = Prefs.listenedMs()
         val songs = Library.songs
         val totalPlays = counts.values.sum()
-        val listenedMs = songs.sumOf { (counts[it.id] ?: 0).toLong() * it.durationMs }
-        val hours = listenedMs / 3_600_000L
-        val minutes = (listenedMs / 60_000L) % 60L
+        val listenedMs = listened.values.sum()
 
         // Summary cards
         val cards = LinearLayout(this)
         cards.orientation = LinearLayout.HORIZONTAL
         cards.addView(card(songs.size.toString(), tr("músicas", "songs")), cardParams(false))
         cards.addView(card(totalPlays.toString(), tr("reproduções", "plays")), cardParams(true))
-        cards.addView(card("${hours}h ${minutes}m", tr("ouvidas", "listened")), cardParams(true))
+        cards.addView(card(formatListened(listenedMs), tr("ouvidas", "listened")), cardParams(true))
         body.addView(cards)
 
         val cards2 = LinearLayout(this)
@@ -62,7 +63,12 @@ class StatsActivity : BaseActivity() {
         } else {
             val max = counts[topSongs.first().id] ?: 1
             topSongs.forEachIndexed { i, s ->
-                body.addView(bar("${i + 1}. ${s.displayTitle}", s.displayArtist, counts[s.id] ?: 0, max))
+                body.addView(
+                    bar(
+                        "${i + 1}. ${s.displayTitle}", s.displayArtist, counts[s.id] ?: 0, max,
+                        "${counts[s.id] ?: 0}× · ${formatListened(listened[s.id] ?: 0L)}"
+                    )
+                )
             }
         }
 
@@ -98,6 +104,41 @@ class StatsActivity : BaseActivity() {
             topAlbums.forEachIndexed { i, e ->
                 body.addView(bar("${i + 1}. ${e.key}", "", e.value, max))
             }
+        }
+
+        val reset = com.google.android.material.button.MaterialButton(
+            this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle
+        )
+        reset.text = tr("Resetar tudo", "Reset all")
+        reset.setOnClickListener {
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(tr("Resetar estatísticas?", "Reset statistics?"))
+                .setMessage(
+                    tr(
+                        "Isso apaga todas as contagens de reproduções e o tempo ouvido. Não dá para desfazer.",
+                        "This erases all play counts and listening time. This cannot be undone."
+                    )
+                )
+                .setNegativeButton(tr("Cancelar", "Cancel"), null)
+                .setPositiveButton(tr("Resetar", "Reset")) { _, _ ->
+                    ListenTracker.stop()
+                    Prefs.resetStats()
+                    recreate()
+                }
+                .show()
+        }
+        body.addView(reset, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(28) })
+    }
+
+    private fun formatListened(ms: Long): String {
+        val total = ms / 1000L
+        val h = total / 3600L
+        val m = (total / 60L) % 60L
+        val s = total % 60L
+        return when {
+            h > 0L -> "${h}h ${m}m"
+            m > 0L -> "${m}m ${s}s"
+            else -> "${s}s"
         }
     }
 
@@ -146,7 +187,7 @@ class StatsActivity : BaseActivity() {
     }
 
     /** One ranked row with a proportional progress bar. */
-    private fun bar(title: String, subtitle: String, value: Int, max: Int): View {
+    private fun bar(title: String, subtitle: String, value: Int, max: Int, label: String = "$value×"): View {
         val row = LinearLayout(this)
         row.orientation = LinearLayout.VERTICAL
         row.setPadding(0, dp(6), 0, dp(6))
@@ -160,7 +201,7 @@ class StatsActivity : BaseActivity() {
         name.ellipsize = android.text.TextUtils.TruncateAt.END
         top.addView(name, LinearLayout.LayoutParams(0, -2, 1f))
         val count = TextView(this)
-        count.text = "$value×"
+        count.text = label
         count.textSize = 13f
         count.alpha = 0.7f
         top.addView(count)
