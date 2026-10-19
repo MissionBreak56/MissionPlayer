@@ -27,12 +27,15 @@ object ArtLoader {
     private val missing = HashSet<String>()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-    private fun key(song: Song, size: Int) =
-        if (song.albumId > 0 && song.album.isNotBlank()) "a${song.albumId}_$size" else "s${song.id}_$size"
+    private fun key(context: Context, song: Song, size: Int): String {
+        val custom = SongArt.stamp(context, song.id)
+        if (custom > 0L) return "c${song.id}_${custom}_$size"
+        return if (song.albumId > 0 && song.album.isNotBlank()) "a${song.albumId}_$size" else "s${song.id}_$size"
+    }
 
-    private fun missingKey(song: Song, size: Int) = "${song.id}_$size"
 
     private fun decode(context: Context, song: Song, size: Int): Bitmap? {
+        if (SongArt.has(context, song.id)) SongArt.decode(context, song.id, size)?.let { return it }
         val primary = try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 context.contentResolver.loadThumbnail(song.uri, Size(size, size), null)
@@ -72,7 +75,7 @@ object ArtLoader {
 
     /** Suspending variant used when the raw bitmap is needed (e.g. for colour extraction). */
     suspend fun bitmap(context: Context, song: Song, size: Int): Bitmap? {
-        val k = key(song, size)
+        val k = key(context, song, size)
         cache.get(k)?.let { return it }
         val app = context.applicationContext
         val bmp = withContext(Dispatchers.IO) { decode(app, song, size) }
@@ -116,7 +119,7 @@ object ArtLoader {
             view.setImageResource(R.drawable.art_placeholder)
             return
         }
-        val k = key(song, size)
+        val k = key(view.context, song, size)
         view.setTag(R.id.tag_art, k)
         val cached = cache.get(k)
         if (cached != null) {
@@ -124,7 +127,7 @@ object ArtLoader {
             return
         }
         view.setImageResource(R.drawable.art_placeholder)
-        val mk = missingKey(song, size)
+        val mk = k
         if (missing.contains(mk)) return
         val app = view.context.applicationContext
         scope.launch {

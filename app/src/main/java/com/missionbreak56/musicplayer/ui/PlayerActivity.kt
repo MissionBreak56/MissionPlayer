@@ -72,6 +72,25 @@ class PlayerActivity : PlayerBoundActivity() {
         if (uri != null) importLyrics(uri)
     }
 
+    private val pickCover = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        val song = currentSong()
+        if (uri != null && song != null) {
+            if (SongArt.saveUri(this, song.id, uri)) {
+                Toast.makeText(this, tr("Capa aplicada", "Cover applied"), Toast.LENGTH_SHORT).show()
+                refreshCover()
+            } else {
+                Toast.makeText(this, tr("Não foi possível usar essa imagem.", "Could not use this image."), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    /** Reloads the cover and the colours taken from it after it was changed. */
+    private fun refreshCover() {
+        val c = controller ?: return
+        val id = c.currentMediaItem?.mediaId?.toLongOrNull() ?: return
+        showSong(c.currentMediaItem, id)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
@@ -507,6 +526,9 @@ class PlayerActivity : PlayerBoundActivity() {
         popup.menu.add(0, 2, 1, R.string.set_ringtone)
         popup.menu.add(0, 3, 2, R.string.share)
         if (LyricsStore.has(this, song.id)) popup.menu.add(0, 5, 4, R.string.remove_lyrics)
+        popup.menu.add(0, 6, 5, tr("Importar capa", "Import cover"))
+        popup.menu.add(0, 7, 6, tr("Buscar capa online", "Find cover online"))
+        if (SongArt.has(this, song.id)) popup.menu.add(0, 8, 7, tr("Remover capa personalizada", "Remove custom cover"))
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 2 -> actions.setRingtone(song)
@@ -514,6 +536,12 @@ class PlayerActivity : PlayerBoundActivity() {
                 5 -> {
                     LyricsStore.delete(this, song.id)
                     loadLyrics(song.id)
+                }
+                6 -> pickCover.launch("image/*")
+                7 -> CoverSearch.show(this, song) { refreshCover() }
+                8 -> {
+                    SongArt.remove(this, song.id)
+                    refreshCover()
                 }
             }
             true
