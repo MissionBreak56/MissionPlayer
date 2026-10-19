@@ -162,20 +162,19 @@ abstract class PlayerBoundActivity : BaseActivity() {
             var target = intArrayOf(
                 container,
                 ColorUtils.blendARGB(container, primary, 0.35f),
-                ColorUtils.blendARGB(container, Color.BLACK, 0.25f)
+                ColorUtils.blendARGB(container, Color.BLACK, 0.25f),
+                ColorUtils.blendARGB(container, primary, 0.60f)
             )
             val bitmap = if (song != null) ArtLoader.bitmap(applicationContext, song, 96) else null
             if (bitmap != null) {
                 val picked = withContext(Dispatchers.Default) {
                     try {
-                        val p = Palette.from(bitmap).maximumColorCount(16).generate()
-                        val dominant = p.getDominantColor(container)
-                        val vibrant = p.getVibrantColor(p.getLightVibrantColor(dominant))
-                        val deep = p.getDarkVibrantColor(p.getDarkMutedColor(dominant))
+                        val raw = GlassColors.pick(bitmap, container)
                         intArrayOf(
-                            ColorUtils.blendARGB(dominant, Color.BLACK, 0.18f),
-                            ColorUtils.blendARGB(vibrant, Color.BLACK, 0.12f),
-                            ColorUtils.blendARGB(deep, Color.BLACK, 0.30f)
+                            ColorUtils.blendARGB(raw[0], Color.BLACK, 0.20f),
+                            ColorUtils.blendARGB(raw[1], Color.BLACK, 0.14f),
+                            ColorUtils.blendARGB(raw[2], Color.BLACK, 0.26f),
+                            ColorUtils.blendARGB(raw[3], Color.BLACK, 0.20f)
                         )
                     } catch (_: Throwable) {
                         null
@@ -190,7 +189,7 @@ abstract class PlayerBoundActivity : BaseActivity() {
     private fun animateMiniColors(target: IntArray) {
         val from = miniColors
         miniAnimator?.cancel()
-        if (from == null) {
+        if (from == null || from.size != target.size) {
             styleMini(target)
             return
         }
@@ -199,7 +198,7 @@ abstract class PlayerBoundActivity : BaseActivity() {
             duration = 450L
             addUpdateListener { a ->
                 val f = a.animatedFraction
-                styleMini(IntArray(3) { i -> eval.evaluate(f, from[i], target[i]) as Int })
+                styleMini(IntArray(target.size) { i -> eval.evaluate(f, from[i], target[i]) as Int })
             }
             start()
         }
@@ -220,7 +219,7 @@ abstract class PlayerBoundActivity : BaseActivity() {
         )
         content.background = LayerDrawable(arrayOf(base, sheen))
 
-        val average = ColorUtils.blendARGB(colors[0], colors[2], 0.5f)
+        val average = ColorUtils.blendARGB(colors[0], colors[colors.size - 1], 0.5f)
         val fg = if (ColorUtils.calculateLuminance(average) > 0.5) Color.rgb(20, 20, 26) else Color.WHITE
         findViewById<TextView>(R.id.miniTitle)?.setTextColor(fg)
         findViewById<TextView>(R.id.miniSubtitle)?.setTextColor(ColorUtils.setAlphaComponent(fg, 190))

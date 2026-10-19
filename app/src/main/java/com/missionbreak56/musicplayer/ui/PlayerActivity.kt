@@ -327,14 +327,12 @@ class PlayerActivity : PlayerBoundActivity() {
     private val fgIdle = Color.argb(120, 255, 255, 255)
 
     private fun skinFromBitmap(bitmap: Bitmap): IntArray? = try {
-        val p = Palette.from(bitmap).maximumColorCount(16).generate()
-        val dominant = p.getDominantColor(0xFF303040.toInt())
-        val vibrant = p.getVibrantColor(p.getLightVibrantColor(dominant))
-        val deep = p.getDarkVibrantColor(p.getDarkMutedColor(dominant))
+        val raw = GlassColors.pick(bitmap, 0xFF303040.toInt())
         intArrayOf(
-            ColorUtils.blendARGB(dominant, Color.BLACK, 0.40f),
-            ColorUtils.blendARGB(vibrant, Color.BLACK, 0.38f),
-            ColorUtils.blendARGB(deep, Color.BLACK, 0.62f)
+            ColorUtils.blendARGB(raw[0], Color.BLACK, 0.42f),
+            ColorUtils.blendARGB(raw[1], Color.BLACK, 0.40f),
+            ColorUtils.blendARGB(raw[2], Color.BLACK, 0.52f),
+            ColorUtils.blendARGB(raw[3], Color.BLACK, 0.45f)
         )
     } catch (_: Throwable) {
         null
@@ -345,14 +343,15 @@ class PlayerActivity : PlayerBoundActivity() {
         return intArrayOf(
             ColorUtils.blendARGB(primary, Color.BLACK, 0.55f),
             ColorUtils.blendARGB(primary, Color.BLACK, 0.62f),
-            ColorUtils.blendARGB(primary, Color.BLACK, 0.82f)
+            ColorUtils.blendARGB(primary, Color.BLACK, 0.82f),
+            ColorUtils.blendARGB(primary, Color.BLACK, 0.70f)
         )
     }
 
     private fun animateSkin(target: IntArray) {
         val from = skinColors
         skinAnimator?.cancel()
-        if (from == null) {
+        if (from == null || from.size != target.size) {
             styleSkin(target)
             return
         }
@@ -361,7 +360,7 @@ class PlayerActivity : PlayerBoundActivity() {
             duration = 600L
             addUpdateListener { a ->
                 val f = a.animatedFraction
-                styleSkin(IntArray(3) { i -> eval.evaluate(f, from[i], target[i]) as Int })
+                styleSkin(IntArray(target.size) { i -> eval.evaluate(f, from[i], target[i]) as Int })
             }
             start()
         }
@@ -370,7 +369,7 @@ class PlayerActivity : PlayerBoundActivity() {
     private fun styleSkin(c: IntArray) {
         skinColors = c
         val w = resources.displayMetrics.widthPixels.toFloat()
-        val base = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(c[0], c[1], c[2]))
+        val base = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(c[0], c[3], c[2]))
         fun blob(color: Int, cx: Float, cy: Float, radius: Float) = GradientDrawable().apply {
             gradientType = GradientDrawable.RADIAL_GRADIENT
             gradientRadius = radius
@@ -390,7 +389,14 @@ class PlayerActivity : PlayerBoundActivity() {
             )
         )
         binding.bgTint.background = LayerDrawable(
-            arrayOf(base, blob(c[1], 0.12f, 0.16f, w * 1.1f), blob(c[0], 0.95f, 0.72f, w * 1.0f), sheen)
+            arrayOf(
+                base,
+                blob(c[1], 0.12f, 0.16f, w * 1.1f),
+                blob(c[3], 0.95f, 0.30f, w * 0.9f),
+                blob(c[2], 0.90f, 0.78f, w * 1.0f),
+                blob(c[0], 0.10f, 0.70f, w * 0.9f),
+                sheen
+            )
         )
     }
 

@@ -1,10 +1,11 @@
-## MissionPlayer v2.9.9 — Tela Sobre com todas as funções
+## MissionPlayer v2.9.10 — Liquid glass com mais cores da capa
 
-APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.9.9-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.9.10-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
 
 ### Mudança
-- **Sobre** atualizado, organizado por seções (Biblioteca, Busca, Player, Som, Aparência, Estatísticas e Privacidade) com todas as funções atuais do app: abas reordenáveis, ordenações e barra alfabética, ocultar itens, foto da pasta, busca em letras, liquid glass, letras automáticas, capas personalizadas, aleatório sem repetir, retomar de onde parou, equalizador e aumento de volume, 7 temas completos, personalização avançada, estatísticas e privacidade. Em português e inglês.
+- **Mesclagem de cores do liquid glass**: antes o efeito pegava só 3 cores parecidas (uma capa com muito verde, azul e roxo podia ficar toda vermelha por causa de um título). Agora o app separa as **4 cores de tons diferentes** que mais aparecem na capa e as mistura no fundo do **player em tela cheia** (gradiente + manchas de luz em cantos diferentes) e no **mini player**, com transição animada entre músicas.
 
 ### Alterações técnicas
-- Texto `about_body` reescrito em `values/strings.xml` e `values-pt/strings.xml`.
-- Versão: 2.9.8 → 2.9.9 (versionCode 32).
+- Novo `GlassColors.pick()`: ordena as cores da capa por presença e escolhe até 4 com tons distantes (≥ 30°), ignorando cinzas, preto e branco quando há opção; completa com as mais comuns se a capa tiver poucos tons.
+- `PlayerActivity` e `PlayerBoundActivity` passam a usar 4 cores (gradiente e animações).
+- Versão: 2.9.9 → 2.9.10 (versionCode 33).
