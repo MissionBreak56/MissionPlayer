@@ -40,7 +40,7 @@ personalização.
   tela, com *Ordem padrão* (a própria do álbum ou da lista) e as mesmas opções da lista de Músicas.
   A escolha fica salva para cada tipo de lista, e *Tocar tudo* e *Aleatório* seguem a ordem escolhida.
 - **Álbuns** em grade de 3 colunas, com capas.
-- **Pastas:** navegue pelas pastas do aparelho; cada pasta mostra sua foto no cabeçalho.
+- **Pastas:** navegue pelas pastas do aparelho; cada pasta mostra sua foto no cabeçalho. Os ícones de pasta aparecem grandes, sem fundo atrás.
 - **Ocultar** músicas e pastas (só a pasta escolhida, as subpastas continuam visíveis). Para desfazer:
   Configurações → *Itens ocultos*.
 
@@ -78,13 +78,25 @@ A foto aparece apenas dentro da pasta (cabeçalho do detalhe), não na lista.
   brilho de vidro, com transição suave ao trocar de música; título, artista, tempo, barra de
   progresso, ícones e letras ficam brancos para ler bem em qualquer capa. Sem capa, usa as cores do
   tema.
-- Capa grande, barra de progresso, aleatório, repetir (desligado / tudo / uma), favorito, fila, letra
-  e temas. Os botões de voltar e avançar são maiores; o repetir fica ao lado do avançar e a fila na
+- **Abre de baixo:** ao tocar no mini player, a tela sobe de baixo para cima e desce ao fechar.
+- Capa grande, barra de progresso, aleatório, repetir (desligado / tudo / uma), favorito, fila e letra. Os botões de voltar e avançar são maiores; o repetir fica ao lado do avançar e a fila na
   linha de baixo, à esquerda.
 - **Deslize a capa** para a esquerda para ir à próxima música e para a direita para voltar à anterior;
   tocar na capa abre a letra.
+- **Menu ⋮ do player:** definir como toque, compartilhar, remover letra, *Importar capa*, *Buscar capa
+  online* e *Remover capa personalizada* (veja *Capas personalizadas*).
 - **Letras:** anexe um arquivo `.lrc` (sincronizado — toque numa linha para pular até ela) ou `.txt`
   a cada música; se não houver, usa a letra embutida no arquivo ou o `.lrc` vizinho.
+
+### Capas personalizadas
+No menu ⋮ do player:
+- **Importar capa** — usa uma imagem da galeria como capa daquela música.
+- **Buscar capa online** — pesquisa capas pelo **nome da música** (iTunes Search, sem conta); o campo
+  vem preenchido com o título e pode ser editado. Toque numa capa para aplicar.
+- **Remover capa personalizada** — volta à capa original.
+
+A capa escolhida vale para a música em todo o app (listas, mini player e player), as cores do liquid
+glass acompanham a nova capa e ela fica salva só no aparelho. A notificação continua com a capa original.
 
 ### Aleatório e repetição
 - **Aleatório sem repetir:** todas as músicas da fila tocam uma vez, começando pela atual, antes de
@@ -135,8 +147,13 @@ As escolhas valem por cima do tema escolhido em *Temas* e ficam salvas. Ao **tro
 SIL Open Font License (texto em `FONTS-OFL.txt`).
 
 ### Estatísticas
-Menu ⋮ → *Estatísticas*: total de músicas, reproduções, tempo ouvido, tempo da biblioteca, favoritas
-e álbuns, além das **músicas, artistas e álbuns mais ouvidos**.
+Configurações → *Estatísticas*: total de músicas, reproduções, **tempo ouvido**, tempo da biblioteca,
+favoritas e álbuns, além das **músicas, artistas e álbuns mais ouvidos** (as músicas mostram também o
+tempo ouvido).
+- **Tempo exato:** conta só o trecho que você realmente escutou de cada música — pausas e pulos para
+  frente não contam. Vale a partir da versão 2.9.5.
+- **Resetar tudo:** botão no fim da tela, com confirmação. Apaga contagens e tempo ouvido (a lista de
+  recentes é mantida).
 
 ### Letras automáticas
 - O app procura sozinho, em segundo plano e só quando há internet, as letras das músicas que não têm,
@@ -168,8 +185,9 @@ tela de bloqueio.
 
 ### Privacidade
 Sem anúncios, sem rastreadores e sem contas. A internet é usada **só** para baixar letras que faltam
-(título, artista, álbum e duração são enviados aos serviços de letras acima); a reprodução é 100%
-local. Desligue em Configurações → *Letras automáticas* para o app não usar a rede.
+(título, artista, álbum e duração são enviados aos serviços de letras acima) e, quando você pede, para
+*Buscar capa online* (o texto da busca vai para o iTunes Search); a reprodução é 100% local. Desligue
+em Configurações → *Letras automáticas* para o app não baixar letras.
 
 ## Permissões
 
@@ -177,7 +195,7 @@ local. Desligue em Configurações → *Letras automáticas* para o app não usa
 |---|---|
 | `READ_MEDIA_AUDIO` / `READ_EXTERNAL_STORAGE` (até Android 12) | Ler as músicas do aparelho |
 | `FOREGROUND_SERVICE` (+ `_MEDIA_PLAYBACK`) e `WAKE_LOCK` | Tocar em segundo plano |
-| `INTERNET` e `ACCESS_NETWORK_STATE` | Baixar letras que faltam e rodar a busca só quando há internet |
+| `INTERNET` e `ACCESS_NETWORK_STATE` | Baixar letras que faltam, buscar capas online e rodar a busca de letras só quando há internet |
 | `POST_NOTIFICATIONS` | Notificação com os controles de reprodução |
 | `MODIFY_AUDIO_SETTINGS` | Equalizador, graves, surround e aumento de volume |
 | `WRITE_SETTINGS` | Somente se você usar *Definir como toque* |
@@ -195,21 +213,27 @@ app/src/main/java/com/missionbreak56/musicplayer/
 ├── data/      Song, MusicRepository (MediaStore), Library (álbuns, artistas, pastas, playlists),
 │              Prefs (favoritos, playlists, estatísticas, tema, equalizador, modos e fila salvos),
 │              Lyrics (leitor .lrc e índice de busca), LyricsFetcher (fontes de letra online),
-│              LyricsWorker (busca automática em segundo plano), Labels
-├── playback/  PlaybackService (sessão, ordem aleatória justa, salvamento de estado), PlaybackQueue,
+│              LyricsWorker (busca automática em segundo plano), SongCache, Labels
+├── playback/  PlaybackService (sessão, ordem aleatória justa, salvamento de estado), ListenTracker (tempo
+│              realmente ouvido), PlaybackQueue,
 │              PlaybackState (salvar/restaurar fila), PlayerConnection, AudioFx (equalizador e aumento
 │              de volume), SleepTimer (código mantido, sem acesso na interface)
 └── ui/        MainActivity (abas), DetailActivity, SearchActivity, PlaylistsActivity, PlayerActivity,
                EqualizerActivity, ThemesActivity, SettingsActivity (configurações), CustomizeActivity
                (personalização avançada), BgImage (imagem de fundo),
                IconManager (troca de ícone), StatsActivity, AboutActivity, AlphaIndexBar (barra # A–Z),
-               FolderArt / FolderArtPicker (foto da pasta), BaseActivity (tela cheia), adaptadores e diálogos
+               FolderArt / FolderArtPicker (foto da pasta), SongArt / CoverSearch (capas por música),
+               UiHelpers, BaseActivity (tela cheia), adaptadores e diálogos
 ```
 
 ## Histórico de versões
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.9.8** | Busca de capa online só pelo nome da música |
+| **2.9.7** | Busca de capas online e *Importar capa* própria no menu ⋮ do player |
+| **2.9.6** | Player abre de baixo para cima |
+| **2.9.5** | Estatísticas com tempo realmente ouvido e botão *Resetar tudo*; ícones de pasta sem círculo e maiores; player sem botão de temas e sem "adicionar letra" no menu ⋮ |
 | **2.9.4** | *Restaurar padrões* agora pergunta antes de restaurar |
 | **2.9.3** | Ao trocar de tema, cor de destaque e fonte voltam para o padrão do tema |
 | **2.9.2** | Remove as cores de destaque prontas; "Cor de Destaque" só com barras (tom e intensidade) e *Usar a cor do tema*; ícone do app em menu flutuante |
