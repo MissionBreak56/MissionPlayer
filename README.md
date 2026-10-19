@@ -130,7 +130,7 @@ Configurações → *Personalização*. A tela abre com o visual padrão: **fund
 - **Ícone do app:** menu flutuante com a imagem de cada ícone, 9 opções — *Original*, e variações *Verde, Azul, Violeta, Dourado, Rosa*, mais
   *Vinil, Ondas* e *Fones*. A troca é imediata (a tela inicial pode levar alguns segundos para
   atualizar). Os ícones também têm versão monocromática para o Android 13+ (ícones temáticos).
-- **Cor de Destaque:** *Usar a cor do tema* ou uma cor personalizada: uma barra em arco-íris
+- **Cor de Destaque:** *Cor Padrão* (o azul-escuro fixo do app) ou uma cor personalizada: uma barra em arco-íris
   escolhe o tom (passos de 5°) e outra a intensidade (do pastel ao escuro), com prévia da cor. Cada
   escolha tem versão clara e escura. Quem usava uma das 16 cores prontas das versões anteriores
   mantém a cor, que passa a ser uma cor personalizada.
@@ -138,7 +138,7 @@ Configurações → *Personalização*. A tela abre com o visual padrão: **fund
   escura. Também dá para usar uma **imagem da galeria** como fundo, com controle de visibilidade
   (a imagem se mistura com a cor do fundo para o texto continuar legível) e botão para remover. A
   tela *Tocando agora* mantém o visual liquid glass da capa.
-- **Fonte:** menu flutuante (cada nome aparece na própria fonte); o padrão é *Padrão do sistema*. Há 19 opções: *Serifada,
+- **Fonte:** menu flutuante (cada nome aparece na própria fonte); *Padrão do sistema* fica no topo da lista e é a fonte padrão. Há 19 opções: *Serifada,
   Monoespaçada, Condensada, Leve, Média, Casual, Cursiva, Pesada, Padrão do sistema, Fina, Versalete,
   Condensada leve, Condensada média, Serifa mono* e as embutidas *Arredondada (Fredoka), Manuscrita
   (Amatic), Rabisco (Intuitive), Serifa elegante (Source Serif)* e *Moderna (Hanken Grotesk)*. A
@@ -230,6 +230,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.10.2** | *Cor Padrão* (azul-escuro fixo) no lugar de "usar a cor do tema"; removida a opção "usar a fonte do tema" e *Padrão do sistema* vai para o topo da lista de fontes |
 | **2.10.1** | Remove o tema de vez: ficam só as personalizações (modo, ícone, cor, fundo e fonte); janela flutuante do modo com tamanho ajustado |
 | **2.10.0** | *Temas* some das Configurações: tema e modo (claro/escuro) viram menus flutuantes dentro de *Personalização* (antes "Personalização avançada"); padrões novos: fundo preto puro, fonte do sistema e cor de destaque azul-escuro; mini player alinhado |
 | **2.9.11** | Corrige o mini player que sumia ao voltar ao app com a música pausada |

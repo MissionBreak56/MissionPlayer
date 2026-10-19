@@ -98,11 +98,11 @@ object Prefs {
 
     /** Accent color override: -1 follows the theme, 0.. picks one of the palette colors. */
     var accent: Int
-        get() = sp?.getInt(KEY_ACCENT, DEFAULT_ACCENT) ?: DEFAULT_ACCENT
+        get() = (sp?.getInt(KEY_ACCENT, DEFAULT_ACCENT) ?: DEFAULT_ACCENT).let { if (it < 0) DEFAULT_ACCENT else it }
         set(value) { store().edit().putInt(KEY_ACCENT, value).apply() }
 
     var fontStyle: Int
-        get() = sp?.getInt(KEY_FONT, DEFAULT_FONT) ?: DEFAULT_FONT
+        get() = (sp?.getInt(KEY_FONT, DEFAULT_FONT) ?: DEFAULT_FONT).let { if (it == 0) DEFAULT_FONT else it }
         set(value) { store().edit().putInt(KEY_FONT, value).apply() }
 
     var cornerStyle: Int

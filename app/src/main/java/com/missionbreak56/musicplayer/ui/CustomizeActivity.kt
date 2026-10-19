@@ -343,17 +343,18 @@ class CustomizeActivity : BaseActivity() {
 
         section(
             tr("Cor de Destaque", "Accent color"),
-            if (onCustom) tr("Cor personalizada", "Custom color")
-            else tr("Usando a cor do tema", "Using the theme's color")
+            if (current == Prefs.DEFAULT_ACCENT) tr("Cor padrão do app", "App default color")
+            else tr("Cor personalizada", "Custom color")
         )
 
         val themeChip = TextView(this)
-        themeChip.text = tr("Usar a cor do tema", "Use the theme's color")
+        val isDefault = current == Prefs.DEFAULT_ACCENT
+        themeChip.text = tr("Cor Padrão", "Default color")
         themeChip.textSize = 14f
         themeChip.setPadding(dp(16), dp(10), dp(16), dp(10))
-        themeChip.background = ring(!onCustom, 20, if (!onCustom) tint(primary, 0x26) else Color.TRANSPARENT)
+        themeChip.background = ring(isDefault, 20, if (isDefault) tint(primary, 0x26) else Color.TRANSPARENT)
         themeChip.setOnClickListener {
-            if (Prefs.accent != -1) { Prefs.accent = -1; recreate() }
+            if (Prefs.accent != Prefs.DEFAULT_ACCENT) { Prefs.accent = Prefs.DEFAULT_ACCENT; recreate() }
         }
         body.addView(themeChip, LinearLayout.LayoutParams(-2, -2).apply { bottomMargin = dp(4) })
 
@@ -534,9 +535,9 @@ class CustomizeActivity : BaseActivity() {
     private fun fontSection() {
         section(
             tr("Fonte", "Font"),
-            tr("Vale para todo o app. \"Usar a fonte do tema\" mantém a fonte própria de cada tema.", "Applies to the whole app. \"Use the theme's font\" keeps each theme's own font.")
+            tr("Vale para todo o app.", "Applies to the whole app.")
         )
-        val index = Prefs.fontStyle.coerceIn(0, Themes.fontCount - 1)
+        val index = Prefs.fontStyle.coerceIn(1, Themes.fontCount - 1)
         val button = LinearLayout(this)
         button.orientation = LinearLayout.HORIZONTAL
         button.gravity = Gravity.CENTER_VERTICAL
@@ -557,8 +558,10 @@ class CustomizeActivity : BaseActivity() {
 
     /** Floating list of fonts, each name drawn in its own font. */
     private fun showFontMenu(anchor: View) {
-        val labels = Themes.fonts.map { it.label }
-        val selected = Prefs.fontStyle.coerceIn(0, labels.lastIndex)
+        // "System default" (index 9) goes first; the "theme's font" option (index 0) no longer exists
+        val order = listOf(9) + (1 until Themes.fontCount).filter { it != 9 }
+        val labels = order.map { Themes.fonts[it].label }
+        val selected = order.indexOf(Prefs.fontStyle).coerceAtLeast(0)
         val popup = android.widget.ListPopupWindow(this)
         popup.anchorView = anchor
         popup.width = anchor.width
@@ -575,7 +578,7 @@ class CustomizeActivity : BaseActivity() {
                 val v = super.getView(position, convertView, parent) as TextView
                 v.text = labels[position]
                 v.textSize = 16f
-                v.typeface = Themes.typeface(context, position) ?: Typeface.DEFAULT
+                v.typeface = Themes.typeface(context, order[position]) ?: Typeface.DEFAULT
                 v.setTextColor(
                     if (position == selected) primary
                     else MaterialColors.getColor(v, com.google.android.material.R.attr.colorOnSurface)
@@ -586,7 +589,8 @@ class CustomizeActivity : BaseActivity() {
         })
         popup.setOnItemClickListener { _, _, position, _ ->
             popup.dismiss()
-            if (Prefs.fontStyle != position) { Prefs.fontStyle = position; recreate() }
+            val chosen = order[position]
+            if (Prefs.fontStyle != chosen) { Prefs.fontStyle = chosen; recreate() }
         }
         popup.show()
         popup.listView?.setSelection(selected)
