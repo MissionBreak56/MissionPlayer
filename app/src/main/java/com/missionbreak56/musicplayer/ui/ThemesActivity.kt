@@ -21,6 +21,11 @@ class ThemesActivity : BaseActivity() {
         binding.listThemes.adapter = ThemeAdapter(
             resources.getStringArray(R.array.theme_names), Prefs.theme
         ) { index ->
+            if (index != Prefs.theme) {
+                // A new theme starts with its own accent color and font.
+                Prefs.accent = -1
+                Prefs.fontStyle = 0
+            }
             Prefs.theme = index
             recreate()
         }

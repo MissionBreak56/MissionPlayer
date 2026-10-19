@@ -131,7 +131,7 @@ Configurações → *Personalização avançada*:
   fonte escolhida vale em todo o app, inclusive com os temas completos.
 - *Restaurar padrões* volta tudo (inclusive o ícone e a imagem de fundo) ao original.
 
-As escolhas valem por cima do tema escolhido em *Temas* e ficam salvas. As fontes embutidas usam a
+As escolhas valem por cima do tema escolhido em *Temas* e ficam salvas. Ao **trocar de tema**, a cor de destaque e a fonte voltam para *Usar do tema*. As fontes embutidas usam a
 SIL Open Font License (texto em `FONTS-OFL.txt`).
 
 ### Estatísticas
@@ -210,6 +210,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.9.3** | Ao trocar de tema, cor de destaque e fonte voltam para o padrão do tema |
 | **2.9.2** | Remove as cores de destaque prontas; "Cor de Destaque" só com barras (tom e intensidade) e *Usar a cor do tema*; ícone do app em menu flutuante |
 | **2.9.1** | Bolinhas de cor redondas; cor livre compacta com barras de tom e intensidade; fonte em menu flutuante; remove a opção de cantos |
 | **2.9.0** | Tela de Configurações (substitui o menu flutuante); roda de cores no destaque; imagem da galeria como fundo; 19 fontes e *Usar a fonte do tema*; corrige a fonte que não mudava com os temas completos |
