@@ -1,3 +1,17 @@
+## MissionPlayer v2.15.0 — Selecionar músicas nas pastas e adicionar músicas na playlist
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.15.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Novidades
+- **Pastas → enviar para playlist:** dentro de uma pasta, segure o dedo numa música ou use ⋮ → *Selecionar músicas*. Marque várias (ou *Todas*), toque no botão de playlist e escolha uma playlist existente ou crie uma nova. Músicas repetidas não são duplicadas e o aviso diz quantas entraram.
+- **Dentro da playlist → Adicionar músicas:** ⋮ → *Adicionar músicas* abre uma lista com as músicas que ainda não estão na playlist, com busca e seleção múltipla; *Adicionar (N)* envia todas.
+- README, tela Sobre (pt/en) e histórico de versões atualizados.
+
+### Alterações técnicas
+- `SongAdapter`: modo de seleção múltipla (caixinha, seleção por toque e por toque longo).
+- Nova `SongPickerActivity` (+ `activity_song_picker.xml`); `SongActions.addManyToPlaylist` e `Prefs.addAllToPlaylist`.
+- Versão: 2.14.1 → 2.15.0 (versionCode 44).
+
 ## MissionPlayer v2.14.1 — Correção: capa girando de verdade
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.14.1-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

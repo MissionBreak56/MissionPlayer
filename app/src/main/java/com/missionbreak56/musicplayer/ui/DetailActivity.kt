@@ -1,9 +1,11 @@
 package com.missionbreak56.musicplayer.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +29,7 @@ class DetailActivity : PlayerBoundActivity() {
     private lateinit var actions: SongActions
     private var kind = Kind.ALBUM
     private var key = ""
+    private lateinit var backCallback: OnBackPressedCallback
 
     /** Sort chosen for this kind of list: -1 keeps its own order, 0.. matches R.array.sort_options. */
     private var sortOrder = -1
@@ -62,6 +65,19 @@ class DetailActivity : PlayerBoundActivity() {
         )
         binding.list.layoutManager = LinearLayoutManager(this)
         binding.list.adapter = adapter
+
+        // Select several songs of a folder and send them to a playlist
+        backCallback = object : OnBackPressedCallback(false) {
+            override fun handleOnBackPressed() = adapter.stopSelecting()
+        }
+        onBackPressedDispatcher.addCallback(this, backCallback)
+        adapter.onSelectionChanged = { updateSelectionUi() }
+        adapter.onLongPress = { song -> if (kind == Kind.FOLDER) adapter.startSelecting(song) }
+        binding.btnSelClose.setOnClickListener { adapter.stopSelecting() }
+        binding.btnSelAll.setOnClickListener { adapter.toggleSelectAll() }
+        binding.btnSelAdd.setOnClickListener {
+            actions.addManyToPlaylist(adapter.selectedSongs()) { adapter.stopSelecting() }
+        }
 
         binding.btnBack.setOnClickListener { finish() }
         binding.btnSort.setOnClickListener { showSortMenu(it) }
@@ -177,11 +193,13 @@ class DetailActivity : PlayerBoundActivity() {
 
     private fun showFolderMenu(anchor: View) {
         val popup = PopupMenu(this, anchor)
-        popup.menu.add(0, 1, 0, R.string.folder_change_photo)
-        popup.menu.add(0, 2, 1, R.string.folder_pick_from_songs)
-        if (FolderArt.has(this, key)) popup.menu.add(0, 3, 2, R.string.folder_remove_photo)
+        popup.menu.add(0, 4, 0, R.string.select_songs)
+        popup.menu.add(0, 1, 1, R.string.folder_change_photo)
+        popup.menu.add(0, 2, 2, R.string.folder_pick_from_songs)
+        if (FolderArt.has(this, key)) popup.menu.add(0, 3, 3, R.string.folder_remove_photo)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
+                4 -> adapter.startSelecting()
                 1 -> pickFolderArt.launch(arrayOf("image/*"))
                 2 -> FolderArtPicker.pickFromSongs(this, key, adapter.current()) { refresh() }
                 3 -> {
@@ -196,10 +214,15 @@ class DetailActivity : PlayerBoundActivity() {
 
     private fun showPlaylistMenu(anchor: View) {
         val popup = PopupMenu(this, anchor)
-        popup.menu.add(0, 1, 0, R.string.rename)
-        popup.menu.add(0, 2, 1, R.string.delete)
+        popup.menu.add(0, 3, 0, R.string.add_songs)
+        popup.menu.add(0, 1, 1, R.string.rename)
+        popup.menu.add(0, 2, 2, R.string.delete)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
+                3 -> startActivity(
+                    Intent(this, SongPickerActivity::class.java)
+                        .putExtra(SongPickerActivity.EXTRA_PLAYLIST, key)
+                )
                 1 -> Dialogs.promptText(this, R.string.rename, key, R.string.save) { name ->
                     val renamed = Prefs.renamePlaylist(key, name)
                     if (renamed != null) {
@@ -219,6 +242,17 @@ class DetailActivity : PlayerBoundActivity() {
             true
         }
         popup.show()
+    }
+
+    private fun updateSelectionUi() {
+        val on = adapter.selecting
+        binding.selectBar.visibility = if (on) View.VISIBLE else View.GONE
+        backCallback.isEnabled = on
+        val n = adapter.selectedCount
+        binding.textSelCount.text = resources.getQuantityString(R.plurals.n_selected, n, n)
+        binding.btnSelAdd.isEnabled = n > 0
+        binding.btnSelAdd.alpha = if (n > 0) 1f else 0.4f
+        binding.btnSelAll.setText(if (adapter.allSelected()) R.string.select_none else R.string.select_all)
     }
 
     override fun onPlayerChanged() {

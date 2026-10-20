@@ -11,8 +11,8 @@ android {
         applicationId = "com.missionbreak56.musicplayer"
         minSdk = 23
         targetSdk = 34
-        versionCode = 43
-        versionName = "2.14.1"
+        versionCode = 44
+        versionName = "2.15.0"
 
         // Author metadata -> available in the manifest as ${author}
         manifestPlaceholders["author"] = "MissionBreak56"

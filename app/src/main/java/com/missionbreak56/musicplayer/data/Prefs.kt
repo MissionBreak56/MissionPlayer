@@ -263,6 +263,23 @@ object Prefs {
         savePlaylists(map)
     }
 
+    /** Adds the songs that are not there yet. Returns how many were added, or -1 for an empty name. */
+    fun addAllToPlaylist(name: String, songIds: List<Long>): Int {
+        val safe = safePlaylistName(name)
+        if (safe.isEmpty()) return -1
+        val map = playlists()
+        val list = map.getOrPut(safe) { mutableListOf() }
+        var added = 0
+        songIds.forEach { id ->
+            if (!list.contains(id)) {
+                list.add(id)
+                added++
+            }
+        }
+        savePlaylists(map)
+        return added
+    }
+
     fun removeFromPlaylist(name: String, songId: Long) {
         val map = playlists()
         map[name]?.remove(songId)

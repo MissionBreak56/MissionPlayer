@@ -96,6 +96,36 @@ class SongActions(
             .show()
     }
 
+    /** Sends several songs to a playlist chosen (or created) in a dialog. */
+    fun addManyToPlaylist(songs: List<Song>, onDone: () -> Unit = {}) {
+        if (songs.isEmpty()) return
+        val names = Prefs.playlists().keys.toList()
+        val items = (listOf(activity.getString(R.string.new_playlist)) + names).toTypedArray()
+        fun finish(name: String) {
+            val added = Prefs.addAllToPlaylist(name, songs.map { it.id })
+            if (added < 0) return
+            val safeName = name.trim()
+            val message = if (added == 0) {
+                activity.getString(R.string.already_in_playlist, safeName)
+            } else {
+                activity.resources.getQuantityString(R.plurals.n_added_to_playlist, added, added, safeName)
+            }
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+            onChanged()
+            onDone()
+        }
+        MaterialAlertDialogBuilder(activity)
+            .setTitle(R.string.add_to_playlist)
+            .setItems(items) { _, which ->
+                if (which == 0) {
+                    Dialogs.promptText(activity, R.string.new_playlist, "", R.string.create) { name -> finish(name) }
+                } else {
+                    finish(names[which - 1])
+                }
+            }
+            .show()
+    }
+
     fun setRingtone(song: Song) {
         if (!Settings.System.canWrite(activity)) {
             toast(R.string.ringtone_permission)

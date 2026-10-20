@@ -52,6 +52,16 @@ personalização.
 ### Playlists
 - **Automáticas:** Favoritas, Adicionadas recentemente, Mais tocadas e Tocadas recentemente.
 - **Suas playlists:** crie, renomeie e apague; adicione músicas pelo menu ⋮ da música.
+- **Adicionar músicas dentro da playlist:** abra a playlist → menu ⋮ → **Adicionar músicas**. Abre uma
+  lista com todas as músicas que ainda não estão nela, com busca (ignora acentos) e caixinhas para marcar
+  várias de uma vez; o botão **Adicionar (N)** envia todas para a playlist.
+- **Enviar músicas de uma pasta para uma playlist:** veja *Selecionar músicas na pasta* abaixo.
+
+### Selecionar músicas na pasta
+Dentro de uma pasta, **segure o dedo numa música** ou use o menu ⋮ → **Selecionar músicas**. Cada música
+ganha uma caixinha; toque para marcar/desmarcar, use **Todas** / **Nenhuma** e o botão de playlist (ícone
+de lista com +) para escolher uma playlist existente ou criar uma nova. Músicas que já estão na playlist
+não são duplicadas, e o aviso mostra quantas foram adicionadas. O botão voltar (ou o X) sai da seleção.
 
 ### Menu da música (⋮)
 Tocar a seguir, adicionar à fila, adicionar à playlist, favoritar, definir como toque, compartilhar
@@ -236,7 +246,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 │              realmente ouvido), PlaybackQueue,
 │              PlaybackState (salvar/restaurar fila), PlayerConnection, AudioFx (equalizador e aumento
 │              de volume), SleepTimer (código mantido, sem acesso na interface)
-└── ui/        MainActivity (abas), DetailActivity, SearchActivity, PlaylistsActivity, PlayerActivity,
+└── ui/        MainActivity (abas), DetailActivity, SongPickerActivity (adicionar músicas à playlist), SearchActivity, PlaylistsActivity, PlayerActivity,
                EqualizerActivity, SettingsActivity (configurações), CustomizeActivity
                (personalização avançada), BgImage (imagem de fundo),
                IconManager (troca de ícone), AppName (nome do app e atalho), StatsActivity, AboutActivity, AlphaIndexBar (barra # A–Z),
@@ -248,6 +258,10 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.15.0** | Selecionar várias músicas dentro de uma pasta e enviar para uma playlist; botão *Adicionar músicas* dentro da playlist, com busca e seleção múltipla |
+| **2.14.1** | Corrige a capa do mini player parada com o Economizador de bateria ligado (rotação por quadros) |
+| **2.14.0** | Capa do mini player girando devagar, estilo vinil, enquanto a música toca |
+| **2.13.0** | Botão *Verificar atualizações* na tela Sobre (compara com o último release do GitHub e abre o download do APK) |
 | **2.12.0** | Opção de mudar o nome do app na tela de Personalização (nome mostrado no app e atalho na tela inicial com o nome escolhido) |
 | **2.11.1** | A capa personalizada também aparece na notificação de reprodução e na tela de bloqueio |
 | **2.11.0** | Temas do player: Liquid glass, Preto AMOLED, Capa desfocada, Aurora, Cor sólida e Grafite (botão só no player) |

@@ -11,6 +11,17 @@
     android:paddingEnd="4dp"
     android:paddingBottom="7dp">
 
+    <CheckBox
+        android:id="@+id/checkSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="6dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:visibility="gone" />
+
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageArt"
         android:layout_width="54dp"

@@ -181,6 +181,11 @@
             android:parentActivityName=".ui.MainActivity" />
 
         <activity
+            android:name=".ui.SongPickerActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.SearchActivity"
             android:exported="false"
             android:parentActivityName=".ui.MainActivity"

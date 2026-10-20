@@ -35,10 +35,64 @@ class SongAdapter(
             }
         }
 
+    // ----- Multi-select (folders, playlist song picker) -----
+
+    /** While true every row shows a checkbox and tapping a row toggles it. */
+    var selecting = false
+        private set
+    private val selected = linkedSetOf<Long>()
+
+    /** The picker filters the list while searching and must not forget songs hidden by the filter. */
+    var keepSelectionOnFilter = false
+
+    var onSelectionChanged: (() -> Unit)? = null
+
+    /** Long press on a row (used to start selecting). */
+    var onLongPress: ((Song) -> Unit)? = null
+
+    val selectedCount: Int get() = selected.size
+
+    fun selectedIds(): Set<Long> = selected.toSet()
+
+    fun selectedSongs(): List<Song> = items.filter { it.id in selected }
+
+    fun startSelecting(first: Song? = null) {
+        selecting = true
+        selected.clear()
+        if (first != null) selected.add(first.id)
+        notifyDataSetChanged()
+        onSelectionChanged?.invoke()
+    }
+
+    fun stopSelecting() {
+        selecting = false
+        selected.clear()
+        notifyDataSetChanged()
+        onSelectionChanged?.invoke()
+    }
+
+    /** Selects every song in the list, or clears the selection when all were already selected. */
+    fun toggleSelectAll() {
+        val all = items.map { it.id }
+        if (all.isNotEmpty() && selected.containsAll(all)) selected.removeAll(all.toSet()) else selected.addAll(all)
+        notifyDataSetChanged()
+        onSelectionChanged?.invoke()
+    }
+
+    fun allSelected(): Boolean = items.isNotEmpty() && selected.containsAll(items.map { it.id })
+
+    private fun toggle(song: Song, position: Int) {
+        if (!selected.add(song.id)) selected.remove(song.id)
+        notifyItemChanged(position)
+        onSelectionChanged?.invoke()
+    }
+
     fun submit(list: List<Song>) {
         if (list == items) return
         items = list
+        if (selecting && !keepSelectionOnFilter) selected.retainAll(list.map { it.id }.toSet())
         notifyDataSetChanged()
+        if (selecting) onSelectionChanged?.invoke()
     }
 
     fun current(): List<Song> = items
@@ -62,9 +116,22 @@ class SongAdapter(
             }
             b.textDuration.text = Format.time(song.durationMs)
             ArtLoader.load(b.imageArt, song, 160)
+            b.checkSelect.visibility = if (selecting) View.VISIBLE else View.GONE
+            b.checkSelect.isChecked = song.id in selected
+            b.btnMore.visibility = if (selecting) View.INVISIBLE else View.VISIBLE
             b.root.setOnClickListener {
                 val pos = bindingAdapterPosition
-                if (pos != RecyclerView.NO_POSITION) onClick(items, pos)
+                if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
+                if (selecting) toggle(song, pos) else onClick(items, pos)
+            }
+            b.root.setOnLongClickListener {
+                val handler = onLongPress
+                if (handler != null && !selecting) {
+                    handler(song)
+                    true
+                } else {
+                    false
+                }
             }
             b.btnMore.setOnClickListener { onMore(it, song) }
         }
