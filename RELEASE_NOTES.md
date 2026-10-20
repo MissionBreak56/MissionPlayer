@@ -1,3 +1,17 @@
+## MissionPlayer v2.16.0 — Foto da playlist
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.16.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Novidade
+- **Foto da playlist**, como a da pasta, mas aqui ela **troca a mini capa** da playlist na lista: ⋮ da playlist (tela Playlists ou dentro da playlist) → *Alterar foto da playlist* (galeria), *Escolher foto das músicas* ou *Remover foto da playlist*. A foto também aparece no cabeçalho da playlist.
+- Renomear a playlist mantém a foto; apagar a playlist remove a foto. Playlists automáticas continuam sem foto personalizada.
+- README, tela Sobre (pt/en) e histórico de versões atualizados.
+
+### Alterações técnicas
+- `FolderArt` reaproveitado com chave `playlist:<nome>` (não conflita com caminhos de pasta) e novo `move()` para renomeação.
+- `GroupAdapter`: mini capa personalizada para playlists e ⋮ também nas playlists do usuário.
+- Versão: 2.15.0 → 2.16.0 (versionCode 45).
+
 ## MissionPlayer v2.15.0 — Selecionar músicas nas pastas e adicionar músicas na playlist
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.15.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

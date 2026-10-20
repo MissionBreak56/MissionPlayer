@@ -35,12 +35,20 @@ class DetailActivity : PlayerBoundActivity() {
     private var sortOrder = -1
 
     private val pickFolderArt = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        if (uri != null && kind == Kind.FOLDER) {
+        val artKey = artKey()
+        if (uri != null && artKey != null) {
             lifecycleScope.launch {
-                val ok = withContext(Dispatchers.IO) { FolderArt.save(applicationContext, key, uri) }
+                val ok = withContext(Dispatchers.IO) { FolderArt.save(applicationContext, artKey, uri) }
                 if (ok) refresh() else Toast.makeText(this@DetailActivity, R.string.folder_photo_failed, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    /** Key of the custom picture of this folder or playlist (null for other kinds of list). */
+    private fun artKey(): String? = when (kind) {
+        Kind.FOLDER -> key
+        Kind.PLAYLIST -> FolderArt.playlistKey(key)
+        else -> null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,8 +131,9 @@ class DetailActivity : PlayerBoundActivity() {
         binding.textEmpty.visibility = if (songs.isEmpty()) View.VISIBLE else View.GONE
         binding.btnPlay.isEnabled = songs.isNotEmpty()
         binding.btnShuffle.isEnabled = songs.isNotEmpty()
-        if (kind == Kind.FOLDER && FolderArt.has(this, key)) {
-            ArtLoader.loadFolder(binding.imageArt, key, 400)
+        val customKey = artKey()
+        if (customKey != null && FolderArt.has(this, customKey)) {
+            ArtLoader.loadFolder(binding.imageArt, customKey, 400)
         } else {
             ArtLoader.load(binding.imageArt, group.songs.firstOrNull(), 400)
         }
@@ -214,11 +223,21 @@ class DetailActivity : PlayerBoundActivity() {
 
     private fun showPlaylistMenu(anchor: View) {
         val popup = PopupMenu(this, anchor)
+        val artKey = FolderArt.playlistKey(key)
         popup.menu.add(0, 3, 0, R.string.add_songs)
-        popup.menu.add(0, 1, 1, R.string.rename)
-        popup.menu.add(0, 2, 2, R.string.delete)
+        popup.menu.add(0, 4, 1, R.string.playlist_change_photo)
+        popup.menu.add(0, 5, 2, R.string.folder_pick_from_songs)
+        if (FolderArt.has(this, artKey)) popup.menu.add(0, 6, 3, R.string.playlist_remove_photo)
+        popup.menu.add(0, 1, 4, R.string.rename)
+        popup.menu.add(0, 2, 5, R.string.delete)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
+                4 -> pickFolderArt.launch(arrayOf("image/*"))
+                5 -> FolderArtPicker.pickFromSongs(this, artKey, adapter.current()) { refresh() }
+                6 -> {
+                    FolderArt.remove(this, artKey)
+                    refresh()
+                }
                 3 -> startActivity(
                     Intent(this, SongPickerActivity::class.java)
                         .putExtra(SongPickerActivity.EXTRA_PLAYLIST, key)
@@ -226,6 +245,7 @@ class DetailActivity : PlayerBoundActivity() {
                 1 -> Dialogs.promptText(this, R.string.rename, key, R.string.save) { name ->
                     val renamed = Prefs.renamePlaylist(key, name)
                     if (renamed != null) {
+                        FolderArt.move(this, FolderArt.playlistKey(key), FolderArt.playlistKey(renamed))
                         key = renamed
                         refresh()
                     }
@@ -234,6 +254,7 @@ class DetailActivity : PlayerBoundActivity() {
                     .setMessage(getString(R.string.delete_playlist_confirm, key))
                     .setPositiveButton(R.string.delete) { _, _ ->
                         Prefs.deletePlaylist(key)
+                        FolderArt.remove(this, FolderArt.playlistKey(key))
                         finish()
                     }
                     .setNegativeButton(R.string.cancel, null)

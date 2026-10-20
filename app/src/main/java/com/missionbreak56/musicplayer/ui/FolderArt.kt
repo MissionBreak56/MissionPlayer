@@ -20,6 +20,18 @@ object FolderArt {
 
     fun has(context: Context, path: String): Boolean = file(context, path).exists()
 
+    /** Playlists reuse this storage; their key can never clash with a folder path (those start with "/"). */
+    fun playlistKey(name: String): String = "playlist:$name"
+
+    /** Moves the picture to a new key (a renamed playlist). An existing picture of the target wins. */
+    fun move(context: Context, from: String, to: String) {
+        if (from == to) return
+        val src = file(context, from)
+        if (!src.exists()) return
+        val dst = file(context, to)
+        if (dst.exists() || !src.renameTo(dst)) src.delete()
+    }
+
     fun remove(context: Context, path: String) {
         file(context, path).delete()
     }

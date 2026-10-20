@@ -56,6 +56,17 @@ personalização.
   lista com todas as músicas que ainda não estão nela, com busca (ignora acentos) e caixinhas para marcar
   várias de uma vez; o botão **Adicionar (N)** envia todas para a playlist.
 - **Enviar músicas de uma pasta para uma playlist:** veja *Selecionar músicas na pasta* abaixo.
+- **Foto da playlist:** veja *Foto da playlist* abaixo.
+
+### Foto da playlist
+Na tela *Playlists* (⋮ de cada playlist) ou dentro da playlist (⋮ no topo):
+- **Alterar foto da playlist** — escolhe uma imagem da galeria;
+- **Escolher foto das músicas** — mostra as capas das músicas da playlist para você tocar numa;
+- **Remover foto da playlist** — volta para a capa da primeira música.
+
+Diferente da foto da pasta, a foto da playlist **substitui a mini capa** que aparece na lista de
+playlists e também aparece no cabeçalho da playlist. Ao renomear a playlist a foto é mantida; ao apagá-la,
+a foto é removida. As playlists automáticas (Favoritas, Mais tocadas...) não têm foto personalizada.
 
 ### Selecionar músicas na pasta
 Dentro de uma pasta, **segure o dedo numa música** ou use o menu ⋮ → **Selecionar músicas**. Cada música
@@ -258,6 +269,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.16.0** | Foto da playlist (galeria ou capas das músicas) que substitui a mini capa na lista de playlists, com opção de remover |
 | **2.15.0** | Selecionar várias músicas dentro de uma pasta e enviar para uma playlist; botão *Adicionar músicas* dentro da playlist, com busca e seleção múltipla |
 | **2.14.1** | Corrige a capa do mini player parada com o Economizador de bateria ligado (rotação por quadros) |
 | **2.14.0** | Capa do mini player girando devagar, estilo vinil, enquanto a música toca |

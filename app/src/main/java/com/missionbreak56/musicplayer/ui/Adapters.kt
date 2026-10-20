@@ -147,7 +147,7 @@ class GroupAdapter(
 
     fun current(): List<Group> = items
 
-    /** Overflow button shown on folder rows (hide folder). */
+    /** Overflow button shown on folder rows (hide folder, photo) and on the user's playlists (photo). */
     var onMore: ((View, Group) -> Unit)? = null
 
     fun submit(list: List<Group>) {
@@ -176,7 +176,10 @@ class GroupAdapter(
             val count = res.getQuantityString(R.plurals.n_songs, group.songs.size, group.songs.size)
             subtitle.text = if (group.extra.isNotBlank()) "${group.extra} \u00B7 $count" else count
 
+            val customPlaylistArt = group.kind == Kind.PLAYLIST &&
+                FolderArt.has(itemView.context, FolderArt.playlistKey(group.key))
             val iconRes = when {
+                customPlaylistArt -> 0
                 group.kind == Kind.FOLDER -> R.drawable.ic_folder
                 group.kind == Kind.GENRE -> R.drawable.ic_genre
                 (group.kind == Kind.PLAYLIST || group.kind == Kind.AUTO) && group.songs.isEmpty() ->
@@ -196,7 +199,12 @@ class GroupAdapter(
                 art.setBackgroundResource(R.color.surface_high)
                 art.setPadding(0, 0, 0, 0)
                 art.imageTintList = null
-                ArtLoader.load(art, group.songs.firstOrNull(), 320)
+                if (customPlaylistArt) {
+                    // the picture chosen for the playlist replaces its small cover in the list
+                    ArtLoader.loadFolder(art, FolderArt.playlistKey(group.key), 320)
+                } else {
+                    ArtLoader.load(art, group.songs.firstOrNull(), 320)
+                }
             }
             itemView.setOnClickListener { onClick(group) }
 
@@ -204,13 +212,13 @@ class GroupAdapter(
             val chevron: View? = itemView.findViewById(R.id.chevron)
             val handler = onMore
             if (more != null) {
-                val show = handler != null && group.kind == Kind.FOLDER
+                val show = handler != null && (group.kind == Kind.FOLDER || group.kind == Kind.PLAYLIST)
                 more.visibility = if (show) View.VISIBLE else View.GONE
                 chevron?.visibility = if (show) View.GONE else View.VISIBLE
                 more.setOnClickListener { v -> handler?.invoke(v, group) }
             }
             itemView.setOnLongClickListener {
-                if (handler != null && group.kind == Kind.FOLDER) {
+                if (handler != null && (group.kind == Kind.FOLDER || group.kind == Kind.PLAYLIST)) {
                     handler(itemView, group)
                     true
                 } else {
