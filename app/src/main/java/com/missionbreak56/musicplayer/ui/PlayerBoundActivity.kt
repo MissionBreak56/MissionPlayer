@@ -1,7 +1,6 @@
 package com.missionbreak56.musicplayer.ui
 
 import android.animation.ArgbEvaluator
-import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -12,7 +11,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.view.animation.LinearInterpolator
+import android.view.Choreographer
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.graphics.ColorUtils
@@ -145,32 +144,53 @@ abstract class PlayerBoundActivity : BaseActivity() {
     }
 
     // ----- Cover spinning slowly like a vinyl record while the music plays -----
+    // Driven by frame callbacks instead of an Animator: Android turns Animators off in Battery
+    // Saver and when the system animation scale is 0, which left the cover completely still.
 
-    private var miniSpin: ObjectAnimator? = null
+    private var miniSpinOn = false
+    private var miniSpinLastNanos = 0L
+
+    private val miniSpinFrame = object : Choreographer.FrameCallback {
+        override fun doFrame(frameTimeNanos: Long) {
+            if (!miniSpinOn) return
+            val art = findViewById<View>(R.id.miniArt)
+            if (art != null) {
+                val dt = if (miniSpinLastNanos == 0L) 0L else frameTimeNanos - miniSpinLastNanos
+                // ~30 fps is plenty for a slow turn and saves battery
+                if (miniSpinLastNanos == 0L || dt >= 33_000_000L) {
+                    miniSpinAngle = (miniSpinAngle + dt / 1_000_000f * 360f / MINI_SPIN_MS) % 360f
+                    art.rotation = miniSpinAngle
+                    miniSpinLastNanos = frameTimeNanos
+                }
+            }
+            Choreographer.getInstance().postFrameCallback(this)
+        }
+    }
 
     private fun updateMiniSpin(playing: Boolean) {
-        val art = findViewById<View>(R.id.miniArt) ?: return
-        val spin = miniSpin ?: ObjectAnimator.ofFloat(art, View.ROTATION, 0f, 360f).apply {
-            duration = MINI_SPIN_MS
-            interpolator = LinearInterpolator()
-            repeatCount = ValueAnimator.INFINITE
-            miniSpin = this
-        }
         if (playing) {
-            if (!spin.isStarted) spin.start() else if (spin.isPaused) spin.resume()
-        } else if (spin.isRunning) {
-            spin.pause() // keeps the current angle, so it continues from there
+            findViewById<View>(R.id.miniArt)?.rotation = miniSpinAngle
+            if (!miniSpinOn) {
+                miniSpinOn = true
+                miniSpinLastNanos = 0L
+                Choreographer.getInstance().postFrameCallback(miniSpinFrame)
+            }
+        } else {
+            stopMiniSpin() // keeps the angle, so it continues from there
         }
     }
 
     private fun stopMiniSpin() {
-        miniSpin?.cancel()
-        miniSpin = null
+        miniSpinOn = false
+        Choreographer.getInstance().removeFrameCallback(miniSpinFrame)
     }
 
     private companion object {
         /** One full turn every 20 seconds: slow, like a record on a turntable. */
-        const val MINI_SPIN_MS = 20_000L
+        const val MINI_SPIN_MS = 20_000f
+
+        /** Shared by all screens so the cover keeps its angle when you change screens. */
+        var miniSpinAngle = 0f
     }
 
     private fun updateMiniPlayer() {

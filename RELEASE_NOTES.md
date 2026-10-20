@@ -1,3 +1,15 @@
+## MissionPlayer v2.14.1 — Correção: capa girando de verdade
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.14.1-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Correção
+- **Capa do mini player girando estilo vinil:** na v2.14.0 a capa ficava parada em aparelhos com o *Economizador de bateria* ligado ou com as animações do sistema desligadas, porque o Android desativa as animações nesses casos. A rotação agora é feita quadro a quadro e funciona sempre (uma volta a cada 20 s, ~30 quadros por segundo).
+- A capa mantém o ângulo ao trocar de tela e para no ângulo atual ao pausar.
+
+### Alterações técnicas
+- `PlayerBoundActivity`: `ObjectAnimator` substituído por `Choreographer.FrameCallback`, com o ângulo guardado e compartilhado entre as telas.
+- Versão: 2.14.0 → 2.14.1 (versionCode 43).
+
 ## MissionPlayer v2.14.0 — Capa girando estilo vinil
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.14.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
