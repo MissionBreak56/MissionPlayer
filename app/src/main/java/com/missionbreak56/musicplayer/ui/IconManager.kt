@@ -45,6 +45,7 @@ object IconManager {
                 PackageManager.DONT_KILL_APP
             )
         }
+        AppName.refreshShortcut(context)
     }
 
     private fun component(context: Context, index: Int) =

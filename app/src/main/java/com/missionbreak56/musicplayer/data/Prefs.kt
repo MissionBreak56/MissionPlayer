@@ -40,6 +40,7 @@ object Prefs {
     private const val KEY_CORNERS = "custom_corners"
     private const val KEY_BG = "custom_background"
     private const val KEY_ICON = "custom_icon"
+    private const val KEY_APP_NAME = "custom_app_name"
     private const val KEY_BG_IMAGE = "custom_bg_image"
     private const val KEY_BG_VISIBLE = "custom_bg_image_visible"
 
@@ -125,6 +126,11 @@ object Prefs {
         get() = sp?.getInt(KEY_ICON, 0) ?: 0
         set(value) { store().edit().putInt(KEY_ICON, value).apply() }
 
+    /** Name chosen in Customization. Empty = the app's own name. */
+    var appName: String
+        get() = sp?.getString(KEY_APP_NAME, "") ?: ""
+        set(value) { store().edit().putString(KEY_APP_NAME, value.trim()).apply() }
+
     /** Time the gallery background image was saved (0 = none). Changes whenever a new image is set. */
     var bgImageStamp: Long
         get() = sp?.getLong(KEY_BG_IMAGE, 0L) ?: 0L
@@ -140,7 +146,7 @@ object Prefs {
 
     fun resetCustomization() {
         store().edit().putInt(KEY_ACCENT, DEFAULT_ACCENT).putInt(KEY_FONT, DEFAULT_FONT).putInt(KEY_CORNERS, 0)
-            .putInt(KEY_BG, DEFAULT_BG).putInt(KEY_THEME, 0).putInt(KEY_NIGHT, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM).putLong(KEY_BG_IMAGE, 0L).putInt(KEY_BG_VISIBLE, 55).apply()
+            .putInt(KEY_BG, DEFAULT_BG).putInt(KEY_THEME, 0).putInt(KEY_NIGHT, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM).putLong(KEY_BG_IMAGE, 0L).putInt(KEY_BG_VISIBLE, 55).putString(KEY_APP_NAME, "").apply()
     }
 
     /** Sort order chosen inside albums / folders / artists / playlists (-1 = their own order). */

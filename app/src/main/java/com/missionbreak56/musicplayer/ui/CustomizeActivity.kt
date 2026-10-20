@@ -5,9 +5,13 @@ import android.graphics.Outline
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.InputFilter
+import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.view.ViewOutlineProvider
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -19,19 +23,23 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
+import com.missionbreak56.musicplayer.R
 import com.missionbreak56.musicplayer.data.Prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Customization: light/dark mode, app icon, accent color, background, font and corner style.
+ * Customization: light/dark mode, app icon and name, accent color, background, font and corner style.
  * Look settings are layered over the chosen theme (see [Themes.applyOverlays]).
  */
 class CustomizeActivity : BaseActivity() {
 
     private lateinit var scroll: ScrollView
     private lateinit var body: LinearLayout
+
+    /** Text typed in the name field but not applied yet (kept when the screen is redrawn). */
+    private var pendingName: String? = null
 
     private val primary: Int
         get() = MaterialColors.getColor(this, androidx.appcompat.R.attr.colorPrimary, 0)
@@ -57,6 +65,7 @@ class CustomizeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        pendingName = savedInstanceState?.getString(STATE_NAME)
         val root = LinearLayout(this)
         root.orientation = LinearLayout.VERTICAL
         root.setBackgroundColor(MaterialColors.getColor(this, android.R.attr.colorBackground, 0))
@@ -86,12 +95,14 @@ class CustomizeActivity : BaseActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(STATE_SCROLL, scroll.scrollY)
+        pendingName?.let { outState.putString(STATE_NAME, it) }
     }
 
     private fun build() {
         body.removeAllViews()
         modeSection()
         iconSection()
+        nameSection()
         accentSection()
         backgroundSection()
         fontSection()
@@ -269,6 +280,67 @@ class CustomizeActivity : BaseActivity() {
         button.addView(arrow)
         button.setOnClickListener { showIconMenu(button) }
         body.addView(button, LinearLayout.LayoutParams(-1, -2))
+    }
+
+    // ----- App name -----
+
+    private fun nameSection() {
+        section(
+            tr("Nome do app", "App name"),
+            tr(
+                "O nome aparece dentro do app (tela Sobre). O Android não deixa um app trocar o próprio nome na gaveta de apps; para ter o nome na tela inicial, crie um atalho. Depois de criado, ele acompanha as trocas de nome e de ícone.",
+                "The name is shown inside the app (About screen). Android does not let an app rename itself in the app drawer; to get the name on your home screen, create a shortcut. Once created, it follows name and icon changes."
+            )
+        )
+        val input = EditText(this)
+        input.setText(pendingName ?: Prefs.appName)
+        input.hint = getString(R.string.app_name)
+        input.setSingleLine(true)
+        input.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(AppName.MAX_LENGTH))
+        input.setPadding(dp(14), dp(12), dp(14), dp(12))
+        input.background = ring(false, 14)
+        input.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) { pendingName = s?.toString() }
+        })
+        body.addView(input, LinearLayout.LayoutParams(-1, -2))
+
+        val buttons = newRow()
+        val applyBtn = MaterialButton(this)
+        applyBtn.text = tr("Aplicar nome", "Apply name")
+        applyBtn.setOnClickListener {
+            Prefs.appName = input.text.toString()
+            pendingName = null
+            AppName.refreshShortcut(this)
+            Toast.makeText(this, tr("Nome: ${AppName.get(this)}", "Name: ${AppName.get(this)}"), Toast.LENGTH_SHORT).show()
+        }
+        val restoreBtn = MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle)
+        restoreBtn.text = tr("Nome original", "Original name")
+        restoreBtn.setOnClickListener {
+            Prefs.appName = ""
+            pendingName = null
+            input.setText("")
+            AppName.refreshShortcut(this)
+            Toast.makeText(this, tr("Nome original restaurado", "Original name restored"), Toast.LENGTH_SHORT).show()
+        }
+        buttons.addView(applyBtn, LinearLayout.LayoutParams(0, -2, 1f).apply { topMargin = dp(8); marginEnd = dp(6) })
+        buttons.addView(restoreBtn, LinearLayout.LayoutParams(0, -2, 1f).apply { topMargin = dp(8); marginStart = dp(6) })
+
+        val shortcutBtn = MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle)
+        shortcutBtn.text = tr("Criar atalho na tela inicial com este nome", "Create a home screen shortcut with this name")
+        shortcutBtn.setOnClickListener {
+            Prefs.appName = input.text.toString()
+            pendingName = null
+            val ok = try { AppName.requestShortcut(this) } catch (_: Exception) { false }
+            Toast.makeText(
+                this,
+                if (ok) tr("Confirme o atalho na tela inicial", "Confirm the shortcut on your home screen")
+                else tr("Seu launcher não permite criar atalhos por aqui", "Your launcher does not allow creating shortcuts from here"),
+                Toast.LENGTH_LONG
+            ).show()
+        }
+        body.addView(shortcutBtn, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(6) })
     }
 
     /** Floating list of app icons, each with its picture. */
@@ -606,13 +678,15 @@ class CustomizeActivity : BaseActivity() {
                 .setTitle(tr("Restaurar padrões?", "Restore defaults?"))
                 .setMessage(
                     tr(
-                        "Modo, ícone, cor de destaque, fundo (inclusive a imagem) e fonte voltarão ao padrão do app.",
-                        "Mode, icon, accent color, background (including the image) and font will go back to the app defaults."
+                        "Modo, ícone, nome do app, cor de destaque, fundo (inclusive a imagem) e fonte voltarão ao padrão do app.",
+                        "Mode, icon, app name, accent color, background (including the image) and font will go back to the app defaults."
                     )
                 )
                 .setPositiveButton(tr("Restaurar", "Restore")) { _, _ ->
                     BgImage.clear(applicationContext)
                     Prefs.resetCustomization()
+                    pendingName = null
+                    AppName.refreshShortcut(this)
                     androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(Prefs.nightMode)
                     if (Prefs.iconVariant != 0) {
                         Prefs.iconVariant = 0
@@ -628,5 +702,6 @@ class CustomizeActivity : BaseActivity() {
 
     companion object {
         private const val STATE_SCROLL = "scroll_y"
+        private const val STATE_NAME = "pending_name"
     }
 }

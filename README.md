@@ -122,7 +122,7 @@ fechar.
 
 ### Configurações
 Toque na engrenagem no topo da tela inicial. Tudo o que ficava no menu flutuante agora está aqui:
-- **Aparência:** *Personalização* (modo claro/escuro/do sistema, ícone, cor de destaque, fundo e fonte).
+- **Aparência:** *Personalização* (modo claro/escuro/do sistema, ícone e nome do app, cor de destaque, fundo e fonte).
 - **Biblioteca:** *Organizar abas* e *Itens ocultos*.
 - **Áudio e letras:** *Equalizador* e a chave de *Letras automáticas*.
 - **Mais:** *Estatísticas* e *Sobre*.
@@ -134,6 +134,12 @@ Configurações → *Personalização*. A tela abre com o visual padrão: **fund
 - **Ícone do app:** menu flutuante com a imagem de cada ícone, 9 opções — *Original*, e variações *Verde, Azul, Violeta, Dourado, Rosa*, mais
   *Vinil, Ondas* e *Fones*. A troca é imediata (a tela inicial pode levar alguns segundos para
   atualizar). Os ícones também têm versão monocromática para o Android 13+ (ícones temáticos).
+- **Nome do app:** campo para escolher o nome do app, com os botões *Aplicar nome* e *Nome original*. O
+  nome aparece dentro do app (título da tela *Sobre*). O Android **não permite** que um app troque o
+  próprio nome na gaveta de apps; por isso há o botão *Criar atalho na tela inicial com este nome*, que
+  adiciona à tela inicial um atalho com o nome e o ícone atuais (o launcher pede a confirmação). Depois
+  de criado, esse atalho acompanha as trocas de nome e de ícone. O nome original continua na gaveta de
+  apps. Essa opção existe **somente** na tela de Personalização.
 - **Cor de Destaque:** *Cor Padrão* (o azul-escuro fixo do app) ou uma cor personalizada: uma barra em arco-íris
   escolhe o tom (passos de 5°) e outra a intensidade (do pastel ao escuro), com prévia da cor. Cada
   escolha tem versão clara e escura. Quem usava uma das 16 cores prontas das versões anteriores
@@ -147,7 +153,7 @@ Configurações → *Personalização*. A tela abre com o visual padrão: **fund
   Condensada leve, Condensada média, Serifa mono* e as embutidas *Arredondada (Fredoka), Manuscrita
   (Amatic), Rabisco (Intuitive), Serifa elegante (Source Serif)* e *Moderna (Hanken Grotesk)*. A
   fonte escolhida vale em todo o app.
-- *Restaurar padrões* pede confirmação e, se você confirmar, volta tudo (modo, ícone, cor, fundo com imagem e fonte) ao padrão do app.
+- *Restaurar padrões* pede confirmação e, se você confirmar, volta tudo (modo, ícone, nome do app, cor, fundo com imagem e fonte) ao padrão do app.
 
 As escolhas ficam salvas. As fontes embutidas usam a
 SIL Open Font License (texto em `FONTS-OFL.txt`).
@@ -225,7 +231,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 └── ui/        MainActivity (abas), DetailActivity, SearchActivity, PlaylistsActivity, PlayerActivity,
                EqualizerActivity, SettingsActivity (configurações), CustomizeActivity
                (personalização avançada), BgImage (imagem de fundo),
-               IconManager (troca de ícone), StatsActivity, AboutActivity, AlphaIndexBar (barra # A–Z),
+               IconManager (troca de ícone), AppName (nome do app e atalho), StatsActivity, AboutActivity, AlphaIndexBar (barra # A–Z),
                FolderArt / FolderArtPicker (foto da pasta), SongArt / CoverSearch (capas por música),
                UiHelpers, BaseActivity (tela cheia), adaptadores e diálogos
 ```
@@ -234,6 +240,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.12.0** | Opção de mudar o nome do app na tela de Personalização (nome mostrado no app e atalho na tela inicial com o nome escolhido) |
 | **2.11.1** | A capa personalizada também aparece na notificação de reprodução e na tela de bloqueio |
 | **2.11.0** | Temas do player: Liquid glass, Preto AMOLED, Capa desfocada, Aurora, Cor sólida e Grafite (botão só no player) |
 | **2.10.2** | *Cor Padrão* (azul-escuro fixo) no lugar de "usar a cor do tema"; removida a opção "usar a fonte do tema" e *Padrão do sistema* vai para o topo da lista de fontes |

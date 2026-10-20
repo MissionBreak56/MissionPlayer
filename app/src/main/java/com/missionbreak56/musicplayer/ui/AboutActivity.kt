@@ -15,7 +15,7 @@ class AboutActivity : BaseActivity() {
         setContentView(binding.root)
         binding.btnBack.setOnClickListener { finish() }
 
-        binding.textAppName.text = getString(R.string.app_name)
+        binding.textAppName.text = AppName.get(this)
         binding.textVersion.text = getString(R.string.version_format, BuildConfig.VERSION_NAME)
         binding.textDeveloper.text =
             getString(R.string.developer_format, getString(R.string.developer_name))
