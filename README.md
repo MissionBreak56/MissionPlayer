@@ -189,6 +189,12 @@ tempo ouvido).
 - Ícone adaptativo (Android 8+), com versão monocromática para o tema de ícones do Android 13+.
 - Idiomas: **português (Brasil)** e **inglês**.
 
+### Verificar atualizações
+Na tela *Sobre* (Configurações → *Sobre*), o botão **Verificar atualizações** consulta o último release
+do GitHub e compara com a versão instalada. Se houver versão mais nova, aparece **Baixar atualização**,
+que abre o APK (`arm64-v8a`) do release no navegador; se não houver APK, abre a página do release. A
+consulta só acontece quando você toca no botão, e a instalação continua sendo manual.
+
 ### Reprodução em segundo plano
 Serviço de mídia (Media3): continua tocando com a tela desligada, com notificação e controles na
 tela de bloqueio.
@@ -196,7 +202,7 @@ tela de bloqueio.
 ### Privacidade
 Sem anúncios, sem rastreadores e sem contas. A internet é usada **só** para baixar letras que faltam
 (título, artista, álbum e duração são enviados aos serviços de letras acima) e, quando você pede, para
-*Buscar capa online* (o texto da busca vai para o iTunes Search); a reprodução é 100% local. Desligue
+*Buscar capa online* (o texto da busca vai para o iTunes Search) e, só quando você toca em *Verificar atualizações*, para consultar o último release no GitHub; a reprodução é 100% local. Desligue
 em Configurações → *Letras automáticas* para o app não baixar letras.
 
 ## Permissões

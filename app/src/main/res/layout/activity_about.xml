@@ -94,6 +94,32 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/textUpdateStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="14sp"
+                android:text="@string/update_current_version" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCheckUpdates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/update_check_button" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDownloadUpdate"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/update_download_button"
+                android:visibility="gone" />
+
+            <TextView
                 android:id="@+id/textAboutBody"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
