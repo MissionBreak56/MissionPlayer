@@ -68,6 +68,8 @@ A foto aparece apenas dentro da pasta (cabeçalho do detalhe), não na lista.
 ### Mini player (liquid glass)
 - Aparece em todas as telas de lista, com capa circular, título, artista, progresso, play/pause,
   próxima e fila.
+- **Capa girando estilo vinil:** enquanto a música toca, a capa circular gira bem devagar (uma volta a
+  cada 20 s); ao pausar ela para no ângulo atual e, ao tocar de novo, continua de onde parou.
 - O fundo **mistura as cores da capa** da música em um gradiente suave, com brilho de vidro no topo e
   borda translúcida, e muda com uma transição animada a cada faixa.
 - Texto, ícones, botão de play e barra de progresso ajustam o contraste (claro/escuro)

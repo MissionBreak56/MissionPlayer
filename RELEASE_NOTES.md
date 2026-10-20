@@ -1,3 +1,15 @@
+## MissionPlayer v2.14.0 — Capa girando estilo vinil
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.14.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Novidade
+- **Capa do mini player girando estilo vinil:** enquanto a música toca, a capa circular gira bem devagar (uma volta a cada 20 segundos). Ao pausar ela para no ângulo atual e retoma dali ao tocar de novo; a animação para quando o app sai de tela, sem gastar bateria.
+- A tela *Sobre* e o README foram atualizados.
+
+### Alterações técnicas
+- `PlayerBoundActivity`: `ObjectAnimator` de rotação linear e infinita na `miniArt`, controlado por `isPlaying` (pause/resume) e cancelado em `onStop`.
+- Versão: 2.13.0 → 2.14.0 (versionCode 42).
+
 ## MissionPlayer v2.13.0 — Verificar atualizações no Sobre
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.13.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

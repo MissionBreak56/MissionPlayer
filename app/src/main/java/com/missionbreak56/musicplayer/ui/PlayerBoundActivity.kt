@@ -1,6 +1,7 @@
 package com.missionbreak56.musicplayer.ui
 
 import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -11,6 +12,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.graphics.ColorUtils
@@ -83,6 +85,7 @@ abstract class PlayerBoundActivity : BaseActivity() {
     }
 
     override fun onStop() {
+        stopMiniSpin()
         uiHandler.removeCallbacks(tick)
         controller?.removeListener(listener)
         connection?.release()
@@ -141,15 +144,46 @@ abstract class PlayerBoundActivity : BaseActivity() {
         if (c.isPlaying) c.pause() else c.play()
     }
 
+    // ----- Cover spinning slowly like a vinyl record while the music plays -----
+
+    private var miniSpin: ObjectAnimator? = null
+
+    private fun updateMiniSpin(playing: Boolean) {
+        val art = findViewById<View>(R.id.miniArt) ?: return
+        val spin = miniSpin ?: ObjectAnimator.ofFloat(art, View.ROTATION, 0f, 360f).apply {
+            duration = MINI_SPIN_MS
+            interpolator = LinearInterpolator()
+            repeatCount = ValueAnimator.INFINITE
+            miniSpin = this
+        }
+        if (playing) {
+            if (!spin.isStarted) spin.start() else if (spin.isPaused) spin.resume()
+        } else if (spin.isRunning) {
+            spin.pause() // keeps the current angle, so it continues from there
+        }
+    }
+
+    private fun stopMiniSpin() {
+        miniSpin?.cancel()
+        miniSpin = null
+    }
+
+    private companion object {
+        /** One full turn every 20 seconds: slow, like a record on a turntable. */
+        const val MINI_SPIN_MS = 20_000L
+    }
+
     private fun updateMiniPlayer() {
         val card = findViewById<View>(R.id.miniPlayer) ?: return
         val c = controller
         val item = c?.currentMediaItem
         if (c == null || item == null) {
             card.visibility = View.GONE
+            stopMiniSpin()
             return
         }
         card.visibility = View.VISIBLE
+        updateMiniSpin(c.isPlaying)
         findViewById<TextView>(R.id.miniTitle).text = item.mediaMetadata.title ?: Labels.unknownTitle
         findViewById<TextView>(R.id.miniSubtitle).text = item.mediaMetadata.artist ?: Labels.unknownArtist
         findViewById<ImageButton>(R.id.miniPlay).setImageResource(
