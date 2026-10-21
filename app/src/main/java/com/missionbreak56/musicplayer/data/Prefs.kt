@@ -44,6 +44,8 @@ object Prefs {
     private const val KEY_BG_IMAGE = "custom_bg_image"
     private const val KEY_BG_VISIBLE = "custom_bg_image_visible"
     const val KEY_CUSTOM_ORDER = "custom_order_"
+    const val KEY_LYRIC_SYNC_CHECKED = "lyric_sync_checked"
+    private const val KEY_AUTO_LYRIC_SYNC = "auto_lyric_sync"
 
     /** Default look: custom deep blue accent (hue 220, "Escuro"), system font, pure background. */
     const val DEFAULT_ACCENT = 544
@@ -120,6 +122,27 @@ object Prefs {
     var autoLyrics: Boolean
         get() = sp?.getBoolean(KEY_AUTO_LYRICS, true) ?: true
         set(value) { store().edit().putBoolean(KEY_AUTO_LYRICS, value).apply() }
+
+    /** Line up synced lyrics with the audio automatically (once per song, when it is shown). */
+    var autoLyricSync: Boolean
+        get() = sp?.getBoolean(KEY_AUTO_LYRIC_SYNC, true) ?: true
+        set(value) { store().edit().putBoolean(KEY_AUTO_LYRIC_SYNC, value).apply() }
+
+    /** Songs whose lyric timing was already checked, so it is not analysed again. */
+    fun lyricSyncChecked(songId: Long): Boolean =
+        sp?.getStringSet(KEY_LYRIC_SYNC_CHECKED, null)?.contains(songId.toString()) == true
+
+    fun markLyricSyncChecked(songId: Long) {
+        val st = store()
+        val set = HashSet(st.getStringSet(KEY_LYRIC_SYNC_CHECKED, emptySet()).orEmpty())
+        if (set.add(songId.toString())) st.edit().putStringSet(KEY_LYRIC_SYNC_CHECKED, set).apply()
+    }
+
+    fun clearLyricSyncChecked(songId: Long) {
+        val st = store()
+        val set = HashSet(st.getStringSet(KEY_LYRIC_SYNC_CHECKED, emptySet()).orEmpty())
+        if (set.remove(songId.toString())) st.edit().putStringSet(KEY_LYRIC_SYNC_CHECKED, set).apply()
+    }
 
     // ----- Advanced customization (0 / -1 = the theme's own look) -----
 

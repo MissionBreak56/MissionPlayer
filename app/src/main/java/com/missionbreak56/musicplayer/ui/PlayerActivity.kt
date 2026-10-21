@@ -34,6 +34,7 @@ import com.missionbreak56.musicplayer.data.Library
 import com.missionbreak56.musicplayer.data.LrcParser
 import com.missionbreak56.musicplayer.data.LyricLine
 import com.missionbreak56.musicplayer.data.LyricsFetcher
+import com.missionbreak56.musicplayer.data.LyricSync
 import com.missionbreak56.musicplayer.data.LyricsIndex
 import com.missionbreak56.musicplayer.data.LyricsStore
 import com.missionbreak56.musicplayer.data.Prefs
@@ -41,6 +42,7 @@ import com.missionbreak56.musicplayer.databinding.ActivityPlayerBinding
 import com.missionbreak56.musicplayer.playback.PlaybackState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Locale
 import kotlinx.coroutines.withContext
 import kotlin.math.abs
 
@@ -59,6 +61,7 @@ class PlayerActivity : PlayerBoundActivity() {
     private var lyricsLines: List<LyricLine> = emptyList()
     private var lyricIndex = -1
     private val triedOnline = HashSet<Long>()
+    private val syncing = HashSet<Long>()
 
     private var closePending = false
     private var restoreTried = false
@@ -131,6 +134,14 @@ class PlayerActivity : PlayerBoundActivity() {
             startActivity(Intent(this, EqualizerActivity::class.java))
         }
         binding.btnLyrics.setOnClickListener { toggleLyrics() }
+        binding.btnSyncEarlier.text = tr("− 0,5 s", "− 0.5 s")
+        binding.btnSyncLater.text = tr("+ 0,5 s", "+ 0.5 s")
+        binding.btnSyncAuto.text = tr("Auto", "Auto")
+        binding.btnSyncReset.text = tr("Zerar", "Reset")
+        binding.btnSyncEarlier.setOnClickListener { adjustLyrics(-500L) }
+        binding.btnSyncLater.setOnClickListener { adjustLyrics(500L) }
+        binding.btnSyncAuto.setOnClickListener { autoSyncNow() }
+        binding.btnSyncReset.setOnClickListener { adjustLyrics(0L, reset = true) }
         binding.imageArt.setOnClickListener { toggleLyrics() }
         setupArtSwipe()
         binding.btnQueue.setOnClickListener { showQueue() }
@@ -493,6 +504,9 @@ class PlayerActivity : PlayerBoundActivity() {
         binding.seekBar.progressTintList = white
         binding.seekBar.thumbTintList = white
         binding.seekBar.progressBackgroundTintList = ColorStateList.valueOf(Color.argb(70, 255, 255, 255))
+        for (v in listOf(binding.btnSyncEarlier, binding.btnSyncLater, binding.btnSyncAuto, binding.btnSyncReset)) {
+            v.setTextColor(fgActive)
+        }
         lyricsAdapter.colorActive = fgActive
         lyricsAdapter.colorIdle = Color.argb(150, 255, 255, 255)
         WindowCompat.getInsetsController(window, binding.root).isAppearanceLightStatusBars = false
@@ -521,6 +535,71 @@ class PlayerActivity : PlayerBoundActivity() {
         binding.lyricsPanel.visibility = if (showLyrics) View.VISIBLE else View.GONE
         lyricIndex = -2
         onPlayerChanged()
+        updateSyncBar()
+    }
+
+    /** The timing buttons only make sense while synced lyrics are on screen. */
+    private fun updateSyncBar() {
+        val synced = lyricsLines.isNotEmpty() && lyricsLines.first().timeMs >= 0
+        binding.lyricsSyncBar.visibility = if (showLyrics && synced) View.VISIBLE else View.GONE
+    }
+
+    private fun formatShift(ms: Long): String = String.format(Locale.getDefault(), "%+.1f s", ms / 1000.0)
+
+    /** Moves this song's lyrics later (+) or earlier (-); [reset] puts them back where the file says. */
+    private fun adjustLyrics(deltaMs: Long, reset: Boolean = false) {
+        val id = shownId
+        val song = Library.song(id) ?: return
+        if (id <= 0) return
+        lifecycleScope.launch {
+            val total = withContext(Dispatchers.IO) {
+                val raw = LyricsIndex.fullText(applicationContext, song) ?: return@withContext null
+                Prefs.markLyricSyncChecked(id)
+                if (reset) {
+                    LyricsStore.setShift(applicationContext, id, raw, 0L)
+                } else {
+                    LyricsStore.shiftBy(applicationContext, id, raw, deltaMs)
+                }
+            }
+            if (total != null && shownId == id) {
+                Toast.makeText(
+                    this@PlayerActivity,
+                    tr("Sincronia da letra: ${formatShift(total)}", "Lyrics timing: ${formatShift(total)}"),
+                    Toast.LENGTH_SHORT
+                ).show()
+                loadLyrics(id)
+            }
+        }
+    }
+
+    /** "Auto" button: listens to the audio and lines the lyric up when it can be sure. */
+    private fun autoSyncNow() {
+        val id = shownId
+        val song = Library.song(id) ?: return
+        if (id <= 0 || !syncing.add(id)) return
+        Toast.makeText(this, tr("Analisando o áudio…", "Analysing the audio…"), Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch {
+            val shift = withContext(Dispatchers.Default) { LyricSync.autoAdjust(applicationContext, song) }
+            syncing.remove(id)
+            if (shownId != id) return@launch
+            if (shift != null) {
+                Toast.makeText(
+                    this@PlayerActivity,
+                    tr("Letra ajustada: ${formatShift(shift)}", "Lyrics adjusted: ${formatShift(shift)}"),
+                    Toast.LENGTH_SHORT
+                ).show()
+                loadLyrics(id)
+            } else {
+                Toast.makeText(
+                    this@PlayerActivity,
+                    tr(
+                        "Não achei um ajuste seguro. Use − e + para acertar à mão.",
+                        "No safe adjustment found. Use − and + to fix it by hand."
+                    ),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     private fun loadLyrics(id: Long) {
@@ -543,6 +622,27 @@ class PlayerActivity : PlayerBoundActivity() {
             binding.textLyricsHint.text = if (lines.isEmpty()) getString(R.string.no_lyrics_short) else ""
             binding.textLyricsHint.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
             binding.btnAddLyrics.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
+            updateSyncBar()
+
+            // Synced lyrics that were never checked: line them up with the audio, once per song.
+            if (lines.isNotEmpty() && lines.first().timeMs >= 0 && id > 0 && song != null &&
+                Prefs.autoLyricSync && !Prefs.lyricSyncChecked(id) && syncing.add(id)
+            ) {
+                val shift = withContext(Dispatchers.Default) { LyricSync.autoAdjust(applicationContext, song) }
+                syncing.remove(id)
+                if (shift != null && shownId == id) {
+                    Toast.makeText(
+                        this@PlayerActivity,
+                        tr(
+                            "Letra ajustada automaticamente: ${formatShift(shift)}",
+                            "Lyrics adjusted automatically: ${formatShift(shift)}"
+                        ),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    loadLyrics(id)
+                    return@launch
+                }
+            }
 
             // No lyrics yet: try to download them now (once per song per session), then reload.
             if (lines.isEmpty() && id > 0 && song != null && Prefs.autoLyrics && triedOnline.add(id)) {

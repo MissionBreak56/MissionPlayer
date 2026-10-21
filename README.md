@@ -189,7 +189,7 @@ fechar.
 Toque na engrenagem no topo da tela inicial. Tudo o que ficava no menu flutuante agora está aqui:
 - **Aparência:** *Personalização* (modo claro/escuro/do sistema, ícone e nome do app, cor de destaque, fundo e fonte).
 - **Biblioteca:** *Organizar abas* e *Itens ocultos*.
-- **Áudio e letras:** *Equalizador* e a chave de *Letras automáticas*.
+- **Áudio e letras:** *Equalizador* e as chaves de *Letras automáticas* e *Ajustar sincronia das letras*.
 - **Backup:** *Fazer backup* e *Restaurar backup*.
 - **Mais:** *Estatísticas* e *Sobre*.
 
@@ -247,6 +247,22 @@ tempo ouvido).
 - A busca roda a cada 15 minutos (o menor intervalo que o Android permite), com 4 músicas ao mesmo
   tempo; músicas não encontradas são tentadas de novo após 15 minutos.
 - Nada para configurar. Para desligar: Configurações → *Letras automáticas*.
+
+### Sincronia das letras
+Letras de outras versões da música (ao vivo, edição de rádio, intro mais longa) podem ficar adiantadas
+ou atrasadas. O app corrige isso de três formas:
+- **Automática:** na primeira vez que uma letra sincronizada aparece, o app decodifica os primeiros 2:40
+  da música, mede o volume da faixa da voz e procura o deslocamento em que o começo de cada linha cai
+  onde o som "sobe" (a voz entrando depois da introdução, de um solo ou de uma pausa). Só aplica quando
+  o resultado é **claramente melhor** que a letra como está e que qualquer outro deslocamento; na
+  dúvida não mexe, então uma letra que já estava certa não é alterada por palpite. Aparece o aviso
+  *Letra ajustada automaticamente: +1,2 s*. Cada música é analisada uma vez; letra nova (baixada de
+  novo ou importada) é analisada de novo. Para desligar: Configurações → *Ajustar sincronia das letras*.
+- **Manual:** com a letra aberta, uma barra no fim da tela tem **− 0,5 s** (a letra adianta),
+  **+ 0,5 s** (a letra atrasa), **Auto** (roda a análise na hora) e **Zerar** (volta ao que o arquivo
+  diz). O ajuste fica salvo para aquela música.
+- **Etiqueta `[offset:ms]`:** o padrão LRC agora é respeitado, tanto nas letras baixadas quanto nas
+  importadas. O ajuste é gravado no próprio arquivo da letra (por isso entra no backup).
 
 ### Equalizador e volume
 - Equalizador do aparelho com presets e controles por banda, reforço de graves e surround.
@@ -317,6 +333,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.20.0** | Sincronia automática das letras (análise do áudio quando há certeza), botões − 0,5 s / + 0,5 s / Auto / Zerar e suporte à etiqueta `[offset]` |
 | **2.19.0** | Mais provedores de letras (QQ Music, LrcApi, Textyl e Lyrist, além de LRCLIB, NetEase, Kugou e lyrics.ovh); a página de cada release no GitHub mostra só as mudanças da própria versão |
 | **2.18.0** | Ordem *Personalizada* (arraste para organizar cada lista); botão aleatório/sequência na notificação; corrige músicas que se repetiam no aleatório antes de dar a volta completa |
 | **2.17.0** | Fila reorganizável por arrastar (com o aleatório desligado); Backup e restauração de tudo em um arquivo `.zip` salvo na pasta que você escolher |

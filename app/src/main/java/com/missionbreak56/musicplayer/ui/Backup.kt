@@ -38,7 +38,7 @@ object Backup {
     /** Playback state, not a user change: kept as it is on this device. */
     private val EXCLUDED = setOf("last_queue", "last_index", "last_position")
 
-    private val ID_SET_KEYS = listOf("favorites", "hidden_songs")
+    private val ID_SET_KEYS = listOf("favorites", "hidden_songs", Prefs.KEY_LYRIC_SYNC_CHECKED)
     private const val K_PLAYLISTS = "playlists"
     private const val K_RECENT = "recent"
     private val K_PAIRS = listOf("play_counts", "listen_ms")

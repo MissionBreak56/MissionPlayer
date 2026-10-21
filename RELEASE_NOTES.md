@@ -1,3 +1,18 @@
+## MissionPlayer v2.20.0 — Sincronia automática das letras
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.20.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Novidades
+- **Ajuste automático do tempo das letras:** ao abrir uma letra sincronizada pela primeira vez, o app analisa o começo da música (volume da faixa da voz) e desloca a letra quando acha, com clareza, o ponto em que ela casa com o áudio. Na dúvida não mexe, para não estragar letras que já estavam certas. Aparece um aviso com o ajuste (ex.: *+1,2 s*). Chave em Configurações → *Ajustar sincronia das letras*.
+- **Ajuste manual:** na tela da letra, botões **− 0,5 s**, **+ 0,5 s**, **Auto** (analisa na hora) e **Zerar**. O ajuste fica salvo por música.
+- **Etiqueta `[offset:ms]`** do formato LRC agora é respeitada (letras baixadas e importadas); o ajuste é gravado no próprio arquivo da letra e entra no backup.
+- README e tela Sobre atualizados.
+
+### Alterações técnicas
+- Novos `AudioEnvelope` (MediaExtractor/MediaCodec → energia 300–3400 Hz a cada 50 ms), `LyricAligner` (contraste de volume antes/depois do início de cada linha, com limites de confiança) e `LyricSync`.
+- `LrcParser` lê `[offset]`; `LyricsStore.shiftBy/setShift`; `Prefs.lyricSyncChecked` (entra no backup).
+- Versão: 2.19.0 → 2.20.0 (versionCode 49).
+
 ## MissionPlayer v2.19.0 — Mais provedores de letras
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.19.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

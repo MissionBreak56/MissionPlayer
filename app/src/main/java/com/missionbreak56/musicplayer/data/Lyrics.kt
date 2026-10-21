@@ -13,12 +13,21 @@ object LrcParser {
 
     private val tag = Regex("""\[(\d{1,3}):(\d{1,2})(?:[.:](\d{1,3}))?]""")
 
+    /** `[offset:+250]`: standard LRC tag, a positive value makes every line appear that many ms earlier. */
+    val offsetTag = Regex("""^\[offset:\s*([+-]?\d+)\s*]$""", RegexOption.IGNORE_CASE)
+
     fun parse(raw: String): List<LyricLine> {
         val synced = ArrayList<LyricLine>()
         val plain = ArrayList<LyricLine>()
+        var offsetMs = 0L
         for (rawLine in raw.lineSequence()) {
             val line = rawLine.trim().trimStart('\uFEFF')
             if (line.isEmpty()) continue
+            val offsetMatch = offsetTag.matchEntire(line)
+            if (offsetMatch != null) {
+                offsetMs = offsetMatch.groupValues[1].toLongOrNull() ?: 0L
+                continue
+            }
             val matches = tag.findAll(line).toList()
             if (matches.isEmpty()) {
                 // [ar:Artist], [ti:Title] ... are metadata, not lyrics
@@ -40,7 +49,9 @@ object LrcParser {
                 synced += LyricLine(minutes * 60_000 + seconds * 1_000 + millis, text)
             }
         }
-        return if (synced.isNotEmpty()) synced.sortedBy { it.timeMs } else plain
+        if (synced.isEmpty()) return plain
+        val shifted = if (offsetMs == 0L) synced else synced.map { it.copy(timeMs = (it.timeMs - offsetMs).coerceAtLeast(0L)) }
+        return shifted.sortedBy { it.timeMs }
     }
 }
 
@@ -68,7 +79,17 @@ object LyricsStore {
         }
     }
 
+    /** New lyrics (downloaded or attached by the user): the timing is checked again for them. */
     fun save(context: Context, songId: Long, text: String) {
+        write(context, songId, text)
+        try {
+            Prefs.clearLyricSyncChecked(songId)
+        } catch (_: Exception) {
+            // not initialised yet (background job): the song is simply checked later
+        }
+    }
+
+    private fun write(context: Context, songId: Long, text: String) {
         val f = file(context, songId)
         f.parentFile?.mkdirs()
         f.writeText(text)
@@ -78,7 +99,38 @@ object LyricsStore {
     fun delete(context: Context, songId: Long) {
         file(context, songId).delete()
         LyricsIndex.invalidate(songId)
+        try {
+            Prefs.clearLyricSyncChecked(songId)
+        } catch (_: Exception) {
+        }
     }
+
+    // ----- Timing (the standard [offset:ms] tag at the top of the .lrc) -----
+
+    /** How much later (positive) or earlier (negative) than the file says the lines are shown. */
+    fun shiftOf(raw: String): Long =
+        -(raw.lineSequence().mapNotNull { LrcParser.offsetTag.matchEntire(it.trim().trimStart('\uFEFF')) }
+            .firstOrNull()?.groupValues?.get(1)?.toLongOrNull() ?: 0L)
+
+    private fun withShift(raw: String, shiftMs: Long): String {
+        val body = raw.lineSequence()
+            .filterNot { LrcParser.offsetTag.matches(it.trim().trimStart('\uFEFF')) }
+            .joinToString("\n")
+        return if (shiftMs == 0L) body else "[offset:${-shiftMs}]\n$body"
+    }
+
+    /**
+     * Sets the total shift of the lyrics of a song. [raw] is the lyrics text as it is now (it may come
+     * from the audio file, in which case a copy is kept in the app's storage). Returns the new total.
+     */
+    fun setShift(context: Context, songId: Long, raw: String, shiftMs: Long): Long {
+        write(context, songId, withShift(raw, shiftMs))
+        return shiftMs
+    }
+
+    /** Moves the lyrics later (positive) or earlier (negative) by [deltaMs]. Returns the new total shift. */
+    fun shiftBy(context: Context, songId: Long, raw: String, deltaMs: Long): Long =
+        setShift(context, songId, raw, shiftOf(raw) + deltaMs)
 }
 
 /**

@@ -98,6 +98,15 @@ class SettingsActivity : BaseActivity() {
             ).show()
         }
 
+        switchEntry(
+            tr("Ajustar sincronia das letras", "Adjust lyrics timing"),
+            tr(
+                "Ao abrir uma letra sincronizada, ouve o começo da música e corrige o atraso ou adiantamento quando tem certeza",
+                "When a synced lyric is shown, listens to the start of the song and fixes it if it runs early or late and it is sure"
+            ),
+            Prefs.autoLyricSync
+        ) { on -> Prefs.autoLyricSync = on }
+
         header(tr("Backup", "Backup"))
         entry(
             tr("Fazer backup", "Back up"),
