@@ -235,8 +235,13 @@ tempo ouvido).
 
 ### Letras automáticas
 - O app procura sozinho, em segundo plano e só quando há internet, as letras das músicas que não têm,
-  consultando em ordem **LRCLIB**, **NetEase**, **Kugou** e **lyrics.ovh**. A primeira letra
+  consultando em ordem **8 provedores**: **LRCLIB**, **NetEase**, **Kugou**, **QQ Music**, **LrcApi**,
+  **Textyl** (sincronizadas), **lyrics.ovh** e **Lyrist** (texto simples). A primeira letra
   sincronizada vence; texto simples só entra se nenhuma fonte tiver a versão sincronizada.
+- Os provedores que buscam de forma mais solta (LrcApi, Textyl e Lyrist) passam por uma conferência:
+  só são aceitos se o título e o artista batem, ou se os tempos da letra cabem na duração da música,
+  para não salvar a letra de outra música. Um provedor fora do ar ou que limita pedidos é pulado por um
+  tempo e os outros continuam. A cada busca só vão título, artista, álbum e duração.
 - As letras baixadas ficam salvas no aparelho e funcionam **offline**, inclusive na busca por letra.
   Ao abrir uma música sem letra, ela é buscada na hora.
 - A busca roda a cada 15 minutos (o menor intervalo que o Android permite), com 4 músicas ao mesmo
@@ -312,6 +317,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.19.0** | Mais provedores de letras (QQ Music, LrcApi, Textyl e Lyrist, além de LRCLIB, NetEase, Kugou e lyrics.ovh); a página de cada release no GitHub mostra só as mudanças da própria versão |
 | **2.18.0** | Ordem *Personalizada* (arraste para organizar cada lista); botão aleatório/sequência na notificação; corrige músicas que se repetiam no aleatório antes de dar a volta completa |
 | **2.17.0** | Fila reorganizável por arrastar (com o aleatório desligado); Backup e restauração de tudo em um arquivo `.zip` salvo na pasta que você escolher |
 | **2.16.0** | Foto da playlist (galeria ou capas das músicas) que substitui a mini capa na lista de playlists, com opção de remover |

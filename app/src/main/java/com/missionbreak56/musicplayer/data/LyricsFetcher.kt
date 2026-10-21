@@ -83,6 +83,36 @@ private fun get(url: String, headers: Map<String, String> = emptyMap()): Http {
 private fun String.orNullIfBlank(): String? =
     if (isBlank() || this == "null") null else this
 
+private val timeTag = Regex("""\[(\d{1,3}):(\d{2})(?:[.:](\d{1,3}))?]""")
+
+/** False when synced lyrics run much longer than the song, which means they belong to another one. */
+private fun fitsDuration(lrc: String, song: Song): Boolean {
+    if (song.durationMs <= 0) return true
+    var last = 0L
+    for (m in timeTag.findAll(lrc)) {
+        val ms = m.groupValues[1].toLong() * 60_000 + m.groupValues[2].toLong() * 1000
+        if (ms > last) last = ms
+    }
+    return last <= song.durationMs + 20_000L
+}
+
+private fun lrcTime(ms: Long): String {
+    val total = ms.coerceAtLeast(0L)
+    return "[%02d:%02d.%02d]".format(total / 60_000, (total / 1000) % 60, (total % 1000) / 10)
+}
+
+/** &#58; and friends -> the real characters (QQ Music sends its lyrics HTML-escaped). */
+private fun unescapeHtml(s: String): String =
+    s.replace(Regex("&#(\\d+);")) { m -> m.groupValues[1].toIntOrNull()?.toChar()?.toString() ?: m.value }
+        .replace("&apos;", "'").replace("&quot;", "\"").replace("&lt;", "<").replace("&gt;", ">")
+        .replace("&amp;", "&")
+
+/** Some endpoints wrap their JSON in a callback, e.g. MusicJsonCallback({...}). */
+private fun jsonText(body: String): String {
+    val t = body.trim()
+    return if (t.startsWith("{") || t.startsWith("[")) t else t.substringAfter('(').substringBeforeLast(')')
+}
+
 
 // ----- 1. LRCLIB -----
 
@@ -247,7 +277,123 @@ private object LyricsOvh : Provider("lyricsovh") {
 }
 
 
-private val providers: List<Provider> = listOf(LrcLib, NetEase, Kugou, LyricsOvh)
+// ----- 5. QQ Music (synced) -----
+
+private object QQMusic : Provider("qqmusic") {
+    private val ref = mapOf("Referer" to "https://y.qq.com/")
+
+    override fun find(song: Song): String? {
+        val title = cleanTitle(song.title)
+        val keyword = "${song.artist} $title".trim()
+        val r = get(
+            "https://c.y.qq.com/soso/fcgi-bin/client_search_cp?ct=24&qqmusic_ver=1298&new_json=1" +
+                "&remoteplace=txt.yqq.center&t=0&aggr=1&cr=1&catZhida=1&lossless=0&flag_qc=0&p=1&n=5" +
+                "&w=${enc(keyword)}&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8" +
+                "&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0",
+            ref
+        )
+        if (r.code != 200) return null
+        val list = JSONObject(jsonText(r.body)).optJSONObject("data")?.optJSONObject("song")
+            ?.optJSONArray("list") ?: return null
+
+        var mid = ""
+        var bestDiff = Long.MAX_VALUE
+        for (i in 0 until list.length()) {
+            val o = list.optJSONObject(i) ?: continue
+            val titleOk = similar(o.optString("name"), title) || similar(o.optString("title"), title)
+            val singers = o.optJSONArray("singer")
+            var artistOk = song.artist.isBlank()
+            if (singers != null) for (k in 0 until singers.length()) {
+                if (similar(singers.optJSONObject(k)?.optString("name").orEmpty(), song.artist)) artistOk = true
+            }
+            val dur = o.optLong("interval", 0) * 1000
+            val diff = if (song.durationMs > 0 && dur > 0) Math.abs(dur - song.durationMs) else 0L
+            if (song.durationMs > 0 && dur > 0 && diff > DURATION_TOLERANCE_MS) continue
+            if (!titleOk || !artistOk) continue
+            if (diff < bestDiff) {
+                bestDiff = diff
+                mid = o.optString("mid")
+            }
+        }
+        if (mid.isBlank()) return null
+
+        val l = get(
+            "https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?songmid=$mid&g_tk=5381" +
+                "&format=json&inCharset=utf8&outCharset=utf-8&nobase64=1",
+            ref
+        )
+        if (l.code != 200) return null
+        val text = JSONObject(jsonText(l.body)).optString("lyric", "")
+        return unescapeHtml(text).replace("\r\n", "\n").trim().orNullIfBlank()
+    }
+}
+
+// ----- 6. LrcApi (api.lrc.cx, synced, community service) -----
+
+private object LrcApi : Provider("lrcapi") {
+    override fun find(song: Song): String? {
+        if (song.artist.isBlank()) return null // too fuzzy without the artist
+        val title = cleanTitle(song.title)
+        val album = if (song.album.isBlank()) "" else "&album=${enc(song.album)}"
+        val r = get(
+            "https://api.lrc.cx/lyrics?title=${enc(title)}&artist=${enc(song.artist)}$album",
+            mapOf("Accept" to "text/plain")
+        )
+        if (r.code != 200) return null
+        val text = r.body.trimStart('\uFEFF').trim()
+        if (text.startsWith("{") || text.startsWith("<")) return null
+        if (!syncedTag.containsMatchIn(text) || !fitsDuration(text, song)) return null
+        return text
+    }
+}
+
+// ----- 7. Textyl (synced, community service) -----
+
+private object Textyl : Provider("textyl") {
+    override fun find(song: Song): String? {
+        if (song.artist.isBlank()) return null
+        val r = get("https://api.textyl.co/api/lyrics?q=${enc(song.artist + " " + cleanTitle(song.title))}")
+        if (r.code != 200) return null
+        val arr = try {
+            JSONArray(r.body)
+        } catch (_: Exception) {
+            return null
+        }
+        val sb = StringBuilder()
+        for (i in 0 until arr.length()) {
+            val o = arr.optJSONObject(i) ?: continue
+            val line = o.optString("lyrics", "").trim()
+            sb.append(lrcTime((o.optDouble("seconds", 0.0) * 1000).toLong())).append(line).append('\n')
+        }
+        val text = sb.toString().trim()
+        if (text.isEmpty() || !fitsDuration(text, song)) return null
+        return text
+    }
+}
+
+// ----- 8. Lyrist (plain text, community service backed by Genius) -----
+
+private object Lyrist : Provider("lyrist") {
+    override fun find(song: Song): String? {
+        if (song.artist.isBlank()) return null
+        val title = cleanTitle(song.title)
+        val r = get("https://lyrist.vercel.app/api/${enc(title)}/${enc(song.artist)}")
+        if (r.code != 200) return null
+        val o = try {
+            JSONObject(r.body)
+        } catch (_: Exception) {
+            return null
+        }
+        // It searches loosely, so only accept a result that names the song and artist we asked for.
+        if (!similar(o.optString("title"), title) || !similar(o.optString("artist"), song.artist)) return null
+        val text = o.optString("lyrics", "").replace("\r\n", "\n").trim()
+        return if (text.length >= 40) text else null
+    }
+}
+
+
+private val providers: List<Provider> =
+    listOf(LrcLib, NetEase, Kugou, QQMusic, LrcApi, Textyl, LyricsOvh, Lyrist)
 
 /**
  * Downloads missing lyrics and keeps them in [LyricsStore], so from then on they work offline.
@@ -257,7 +403,13 @@ private val providers: List<Provider> = listOf(LrcLib, NetEase, Kugou, LyricsOvh
  *   1. LRCLIB (lrclib.net)       - synced + plain, open community database
  *   2. NetEase Cloud Music       - synced (unofficial public endpoint)
  *   3. Kugou                     - synced (unofficial public endpoint)
- *   4. lyrics.ovh                - plain text only
+ *   4. QQ Music                  - synced (unofficial public endpoint)
+ *   5. LrcApi (api.lrc.cx)       - synced (community service)
+ *   6. Textyl                    - synced (community service)
+ *   7. lyrics.ovh                - plain text only
+ *   8. Lyrist                    - plain text only (community service)
+ * Results from the loose-matching sources are checked (same title/artist, or lyric times that fit
+ * the length of the song) so lyrics of another song are not saved by mistake.
  * Only title, artist, album and duration are sent. A source that is rate-limiting or failing is
  * skipped for a short while, so one bad source never blocks the others.
  */

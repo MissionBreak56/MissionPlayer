@@ -1,3 +1,20 @@
+## MissionPlayer v2.19.0 — Mais provedores de letras
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.19.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Novidades
+- **Mais provedores de letras:** além de LRCLIB, NetEase, Kugou e lyrics.ovh, o app agora também consulta **QQ Music**, **LrcApi** e **Textyl** (letras sincronizadas) e **Lyrist** (texto simples). Mais músicas passam a ter letra automática.
+- Os provedores de busca mais solta só são aceitos depois de uma conferência (título e artista batendo, ou tempos da letra compatíveis com a duração da música), para não salvar a letra errada. Um provedor fora do ar é pulado e os outros continuam.
+- README e tela Sobre atualizados.
+
+### Publicação
+- A página de cada release no GitHub passa a mostrar **só as mudanças da própria versão**; o histórico completo continua no arquivo `RELEASE_NOTES.md` e na tabela do README.
+
+### Alterações técnicas
+- `LyricsFetcher`: novos provedores, conferência de duração (`fitsDuration`) e decodificação de HTML do QQ Music.
+- Workflow de build: o corpo da release é extraído da seção da versão atual do `RELEASE_NOTES.md`.
+- Versão: 2.18.0 → 2.19.0 (versionCode 48).
+
 ## MissionPlayer v2.18.0 — Ordem personalizada, botão na notificação e aleatório corrigido
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.18.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

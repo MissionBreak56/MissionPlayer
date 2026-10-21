@@ -91,8 +91,20 @@ jobs:
           TAG="v$VERSION"
           APK=$(ls app/build/outputs/apk/release/*.apk | head -1)
           cp "$APK" "MissionPlayer-$TAG-arm64-v8a.apk"
+          # The release page shows only what changed in THIS version: the section of
+          # RELEASE_NOTES.md whose heading is "## MissionPlayer v<version> ..." (older sections stay
+          # in the file but are not published). If no heading matches, the newest section is used.
+          awk -v ver="$VERSION" '
+            /^## MissionPlayer v/ { show = (index($0, "v" ver " ") > 0 || $0 ~ ("v" ver "$")) }
+            show' RELEASE_NOTES.md > release-notes-current.md
+          if [ ! -s release-notes-current.md ]; then
+            awk '/^## MissionPlayer v/ { n++ } n == 1' RELEASE_NOTES.md > release-notes-current.md
+          fi
+          if [ ! -s release-notes-current.md ]; then
+            echo "MissionPlayer $TAG" > release-notes-current.md
+          fi
           gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
           gh release create "$TAG" "MissionPlayer-$TAG-arm64-v8a.apk" \
             --target "$GITHUB_SHA" \
             --title "MissionPlayer $TAG" \
-            --notes-file RELEASE_NOTES.md
+            --notes-file release-notes-current.md
