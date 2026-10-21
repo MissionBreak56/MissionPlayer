@@ -148,9 +148,30 @@ object Library {
         return if (c in 'a'..'z') c.uppercaseChar().toString() else "#"
     }
 
+    /** The "Personalizada" sort: the user drags songs into the order they want. */
+    const val SORT_CUSTOM = 7
+
+    /** Like [sorted], but also understands [SORT_CUSTOM] (which needs the list's [scope]). */
+    fun sortedFor(list: List<Song>, order: Int, scope: String): List<Song> =
+        if (order == SORT_CUSTOM) sortedCustom(list, scope) else sorted(list, order)
+
+    /**
+     * The saved custom order first; songs that are not in it yet (new ones) go to the end, A-Z.
+     * Before the user ever dragged anything, the Songs tab starts A-Z and other lists keep their own order.
+     */
+    fun sortedCustom(list: List<Song>, scope: String): List<Song> {
+        val saved = Prefs.customOrder(scope)
+        if (saved.isEmpty()) return if (scope == "songs") list.sortedByText { it.displayTitle } else list
+        val position = HashMap<Long, Int>(saved.size * 2)
+        saved.forEachIndexed { i, id -> position.putIfAbsent(id, i) }
+        val known = list.filter { it.id in position }.sortedBy { position[it.id] }
+        val fresh = list.filter { it.id !in position }.sortedByText { it.displayTitle }
+        return known + fresh
+    }
+
     /**
      * Sort orders: 0 A-Z, 1 artist, 2 album, 3 most recent, 4 longest,
-     * 5 most played, 6 Z-A.
+     * 5 most played, 6 Z-A. (7, custom, goes through [sortedFor].)
      */
     fun sorted(list: List<Song>, order: Int): List<Song> = when (order) {
         1 -> list.sortedByText { it.displayArtist }

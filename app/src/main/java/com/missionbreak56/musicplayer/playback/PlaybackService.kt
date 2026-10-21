@@ -14,17 +14,20 @@ import androidx.media3.common.Timeline
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ShuffleOrder.DefaultShuffleOrder
+import androidx.media3.session.CommandButton
 import androidx.media3.session.DefaultMediaNotificationProvider
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionResult
+import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import kotlin.random.Random
 import com.missionbreak56.musicplayer.R
 import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.ui.MainActivity
+import com.missionbreak56.musicplayer.ui.tr
 
 /**
  * Background audio playback. Exposes a MediaSession so the system media
@@ -61,13 +64,16 @@ class PlaybackService : MediaSessionService() {
     private val stateListener = object : Player.Listener {
         override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
             Prefs.shuffleMode = shuffleModeEnabled
+            updateCustomLayout()
             if (shuffleModeEnabled) {
                 handler.post {
                     exo?.let {
                         if (it.repeatMode == Player.REPEAT_MODE_OFF) it.repeatMode = Player.REPEAT_MODE_ALL
-                        reshuffleFromCurrent(it)
+                        syncShuffleRound(it, newRound = true)
                     }
                 }
+            } else {
+                roundPlayed.clear()
             }
         }
 
@@ -90,29 +96,19 @@ class PlaybackService : MediaSessionService() {
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             val p = exo ?: return
             PlaybackState.savePosition(p)
-            if (p.shuffleModeEnabled && p.mediaItemCount > 1) {
-                val order = currentOrder(p)
-                val cur = p.currentMediaItemIndex
-                if (order.size == p.mediaItemCount) {
-                    if (lastIndex == order.last() && cur == order.first() && lastIndex != cur) {
-                        // The cycle just wrapped (automatically or with "next"): new random round.
-                        handler.post { reshuffleFromCurrent(p) }
-                    } else if (cur == order.last()) {
-                        // Last song of the round: pick a different, long-unplayed song to start the next.
-                        rotateStart(p, order)
-                    }
-                }
+            // Every song that starts, however it started (end of the previous one, next, previous,
+            // a tap in the queue), is registered in the shuffle round. "Repeat one" is not a new song.
+            if (p.shuffleModeEnabled && mediaItem != null &&
+                reason != Player.MEDIA_ITEM_TRANSITION_REASON_REPEAT
+            ) {
+                syncShuffleRound(p, newRound = false)
             }
-            lastIndex = p.currentMediaItemIndex
         }
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             exo?.let { PlaybackState.savePosition(it) }
         }
     }
-
-    /** Queue index that was playing before the latest transition. */
-    private var lastIndex = -1
 
     private val sessionCallback = object : MediaSession.Callback {
         override fun onConnect(
@@ -123,9 +119,11 @@ class PlaybackService : MediaSessionService() {
                 .add(PlaybackQueue.RESHUFFLE)
                 .add(PlaybackQueue.FIX_ADDED)
                 .add(PlaybackQueue.REFRESH_ART)
+                .add(PlaybackQueue.TOGGLE_SHUFFLE)
                 .build()
             return MediaSession.ConnectionResult.AcceptedResultBuilder(session)
                 .setAvailableSessionCommands(commands)
+                .setCustomLayout(ImmutableList.of(shuffleButton(exo?.shuffleModeEnabled == true)))
                 .build()
         }
 
@@ -141,7 +139,8 @@ class PlaybackService : MediaSessionService() {
             val p = exo
             if (p != null) {
                 when (customCommand.customAction) {
-                    PlaybackQueue.RESHUFFLE.customAction -> reshuffleFromCurrent(p)
+                    PlaybackQueue.RESHUFFLE.customAction -> syncShuffleRound(p, newRound = true)
+                    PlaybackQueue.TOGGLE_SHUFFLE.customAction -> p.shuffleModeEnabled = !p.shuffleModeEnabled
                     PlaybackQueue.FIX_ADDED.customAction ->
                         placeAddedSong(p, args.getInt("index", -1), args.getBoolean("next", false))
                 }
@@ -155,28 +154,63 @@ class PlaybackService : MediaSessionService() {
         p.setShuffleOrder(DefaultShuffleOrder(order.toIntArray(), System.nanoTime()))
     }
 
-    /** New random order: the current song first, then all the others once, in random order. */
-    private fun reshuffleFromCurrent(p: ExoPlayer) {
-        val n = p.mediaItemCount
-        if (!p.shuffleModeEnabled || n < 2) return
-        val current = p.currentMediaItemIndex.coerceIn(0, n - 1)
-        val rest = (0 until n).filter { it != current }.shuffled()
-        applyOrder(p, listOf(current) + rest)
-    }
+    /** Ids of the songs already played in the current shuffle round, in the order they were played. */
+    private val roundPlayed = LinkedHashSet<String>()
 
     /**
-     * Called when the last song of a shuffle round starts: swaps a random, early-played song into
-     * the first slot so the round after this one begins with a different song, not a repeat.
+     * Keeps the shuffle order honest. The order is always: songs already played in this round (in
+     * the order they played, so "previous" goes back through them), then the songs not played yet.
+     * Whatever starts a song (end of the previous one, next, previous, a tap in the queue) calls
+     * this, so a song is never repeated before all the others had their turn. When the last song of
+     * the round starts, a new round is prepared: random order, with the songs heard last pushed to
+     * the end of it so they do not come back right away.
+     *
+     * [newRound] throws the history away: new queue, shuffle just turned on, saved queue restored.
      */
-    private fun rotateStart(p: ExoPlayer, order: List<Int>) {
-        if (order.size < 2) return
-        val pool = order.subList(0, maxOf(1, (order.size - 1) / 2))
-        val pick = pool.random()
-        val at = order.indexOf(pick)
-        if (at <= 0) return
-        val m = order.toMutableList()
-        java.util.Collections.swap(m, 0, at)
-        applyOrder(p, m)
+    private fun syncShuffleRound(p: ExoPlayer, newRound: Boolean) {
+        val n = p.mediaItemCount
+        if (!p.shuffleModeEnabled || n < 2) {
+            roundPlayed.clear()
+            return
+        }
+        val cur = p.currentMediaItemIndex.coerceIn(0, n - 1)
+        val ids = List(n) { p.getMediaItemAt(it).mediaId }
+        val byId = ids.indices.groupBy { ids[it] }
+        val curId = ids[cur]
+
+        if (newRound) roundPlayed.clear()
+        roundPlayed.retainAll(ids.toSet())
+        roundPlayed.add(curId) // nothing changes when stepping back into a song already heard
+
+        var unplayed: List<Int> = if (newRound) {
+            (0 until n).filter { ids[it] != curId }.shuffled()
+        } else {
+            currentOrder(p).filter { ids[it] !in roundPlayed }
+        }
+
+        if (!newRound && unplayed.isEmpty() && roundPlayed.last() == curId) {
+            // Last song of the round: prepare the next round.
+            val recent = roundPlayed.toList().dropLast(1).takeLast((n / 4).coerceIn(1, 10)).toSet()
+            roundPlayed.clear()
+            roundPlayed.add(curId)
+            val others = (0 until n).filter { ids[it] != curId }.shuffled()
+            val (heardLately, rest) = others.partition { ids[it] in recent }
+            unplayed = rest + heardLately
+        }
+
+        val order = LinkedHashSet<Int>()
+        for (id in roundPlayed) {
+            val indexes = byId[id].orEmpty()
+            if (id == curId) {
+                indexes.filter { it != cur }.forEach { order.add(it) }
+                order.add(cur)
+            } else {
+                indexes.forEach { order.add(it) }
+            }
+        }
+        unplayed.forEach { order.add(it) }
+        for (i in 0 until n) order.add(i) // safety net: nothing may be missing
+        applyOrder(p, order.toList())
     }
 
     /** Current shuffle order as a list of queue indexes (first to last). */
@@ -211,6 +245,19 @@ class PlaybackService : MediaSessionService() {
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             mediaItem?.mediaId?.toLongOrNull()?.let { Prefs.recordPlay(it) }
         }
+    }
+
+    // ----- Notification button: shuffle <-> in order -----
+
+    private fun shuffleButton(shuffleOn: Boolean): CommandButton =
+        CommandButton.Builder()
+            .setDisplayName(if (shuffleOn) tr("Aleatório", "Shuffle") else tr("Em sequência", "In order"))
+            .setIconResId(if (shuffleOn) R.drawable.ic_notif_shuffle else R.drawable.ic_notif_sequence)
+            .setSessionCommand(PlaybackQueue.TOGGLE_SHUFFLE)
+            .build()
+
+    private fun updateCustomLayout() {
+        mediaSession?.setCustomLayout(ImmutableList.of(shuffleButton(exo?.shuffleModeEnabled == true)))
     }
 
     override fun onCreate() {
@@ -258,6 +305,7 @@ class PlaybackService : MediaSessionService() {
             .setSessionActivity(openApp)
             .setCallback(sessionCallback)
             .setBitmapLoader(SongBitmapLoader(this))
+            .setCustomLayout(ImmutableList.of(shuffleButton(player.shuffleModeEnabled)))
             .build()
     }
 

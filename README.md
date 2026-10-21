@@ -30,8 +30,13 @@ personalização.
   abas*); a ordem fica salva.
 - **Atalhos na tela inicial:** Favoritos, Playlists e Recente.
 - **Músicas:** botão de reprodução aleatória e ordenação (botão de ordenar, a opção atual vem marcada)
-  por **A a Z, Z a A, Mais recentes, Mais tocadas, Artista, Álbum ou Duração**. A ordem alfabética
-  ignora acentos (Á fica junto do A).
+  por **A a Z, Z a A, Mais recentes, Mais tocadas, Artista, Álbum, Duração ou Personalizada**. A ordem
+  alfabética ignora acentos (Á fica junto do A).
+- **Ordem Personalizada:** escolha *Personalizada* no botão de ordenar e cada música ganha uma alça (≡)
+  à direita: arraste pela alça para colocá-la onde quiser. A ordem é salva **por lista** (a aba
+  Músicas e cada pasta, álbum, artista ou playlist têm a sua), *Tocar tudo* e tocar uma música seguem
+  essa ordem, músicas novas entram no fim da lista e a ordem entra no backup. Na primeira vez a aba
+  Músicas começa em A a Z e as outras listas começam na ordem própria delas.
 - **Barra alfabética (# A–Z)** na lateral direita das listas: toque ou arraste para pular direto para
   uma letra, com a letra em destaque no centro da tela. Na lista de Músicas ela só aparece na ordem
   A a Z. **Dentro de álbuns, pastas, artistas e listas** a barra também aparece (em listas com mais
@@ -134,7 +139,18 @@ glass acompanham a nova capa, a capa também aparece na **notificação de repro
   reprodução segue sozinha: o app escolhe uma música diferente (a que tocou há mais tempo) para abrir
   uma nova rodada embaralhada, sem repetir a que acabou de tocar. Com o aleatório ligado, *repetir
   desligado* se comporta como *repetir todas*.
+- **Sem repetições antes da volta completa:** o app registra cada música que começa, seja pelo fim da
+  anterior, por *avançar*, *voltar* ou por um toque na fila. As que ainda não tocaram nessa rodada
+  ficam reservadas, então nenhuma música repete antes de todas as outras terem tocado. Voltar percorre
+  as que acabaram de tocar e avançar retoma de onde parou. Ao começar uma nova rodada as últimas
+  músicas ouvidas vão para o fim dela, para não voltarem logo.
 - **Modos salvos:** a última escolha de repetir e de aleatório volta como você deixou.
+
+### Botão aleatório/sequência na notificação
+A notificação de reprodução (e os controles da tela de bloqueio) ganhou um botão que **alterna entre
+aleatório e em sequência**: o ícone de setas cruzadas indica que o aleatório está ligado e o ícone de
+lista indica que as músicas tocam em ordem. Ele aparece junto dos controles de voltar, tocar/pausar e
+avançar (em algumas versões do Android, ao expandir a notificação) e acompanha o botão do player.
 
 ### Reorganizar a fila
 Com o **aleatório desligado**, abra a fila (botão de fila no mini player ou na tela Tocando agora) e
@@ -296,6 +312,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.18.0** | Ordem *Personalizada* (arraste para organizar cada lista); botão aleatório/sequência na notificação; corrige músicas que se repetiam no aleatório antes de dar a volta completa |
 | **2.17.0** | Fila reorganizável por arrastar (com o aleatório desligado); Backup e restauração de tudo em um arquivo `.zip` salvo na pasta que você escolher |
 | **2.16.0** | Foto da playlist (galeria ou capas das músicas) que substitui a mini capa na lista de playlists, com opção de remover |
 | **2.15.0** | Selecionar várias músicas dentro de uma pasta e enviar para uma playlist; botão *Adicionar músicas* dentro da playlist, com busca e seleção múltipla |

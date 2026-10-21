@@ -293,6 +293,9 @@ object Backup {
         (prefs[K_PLAYLISTS] as? String)?.let { raw -> parsePlaylists(raw).forEach { ids.addAll(it.second) } }
         K_PAIRS.forEach { key -> (prefs[key] as? String)?.let { ids.addAll(parsePairs(it).keys) } }
         (prefs[K_RECENT] as? String)?.let { ids.addAll(parseIds(it)) }
+        prefs.forEach { (key, value) ->
+            if (key.startsWith(Prefs.KEY_CUSTOM_ORDER) && value is String) ids.addAll(parseIds(value))
+        }
         return ids
     }
 
@@ -326,6 +329,11 @@ object Backup {
         }
         (prefs[K_RECENT] as? String)?.let { raw ->
             out[K_RECENT] = parseIds(raw).mapNotNull { map(it) }.distinct().joinToString(",")
+        }
+        prefs.forEach { (key, value) ->
+            if (key.startsWith(Prefs.KEY_CUSTOM_ORDER) && value is String) {
+                out[key] = parseIds(value).mapNotNull { map(it) }.distinct().joinToString(",")
+            }
         }
         return out
     }

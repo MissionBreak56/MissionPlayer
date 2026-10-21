@@ -50,6 +50,13 @@ class LibraryPagerAdapter(
         onMore = { view, song -> host.onSongMenu(view, song) }
     )
 
+    /** Drag to reorder the Songs tab when it is sorted "Personalizada". */
+    private val reorder = SongReorder(
+        songAdapter,
+        active = { Prefs.sortOrder == Library.SORT_CUSTOM },
+        onSaved = { list -> Prefs.setCustomOrder("songs", list.map { it.id }) }
+    )
+
     private val groupAdapters: Array<GroupAdapter?> = arrayOf(
         null,
         GroupAdapter(true) { host.onOpenGroup(it) },
@@ -85,12 +92,13 @@ class LibraryPagerAdapter(
         refreshJob = scope.launch {
             val snap = withContext(Dispatchers.Default) {
                 Snapshot(
-                    Library.sorted(Library.songs, order),
+                    Library.sortedFor(Library.songs, order, "songs"),
                     Library.albums(),
                     Library.artists(),
                     Library.folders()
                 )
             }
+            songAdapter.reorderMode = order == Library.SORT_CUSTOM
             songAdapter.submit(snap.songs)
             groupAdapters[1]?.submit(snap.albums)
             groupAdapters[2]?.submit(snap.artists)
@@ -113,6 +121,7 @@ class LibraryPagerAdapter(
         val b = PageListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val ctx = parent.context
         b.list.layoutManager = if (viewType == 1) GridLayoutManager(ctx, 3) else LinearLayoutManager(ctx)
+        if (viewType == 0) reorder.attach(b.list)
         return PageHolder(b)
     }
 

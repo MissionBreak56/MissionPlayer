@@ -1,3 +1,19 @@
+## MissionPlayer v2.18.0 — Ordem personalizada, botão na notificação e aleatório corrigido
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.18.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Novidades
+- **Ordem Personalizada:** nova opção no botão de ordenar (aba Músicas e dentro de pastas, álbuns, artistas e playlists). Cada música ganha uma alça ≡ para arrastar. A ordem é salva por lista, músicas novas entram no fim, *Tocar tudo* segue a ordem e ela entra no backup.
+- **Notificação:** botão que alterna entre **aleatório** e **em sequência** (ícone de setas cruzadas = aleatório ligado; ícone de lista = em sequência).
+
+### Correção
+- **Aleatório:** músicas podiam repetir antes de todas tocarem. A rodada agora é controlada música a música: tocar uma música por qualquer caminho (fim da anterior, avançar, voltar, toque na fila) a marca como tocada; as que faltam ficam reservadas e uma nova rodada só começa quando todas tocaram, deixando as últimas ouvidas para o fim.
+
+### Alterações técnicas
+- `PlaybackService`: `syncShuffleRound` substitui `reshuffleFromCurrent`/`rotateStart` e a detecção de "volta" por índices; novo `SessionCommand` `TOGGLE_SHUFFLE` com `CommandButton` no custom layout da sessão.
+- `Library.sortedCustom`/`sortedFor`, `Prefs.customOrder`, `SongReorder` (ItemTouchHelper) e alça no `item_song`.
+- Versão: 2.17.0 → 2.18.0 (versionCode 47).
+
 ## MissionPlayer v2.17.0 — Reorganizar a fila e Backup/Restauração
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.17.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

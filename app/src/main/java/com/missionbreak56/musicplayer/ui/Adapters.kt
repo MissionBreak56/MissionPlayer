@@ -36,6 +36,28 @@ class SongAdapter(
             }
         }
 
+    // ----- Custom order: a drag handle on every row -----
+
+    /** True while the list uses the "Personalizada" sort: rows show a handle to drag them. */
+    var reorderMode = false
+        set(value) {
+            if (field != value) {
+                field = value
+                notifyDataSetChanged()
+            }
+        }
+
+    var onStartDrag: ((RecyclerView.ViewHolder) -> Unit)? = null
+
+    /** Moves a row while it is dragged. */
+    fun move(from: Int, to: Int) {
+        if (from == to || from !in items.indices || to !in items.indices) return
+        val moved = items.toMutableList()
+        moved.add(to, moved.removeAt(from))
+        items = moved
+        notifyItemMoved(from, to)
+    }
+
     // ----- Multi-select (folders, playlist song picker) -----
 
     /** While true every row shows a checkbox and tapping a row toggles it. */
@@ -120,6 +142,18 @@ class SongAdapter(
             b.checkSelect.visibility = if (selecting) View.VISIBLE else View.GONE
             b.checkSelect.isChecked = song.id in selected
             b.btnMore.visibility = if (selecting) View.INVISIBLE else View.VISIBLE
+            val showHandle = reorderMode && !selecting
+            b.dragHandle.visibility = if (showHandle) View.VISIBLE else View.GONE
+            b.dragHandle.setOnTouchListener(
+                if (showHandle) {
+                    View.OnTouchListener { _, event ->
+                        if (event.actionMasked == MotionEvent.ACTION_DOWN) onStartDrag?.invoke(this@VH)
+                        false
+                    }
+                } else {
+                    null
+                }
+            )
             b.root.setOnClickListener {
                 val pos = bindingAdapterPosition
                 if (pos == RecyclerView.NO_POSITION) return@setOnClickListener

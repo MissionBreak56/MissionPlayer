@@ -44,6 +44,9 @@ class DetailActivity : PlayerBoundActivity() {
         }
     }
 
+    /** Where this list's custom ("Personalizada") order is saved. */
+    private fun orderScope(): String = "${kind.name}:$key"
+
     /** Key of the custom picture of this folder or playlist (null for other kinds of list). */
     private fun artKey(): String? = when (kind) {
         Kind.FOLDER -> key
@@ -80,6 +83,11 @@ class DetailActivity : PlayerBoundActivity() {
         }
         onBackPressedDispatcher.addCallback(this, backCallback)
         adapter.onSelectionChanged = { updateSelectionUi() }
+        SongReorder(
+            adapter,
+            active = { sortOrder == Library.SORT_CUSTOM && !adapter.selecting },
+            onSaved = { list -> Prefs.setCustomOrder(orderScope(), list.map { it.id }) }
+        ).attach(binding.list)
         adapter.onLongPress = { song -> if (kind == Kind.FOLDER) adapter.startSelecting(song) }
         binding.btnSelClose.setOnClickListener { adapter.stopSelecting() }
         binding.btnSelAll.setOnClickListener { adapter.toggleSelectAll() }
@@ -125,7 +133,8 @@ class DetailActivity : PlayerBoundActivity() {
         binding.textName.text = group.title
         val count = resources.getQuantityString(R.plurals.n_songs, group.songs.size, group.songs.size)
         binding.textInfo.text = if (group.extra.isNotBlank()) "${group.extra}\n$count" else count
-        val songs = if (sortOrder >= 0) Library.sorted(group.songs, sortOrder) else group.songs
+        val songs = if (sortOrder >= 0) Library.sortedFor(group.songs, sortOrder, orderScope()) else group.songs
+        adapter.reorderMode = sortOrder == Library.SORT_CUSTOM
         adapter.submit(songs)
         setupIndexBar(songs)
         binding.textEmpty.visibility = if (songs.isEmpty()) View.VISIBLE else View.GONE
@@ -246,6 +255,7 @@ class DetailActivity : PlayerBoundActivity() {
                     val renamed = Prefs.renamePlaylist(key, name)
                     if (renamed != null) {
                         FolderArt.move(this, FolderArt.playlistKey(key), FolderArt.playlistKey(renamed))
+                        Prefs.moveCustomOrder("${Kind.PLAYLIST.name}:$key", "${Kind.PLAYLIST.name}:$renamed")
                         key = renamed
                         refresh()
                     }
@@ -255,6 +265,7 @@ class DetailActivity : PlayerBoundActivity() {
                     .setPositiveButton(R.string.delete) { _, _ ->
                         Prefs.deletePlaylist(key)
                         FolderArt.remove(this, FolderArt.playlistKey(key))
+                        Prefs.removeCustomOrder("${Kind.PLAYLIST.name}:$key")
                         finish()
                     }
                     .setNegativeButton(R.string.cancel, null)

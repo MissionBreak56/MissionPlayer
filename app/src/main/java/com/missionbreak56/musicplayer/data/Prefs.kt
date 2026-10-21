@@ -43,6 +43,7 @@ object Prefs {
     private const val KEY_APP_NAME = "custom_app_name"
     private const val KEY_BG_IMAGE = "custom_bg_image"
     private const val KEY_BG_VISIBLE = "custom_bg_image_visible"
+    const val KEY_CUSTOM_ORDER = "custom_order_"
 
     /** Default look: custom deep blue accent (hue 220, "Escuro"), system font, pure background. */
     const val DEFAULT_ACCENT = 544
@@ -173,6 +174,29 @@ object Prefs {
 
     fun setDetailSort(kind: String, order: Int) {
         store().edit().putInt("detail_sort_$kind", order).apply()
+    }
+
+    // ----- Custom ("Personalizada") order, one per list: "songs" or "<KIND>:<key>" -----
+
+    fun customOrder(scope: String): List<Long> =
+        (sp?.getString("$KEY_CUSTOM_ORDER$scope", "") ?: "").split(SEP_ID).mapNotNull { it.trim().toLongOrNull() }
+
+    fun setCustomOrder(scope: String, ids: List<Long>) {
+        store().edit().putString("$KEY_CUSTOM_ORDER$scope", ids.joinToString(SEP_ID)).apply()
+    }
+
+    fun removeCustomOrder(scope: String) {
+        store().edit().remove("$KEY_CUSTOM_ORDER$scope").apply()
+    }
+
+    /** A renamed playlist keeps its custom order. */
+    fun moveCustomOrder(from: String, to: String) {
+        if (from == to) return
+        val st = store()
+        val raw = st.getString("$KEY_CUSTOM_ORDER$from", null) ?: return
+        val edit = st.edit().remove("$KEY_CUSTOM_ORDER$from")
+        if (!st.contains("$KEY_CUSTOM_ORDER$to")) edit.putString("$KEY_CUSTOM_ORDER$to", raw)
+        edit.apply()
     }
 
     var sortOrder: Int

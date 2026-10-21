@@ -39,6 +39,9 @@ object PlaybackQueue {
     /** Tells the service a song was just added to the queue (extras: "index", "next"). */
     val FIX_ADDED = SessionCommand("com.missionbreak56.musicplayer.FIX_ADDED", Bundle.EMPTY)
 
+    /** Switches between shuffle and playing in order (used by the notification button). */
+    val TOGGLE_SHUFFLE = SessionCommand("com.missionbreak56.musicplayer.TOGGLE_SHUFFLE", Bundle.EMPTY)
+
     private fun reshuffle(controller: MediaController) {
         controller.sendCustomCommand(RESHUFFLE, Bundle.EMPTY)
     }
