@@ -64,6 +64,25 @@ object Prefs {
 
     private fun store(): SharedPreferences = sp ?: error("Prefs.init() was not called")
 
+    /** Every saved setting with its type, used by the backup. */
+    fun allEntries(): Map<String, Any?> = store().all
+
+    /** Replaces all saved settings with [entries] (restore). Types are kept. */
+    fun replaceAll(entries: Map<String, Any?>) {
+        val editor = store().edit().clear()
+        entries.forEach { (key, value) ->
+            when (value) {
+                is Boolean -> editor.putBoolean(key, value)
+                is Int -> editor.putInt(key, value)
+                is Long -> editor.putLong(key, value)
+                is Float -> editor.putFloat(key, value)
+                is String -> editor.putString(key, value)
+                is Set<*> -> editor.putStringSet(key, value.filterIsInstance<String>().toSet())
+            }
+        }
+        editor.commit()
+    }
+
     fun registerListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         store().registerOnSharedPreferenceChangeListener(listener)
     }

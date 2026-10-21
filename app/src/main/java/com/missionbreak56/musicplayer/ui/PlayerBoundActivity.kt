@@ -17,6 +17,7 @@ import android.widget.TextView
 import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.lifecycleScope
 import androidx.palette.graphics.Palette
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -330,13 +331,59 @@ abstract class PlayerBoundActivity : BaseActivity() {
                 item.mediaMetadata.title?.toString().orEmpty(),
                 item.mediaMetadata.artist?.toString().orEmpty()
             )
-        }
+        }.toMutableList()
         val current = c.currentMediaItemIndex
-        sheet.list.layoutManager = LinearLayoutManager(this)
-        sheet.list.adapter = QueueAdapter(entries, current) { index ->
+        val adapter = QueueAdapter(entries, current) { index ->
             c.seekTo(index, 0L)
             c.play()
             dialog.dismiss()
+        }
+        sheet.list.layoutManager = LinearLayoutManager(this)
+        sheet.list.adapter = adapter
+
+        // With shuffle off the queue can be reordered by dragging. With shuffle on the play order
+        // is random, so reordering would have no visible effect and is not offered.
+        val canReorder = !c.shuffleModeEnabled && c.isCommandAvailable(Player.COMMAND_CHANGE_MEDIA_ITEMS)
+        sheet.textQueueHint.text = if (canReorder) {
+            tr("Arraste ≡ (ou segure uma música) para reorganizar a fila", "Drag ≡ (or press and hold a song) to reorder the queue")
+        } else if (c.shuffleModeEnabled) {
+            tr("Desligue o aleatório para reorganizar a fila", "Turn shuffle off to reorder the queue")
+        } else {
+            ""
+        }
+        sheet.textQueueHint.visibility = if (sheet.textQueueHint.text.isEmpty()) View.GONE else View.VISIBLE
+        if (canReorder) {
+            var dragFrom = -1
+            var dragTo = -1
+            val helper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    val from = viewHolder.bindingAdapterPosition
+                    val to = target.bindingAdapterPosition
+                    if (from == RecyclerView.NO_POSITION || to == RecyclerView.NO_POSITION) return false
+                    if (dragFrom < 0) dragFrom = from
+                    dragTo = to
+                    adapter.move(from, to)
+                    return true
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+
+                override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                    super.clearView(recyclerView, viewHolder)
+                    // the player is updated once, when the finger is lifted
+                    if (dragFrom >= 0 && dragTo >= 0 && dragFrom != dragTo) c.moveMediaItem(dragFrom, dragTo)
+                    dragFrom = -1
+                    dragTo = -1
+                }
+            })
+            helper.attachToRecyclerView(sheet.list)
+            adapter.onStartDrag = { helper.startDrag(it) }
         }
         sheet.list.scrollToPosition((current - 2).coerceAtLeast(0))
         dialog.setContentView(sheet.root)

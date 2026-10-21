@@ -2,6 +2,7 @@ package com.missionbreak56.musicplayer.ui
 
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -232,10 +233,26 @@ class GroupAdapter(
 class QueueEntry(val mediaId: String, val title: String, val artist: String)
 
 class QueueAdapter(
-    private val items: List<QueueEntry>,
-    private val currentIndex: Int,
+    private val items: MutableList<QueueEntry>,
+    private var currentIndex: Int,
     private val onClick: (Int) -> Unit
 ) : RecyclerView.Adapter<QueueAdapter.VH>() {
+
+    /** Set when the queue can be reordered: each row then shows a drag handle that calls this. */
+    var onStartDrag: ((RecyclerView.ViewHolder) -> Unit)? = null
+
+    /** Moves a row while it is being dragged and keeps track of which row is playing. */
+    fun move(from: Int, to: Int) {
+        if (from == to || from !in items.indices || to !in items.indices) return
+        items.add(to, items.removeAt(from))
+        currentIndex = when {
+            currentIndex == from -> to
+            from < currentIndex && to >= currentIndex -> currentIndex - 1
+            from > currentIndex && to <= currentIndex -> currentIndex + 1
+            else -> currentIndex
+        }
+        notifyItemMoved(from, to)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
         VH(ItemSongBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -252,7 +269,18 @@ class QueueAdapter(
             )
             b.textSubtitle.text = entry.artist
             b.textDuration.visibility = View.GONE
-            b.btnMore.visibility = View.GONE
+            val drag = onStartDrag
+            if (drag != null) {
+                b.btnMore.visibility = View.VISIBLE
+                b.btnMore.setImageResource(R.drawable.ic_drag_handle)
+                b.btnMore.setOnTouchListener { _, event ->
+                    if (event.actionMasked == MotionEvent.ACTION_DOWN) drag(this@VH)
+                    false
+                }
+            } else {
+                b.btnMore.visibility = View.GONE
+                b.btnMore.setOnTouchListener(null)
+            }
             ArtLoader.load(b.imageArt, Library.song(entry.mediaId.toLongOrNull() ?: -1L), 160)
             b.root.setOnClickListener {
                 val pos = bindingAdapterPosition

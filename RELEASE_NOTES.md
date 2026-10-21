@@ -1,3 +1,18 @@
+## MissionPlayer v2.17.0 — Reorganizar a fila e Backup/Restauração
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.17.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Novidades
+- **Reorganizar a fila:** com o aleatório desligado, arraste as músicas da fila pelo ícone ≡ (ou segure o dedo) para mudar a ordem. A música tocando continua tocando e a nova ordem é salva com a fila. Com o aleatório ligado a fila mostra o aviso para desligá-lo.
+- **Backup e restauração** (Configurações → Backup): *Fazer backup* abre o seletor de arquivos para você escolher a pasta e o nome; *Restaurar backup* lê o arquivo e substitui os dados atuais. Entram favoritas, playlists e fotos, ocultos, estatísticas, aparência (inclusive imagem de fundo, ícone e nome), ordem das abas, ordenações, equalizador, aleatório/repetir, letras automáticas, fotos de pastas, capas de músicas e letras anexadas.
+- As músicas são reencontradas ao restaurar pelo caminho ou por título + artista + duração, então o backup funciona também em outro aparelho; músicas que não existem mais ficam de fora e o app avisa quantas.
+- README, tela Sobre (pt/en) e histórico de versões atualizados.
+
+### Alterações técnicas
+- `QueueAdapter` com `ItemTouchHelper` e `moveMediaItem` (uma chamada ao soltar o dedo).
+- Nova `Backup` (zip com `backup.json` + imagens/letras, validação de nomes, restauração em pasta temporária antes de trocar os arquivos); `Prefs.allEntries()/replaceAll()`.
+- Versão: 2.16.0 → 2.17.0 (versionCode 46).
+
 ## MissionPlayer v2.16.0 — Foto da playlist
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.16.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

@@ -136,6 +136,32 @@ glass acompanham a nova capa, a capa também aparece na **notificação de repro
   desligado* se comporta como *repetir todas*.
 - **Modos salvos:** a última escolha de repetir e de aleatório volta como você deixou.
 
+### Reorganizar a fila
+Com o **aleatório desligado**, abra a fila (botão de fila no mini player ou na tela Tocando agora) e
+arraste uma música pelo ícone **≡** (ou segure o dedo nela) para mudar a ordem; a música que está
+tocando continua tocando e a nova ordem vale para as próximas, sendo salva junto com a fila. Com o
+aleatório ligado a ordem é sorteada, então a fila mostra o aviso *Desligue o aleatório para
+reorganizar a fila*.
+
+### Backup e restauração
+Em Configurações → **Backup**:
+- **Fazer backup:** abre o seletor de arquivos do Android, onde você escolhe a **pasta** e o nome do
+  arquivo (por exemplo `MissionPlayer-backup-2026-10-20.zip`). Pode ser a memória interna, o cartão SD
+  ou uma pasta sincronizada com a nuvem.
+- **Restaurar backup:** escolha o arquivo e confirme. O app substitui os dados atuais pelos do arquivo
+  e fecha para aplicar tudo; é só abrir de novo.
+
+O arquivo guarda: favoritas, playlists (e suas fotos), músicas e pastas ocultas, estatísticas
+(reproduções, tempo ouvido, recentes), ajustes de aparência (tema claro/escuro, cor, fonte, cantos,
+fundo e imagem de fundo, ícone e nome do app), ordem das abas, ordenações, equalizador, aleatório/repetir,
+letras automáticas, fotos das pastas, capas personalizadas de músicas e letras anexadas. A fila atual e
+o ponto de reprodução não entram.
+
+As músicas são salvas com caminho, título, artista e duração, porque o número interno do Android muda
+em outro aparelho. Ao restaurar, cada música é encontrada de novo pelo caminho ou por título + artista +
+duração; as que não existirem mais no aparelho ficam de fora e o app avisa quantas foram. O arquivo é
+um `.zip` comum (com um `backup.json` legível) e fica só onde você o guardou.
+
 ### Retomar de onde parou
 O app guarda a fila, a música atual e o ponto exato (atualizado a cada 5 s tocando, ao pausar, ao
 trocar de música e ao fechar). Ao reabrir, o mini player mostra a última música pausada no mesmo
@@ -148,6 +174,7 @@ Toque na engrenagem no topo da tela inicial. Tudo o que ficava no menu flutuante
 - **Aparência:** *Personalização* (modo claro/escuro/do sistema, ícone e nome do app, cor de destaque, fundo e fonte).
 - **Biblioteca:** *Organizar abas* e *Itens ocultos*.
 - **Áudio e letras:** *Equalizador* e a chave de *Letras automáticas*.
+- **Backup:** *Fazer backup* e *Restaurar backup*.
 - **Mais:** *Estatísticas* e *Sobre*.
 
 ### Personalização
@@ -225,7 +252,7 @@ tela de bloqueio.
 ### Privacidade
 Sem anúncios, sem rastreadores e sem contas. A internet é usada **só** para baixar letras que faltam
 (título, artista, álbum e duração são enviados aos serviços de letras acima) e, quando você pede, para
-*Buscar capa online* (o texto da busca vai para o iTunes Search) e, só quando você toca em *Verificar atualizações*, para consultar o último release no GitHub; a reprodução é 100% local. Desligue
+*Buscar capa online* (o texto da busca vai para o iTunes Search) e, só quando você toca em *Verificar atualizações*, para consultar o último release no GitHub; a reprodução é 100% local. O backup é um arquivo local que só você guarda: o app não envia nada para lugar nenhum. Desligue
 em Configurações → *Letras automáticas* para o app não baixar letras.
 
 ## Permissões
@@ -257,7 +284,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 │              realmente ouvido), PlaybackQueue,
 │              PlaybackState (salvar/restaurar fila), PlayerConnection, AudioFx (equalizador e aumento
 │              de volume), SleepTimer (código mantido, sem acesso na interface)
-└── ui/        MainActivity (abas), DetailActivity, SongPickerActivity (adicionar músicas à playlist), SearchActivity, PlaylistsActivity, PlayerActivity,
+└── ui/        MainActivity (abas), DetailActivity, SongPickerActivity (adicionar músicas à playlist), Backup (backup e restauração), SearchActivity, PlaylistsActivity, PlayerActivity,
                EqualizerActivity, SettingsActivity (configurações), CustomizeActivity
                (personalização avançada), BgImage (imagem de fundo),
                IconManager (troca de ícone), AppName (nome do app e atalho), StatsActivity, AboutActivity, AlphaIndexBar (barra # A–Z),
@@ -269,6 +296,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.17.0** | Fila reorganizável por arrastar (com o aleatório desligado); Backup e restauração de tudo em um arquivo `.zip` salvo na pasta que você escolher |
 | **2.16.0** | Foto da playlist (galeria ou capas das músicas) que substitui a mini capa na lista de playlists, com opção de remover |
 | **2.15.0** | Selecionar várias músicas dentro de uma pasta e enviar para uma playlist; botão *Adicionar músicas* dentro da playlist, com busca e seleção múltipla |
 | **2.14.1** | Corrige a capa do mini player parada com o Economizador de bateria ligado (rotação por quadros) |

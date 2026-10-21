@@ -30,6 +30,14 @@ object SongArt {
         }
     }
 
+    /** Forgets what was read from disk (after a restore replaced the files). */
+    fun reset() {
+        synchronized(this) {
+            stamps.clear()
+            ready = false
+        }
+    }
+
     /** 0 when the song has no custom cover, otherwise a value that changes whenever it changes. */
     fun stamp(context: Context, songId: Long): Long {
         ensure(context)
