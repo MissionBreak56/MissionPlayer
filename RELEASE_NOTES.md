@@ -1,3 +1,14 @@
+## MissionPlayer v2.20.1 — Barra de sincronia da letra sem cobrir o texto
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.20.1-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Correção
+- **Ajustador de letra:** a barra com **− 0,5 s**, **+ 0,5 s**, **Auto** e **Zerar** ficava por cima da lista de letras, e as linhas passavam por trás dos botões atrapalhando a leitura. Agora a barra ocupa um espaço próprio entre a letra e o título da música: a letra termina onde a barra começa e nada passa por trás dela. Sem letra sincronizada a barra some e a letra usa o espaço todo, como antes.
+
+### Alterações técnicas
+- `activity_player.xml`: `lyricsSyncBar` saiu de dentro do `lyricsPanel` e virou irmão no `ConstraintLayout`, com o painel de letras limitado por ele.
+- Versão: 2.20.0 → 2.20.1 (versionCode 50).
+
 ## MissionPlayer v2.20.0 — Sincronia automática das letras
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.20.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

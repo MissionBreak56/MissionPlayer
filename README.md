@@ -258,7 +258,7 @@ ou atrasadas. O app corrige isso de três formas:
   dúvida não mexe, então uma letra que já estava certa não é alterada por palpite. Aparece o aviso
   *Letra ajustada automaticamente: +1,2 s*. Cada música é analisada uma vez; letra nova (baixada de
   novo ou importada) é analisada de novo. Para desligar: Configurações → *Ajustar sincronia das letras*.
-- **Manual:** com a letra aberta, uma barra no fim da tela tem **− 0,5 s** (a letra adianta),
+- **Manual:** com a letra aberta, uma barra logo abaixo da letra (sem ficar por cima dela) tem **− 0,5 s** (a letra adianta),
   **+ 0,5 s** (a letra atrasa), **Auto** (roda a análise na hora) e **Zerar** (volta ao que o arquivo
   diz). O ajuste fica salvo para aquela música.
 - **Etiqueta `[offset:ms]`:** o padrão LRC agora é respeitado, tanto nas letras baixadas quanto nas
@@ -333,6 +333,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.20.1** | Corrige a barra de ajuste de sincronia da letra, que ficava por cima das linhas: agora ela ocupa um espaço próprio abaixo da letra |
 | **2.20.0** | Sincronia automática das letras (análise do áudio quando há certeza), botões − 0,5 s / + 0,5 s / Auto / Zerar e suporte à etiqueta `[offset]` |
 | **2.19.0** | Mais provedores de letras (QQ Music, LrcApi, Textyl e Lyrist, além de LRCLIB, NetEase, Kugou e lyrics.ovh); a página de cada release no GitHub mostra só as mudanças da própria versão |
 | **2.18.0** | Ordem *Personalizada* (arraste para organizar cada lista); botão aleatório/sequência na notificação; corrige músicas que se repetiam no aleatório antes de dar a volta completa |
