@@ -134,7 +134,7 @@ class MetadataEditorActivity : BaseActivity() {
         tv.setTypeface(tv.typeface, Typeface.BOLD)
         tv.setTextColor(MaterialColors.getColor(tv, com.google.android.material.R.attr.colorPrimary))
         tv.setPadding(0, dp(20), 0, dp(6))
-        tv.accessibilityHeading = true
+        androidx.core.view.ViewCompat.setAccessibilityHeading(tv, true)
         form.addView(tv)
     }
 
