@@ -36,4 +36,5 @@ jobs:
           PY
       - name: Report compile errors
         if: failure()
-        run: grep -E "^e: |What went wrong|error:" test.log | head -40 | while read -r l; do echo "::error title=Build error::$l"; done
+        run: |
+          grep -E "^e: |What went wrong|error:" test.log | head -40 | while read -r l; do echo "::error title=Build error::$l"; done
