@@ -67,6 +67,8 @@ class MetadataEditorActivity : BaseActivity() {
     private lateinit var optionsScroll: HorizontalScrollView
     private lateinit var optionsRow: LinearLayout
     private lateinit var searchBtn: MaterialButton
+    private lateinit var lyricsBtn: MaterialButton
+    private lateinit var coverSearchBtn: MaterialButton
     private lateinit var pickBtn: MaterialButton
     private lateinit var removeBtn: MaterialButton
     private lateinit var undoBtn: MaterialButton
@@ -264,6 +266,11 @@ class MetadataEditorActivity : BaseActivity() {
         coverButtons.addView(removeBtn, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(4) })
         coverButtons.addView(undoBtn, LinearLayout.LayoutParams(0, -2, 1f))
         form.addView(coverButtons, LinearLayout.LayoutParams(-1, -2))
+        coverSearchBtn = MaterialButton(this).apply {
+            text = tr("Buscar capa online", "Find cover online")
+            setOnClickListener { vm.searchCovers() }
+        }
+        form.addView(coverSearchBtn, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(4) })
         coverNote = TextView(this).apply {
             textSize = 13f
             visibility = View.GONE
@@ -280,9 +287,12 @@ class MetadataEditorActivity : BaseActivity() {
 
         sectionTitle(tr("Letras", "Lyrics"))
         addField(TagField.LYRICS, multiline = true)
+        lyricsBtn = MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
+            text = tr("Buscar letra online", "Search lyrics online")
+            setOnClickListener { vm.searchLyrics() }
+        }
+        form.addView(lyricsBtn, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
 
-        sectionTitle(tr("Outras informações", "Other information"))
-        addField(TagField.COMMENT, multiline = true)
     }
 
     private fun buildBottomBar(): LinearLayout {
@@ -322,7 +332,7 @@ class MetadataEditorActivity : BaseActivity() {
             statusView.visibility = View.VISIBLE
             statusView.text = s.loadError
             statusView.setTextColor(MaterialColors.getColor(statusView, com.google.android.material.R.attr.colorError))
-            for (v in listOf(searchBtn, pickBtn, removeBtn, undoBtn, saveBtn)) v.isEnabled = false
+            for (v in listOf(searchBtn, pickBtn, removeBtn, undoBtn, saveBtn, lyricsBtn, coverSearchBtn)) v.isEnabled = false
             return
         }
         if (!s.loading && s.fieldsRevision != shownRevision) {
@@ -334,7 +344,7 @@ class MetadataEditorActivity : BaseActivity() {
             val supported = s.format.supports(f) || s.loading
             til.visibility = if (supported) View.VISIBLE else View.GONE
             til.isEnabled = writable && !s.saving
-            til.helperText = if (f in s.importedFields) tr("Importado do MusicBrainz", "Imported from MusicBrainz") else null
+            til.helperText = if (f in s.importedFields) if (f == TagField.LYRICS) tr("Letra importada", "Imported lyrics") else tr("Importado do MusicBrainz", "Imported from MusicBrainz") else null
         }
         if (!s.loading && !writable) {
             readOnlyNote.visibility = View.VISIBLE
@@ -362,6 +372,8 @@ class MetadataEditorActivity : BaseActivity() {
         searchBtn.text = if (s.importedFields.isNotEmpty() || s.coverOptions.isNotEmpty()) tr("Pesquisar novamente", "Search again")
         else tr("Buscar informações automaticamente", "Find information automatically")
         pickBtn.isEnabled = canAct
+        lyricsBtn.isEnabled = canAct
+        coverSearchBtn.isEnabled = canAct
         removeBtn.isEnabled = canAct && s.cover !is CoverUi.Remove
         undoBtn.visibility = if (s.cover is CoverUi.Keep) View.GONE else View.VISIBLE
         undoBtn.isEnabled = !s.saving
@@ -558,6 +570,14 @@ class MetadataEditorActivity : BaseActivity() {
                 } else {
                     showCandidates(e.outcome.candidates)
                 }
+            }
+            is EditorEvent.ConfirmReplaceLyrics -> {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(tr("Substituir a letra atual?", "Replace the current lyrics?"))
+                    .setMessage(tr("Foi encontrada uma letra para esta música. Ela substituirá o texto do campo (só é gravada ao salvar).", "Lyrics were found for this song. They will replace the text in the field (only written when you save)."))
+                    .setPositiveButton(tr("Substituir", "Replace")) { _, _ -> vm.applyLyrics(e.text) }
+                    .setNegativeButton(tr("Manter a atual", "Keep current"), null)
+                    .show()
             }
             is EditorEvent.ConfirmReplaceEdits -> {
                 val names = e.conflicts.joinToString(", ") { labelOf(it).substringBefore(" (") }

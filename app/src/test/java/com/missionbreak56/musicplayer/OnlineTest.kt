@@ -3,6 +3,8 @@ package com.missionbreak56.musicplayer
 import com.missionbreak56.musicplayer.online.Candidate
 import com.missionbreak56.musicplayer.online.CoverArtClient
 import com.missionbreak56.musicplayer.online.HttpFetcher
+import com.missionbreak56.musicplayer.online.ItunesCoverClient
+import com.missionbreak56.musicplayer.tags.LyricsText
 import com.missionbreak56.musicplayer.online.LocalInfo
 import com.missionbreak56.musicplayer.online.MatchQuality
 import com.missionbreak56.musicplayer.online.MatchScorer
@@ -180,5 +182,18 @@ class OnlineTest {
 
     @Test fun coverInvalidJsonIsReported() {
         try { CoverArtClient.parse("nope", false); fail() } catch (e: OnlineException) { assertEquals(OnlineError.INVALID_RESPONSE, e.error) }
+    }
+
+    @Test fun itunesCoversUseBigUrlAndSkipDuplicates() {
+        val json = """{"results":[{"collectionId":1,"artworkUrl100":"https://a/x/100x100bb.jpg"},
+            {"collectionId":2,"artworkUrl100":"https://a/x/100x100bb.jpg"},{"collectionId":3,"artworkUrl100":""}]}"""
+        val o = ItunesCoverClient.parse(json)
+        assertEquals(1, o.size); assertEquals("https://a/x/1200x1200bb.jpg", o[0].fullUrl)
+    }
+
+    @Test fun syncedLyricsBecomePlainText() {
+        val lrc = "[ar:The Band]\n[offset:0]\n[00:12.30]First line\n[01:02.5][01:30.00]Second <00:13.00>line\n\n\n\n[02:00.00]Last"
+        assertEquals("First line\nSecond line\n\nLast", LyricsText.toPlain(lrc))
+        assertEquals("já é texto", LyricsText.toPlain("já é texto"))
     }
 }

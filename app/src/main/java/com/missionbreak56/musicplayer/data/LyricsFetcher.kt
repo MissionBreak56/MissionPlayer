@@ -438,10 +438,28 @@ object LyricsFetcher {
 
     // ----- Public entry point -----
 
+    /** What a search found (without saving anything): the best text (synced if some source had it) and how it went. */
+    class Lookup(val text: String?, val outcome: Outcome)
+
     /** Looks the song up online and saves the lyrics. Blocking: call from a background thread. */
     fun fetch(context: Context, song: Song): Outcome {
         val app = context.applicationContext
-        if (song.title.isBlank()) return Outcome.NOT_FOUND
+        val found = lookup(song)
+        val best = found.text
+        when {
+            best != null -> {
+                LyricsStore.save(app, song.id, best)
+                LyricsIndex.update(song.id, best)
+                clearMiss(app, song.id)
+            }
+            found.outcome == Outcome.NOT_FOUND -> markMiss(app, song.id)
+        }
+        return found.outcome
+    }
+
+    /** Asks the sources for the lyrics of [song] and returns them without saving. Blocking: call from a background thread. */
+    fun lookup(song: Song): Lookup {
+        if (song.title.isBlank()) return Lookup(null, Outcome.NOT_FOUND)
 
         var plainFallback: String? = null
         var synced: String? = null
@@ -476,15 +494,10 @@ object LyricsFetcher {
 
         val best = synced ?: plainFallback
         return when {
-            best != null -> {
-                LyricsStore.save(app, song.id, best)
-                LyricsIndex.update(song.id, best)
-                clearMiss(app, song.id)
-                Outcome.FOUND
-            }
-            answered -> { markMiss(app, song.id); Outcome.NOT_FOUND }
-            skipped && !failed -> Outcome.RATE_LIMITED
-            else -> Outcome.ERROR
+            best != null -> Lookup(best, Outcome.FOUND)
+            answered -> Lookup(null, Outcome.NOT_FOUND)
+            skipped && !failed -> Lookup(null, Outcome.RATE_LIMITED)
+            else -> Lookup(null, Outcome.ERROR)
         }
     }
 }

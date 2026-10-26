@@ -12,6 +12,9 @@ import com.missionbreak56.musicplayer.data.Song
 import com.missionbreak56.musicplayer.online.Candidate
 import com.missionbreak56.musicplayer.online.CoverArtClient
 import com.missionbreak56.musicplayer.online.CoverOption
+import com.missionbreak56.musicplayer.online.ItunesCoverClient
+import com.missionbreak56.musicplayer.data.LyricsFetcher
+import com.missionbreak56.musicplayer.tags.LyricsText
 import com.missionbreak56.musicplayer.online.ImportedMetadata
 import com.missionbreak56.musicplayer.online.LocalInfo
 import com.missionbreak56.musicplayer.online.MatchQuality
@@ -71,6 +74,7 @@ sealed class EditorEvent {
     class PickCandidate(val outcome: SearchOutcome, val weak: Boolean) : EditorEvent()
     class ConfirmReplaceEdits(val meta: ImportedMetadata, val conflicts: List<TagField>) : EditorEvent()
     class Toast(val text: String) : EditorEvent()
+    class ConfirmReplaceLyrics(val text: String) : EditorEvent()
     object Saved : EditorEvent()
     class SaveFailed(val error: TagError) : EditorEvent()
 }
@@ -101,6 +105,7 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
     )
     private val musicBrainz = MusicBrainzClient(http)
     private val coverArt = CoverArtClient(http)
+    private val itunes = ItunesCoverClient(http)
     private var searchJob: Job? = null
     private var coverJob: Job? = null
     private val thumbCache = HashMap<String, Bitmap>()
@@ -331,6 +336,118 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
                 throw e
             } catch (e: OnlineException) {
                 _state.update { it.copy(coverNote = tr("Não foi possível buscar capas agora.", "Could not look for covers right now.")) }
+            }
+        }
+    }
+
+    // ----- Lyrics -----
+
+    /** Looks the lyrics up with the same sources the app already uses, using the title/artist currently typed. */
+    fun searchLyrics() {
+        val s = song ?: return
+        val st = _state.value
+        if (st.busy || st.saving) return
+        val title = edited[TagField.TITLE].orEmpty().trim()
+        if (title.isEmpty()) {
+            setStatus(tr("Preencha o título para buscar a letra.", "Fill in the title to search for the lyrics."), true)
+            return
+        }
+        val probe = s.copy(
+            title = title,
+            artist = edited[TagField.ARTIST].orEmpty().trim(),
+            album = edited[TagField.ALBUM].orEmpty().trim()
+        )
+        _state.update { it.copy(busy = true, status = tr("Buscando letra…", "Searching for lyrics…"), statusIsError = false) }
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            try {
+                val found = withContext(Dispatchers.IO) { LyricsFetcher.lookup(probe) }
+                val plain = found.text?.let { LyricsText.toPlain(it) }.orEmpty()
+                when {
+                    plain.isNotEmpty() -> {
+                        _state.update { it.copy(status = null) }
+                        if (edited[TagField.LYRICS].orEmpty().isBlank()) applyLyrics(plain)
+                        else _events.emit(EditorEvent.ConfirmReplaceLyrics(plain))
+                    }
+                    found.outcome == LyricsFetcher.Outcome.RATE_LIMITED -> setStatus(
+                        tr("As fontes de letra pediram para esperar. Tente de novo em instantes.", "The lyrics sources asked to wait. Try again shortly."), true
+                    )
+                    found.outcome == LyricsFetcher.Outcome.ERROR -> setStatus(
+                        tr("Falha de conexão ao buscar a letra.", "Connection failed while searching for the lyrics."), true
+                    )
+                    else -> setStatus(tr("Letra não encontrada para esta música.", "No lyrics found for this song."), true)
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                setStatus(tr("Erro inesperado ao buscar a letra.", "Unexpected error searching for lyrics."), true)
+            } finally {
+                _state.update { it.copy(busy = false) }
+            }
+        }
+    }
+
+    /** Puts [text] in the lyrics field. Nothing is written to the file until Save. */
+    fun applyLyrics(text: String) {
+        edited[TagField.LYRICS] = text
+        touched -= TagField.LYRICS
+        _state.update {
+            it.copy(
+                fieldsRevision = it.fieldsRevision + 1, importedFields = it.importedFields + TagField.LYRICS,
+                dirty = dirtyFor(it.cover),
+                status = tr("Letra encontrada (texto simples). Revise e toque em Salvar.", "Lyrics found (plain text). Review them and tap Save."),
+                statusIsError = false
+            )
+        }
+    }
+
+    // ----- Cover search (independent of the metadata search) -----
+
+    /** Looks for covers by the typed title/artist/album: Cover Art Archive (via MusicBrainz) and iTunes. */
+    fun searchCovers() {
+        val snap = snapshot ?: return
+        val s = song ?: return
+        val st = _state.value
+        if (st.busy || st.saving) return
+        val title = edited[TagField.TITLE].orEmpty().trim()
+        val artist = edited[TagField.ARTIST].orEmpty().trim()
+        val album = edited[TagField.ALBUM].orEmpty().trim()
+        if (title.isEmpty() && album.isEmpty()) {
+            setStatus(tr("Preencha o título ou o álbum para buscar capas.", "Fill in the title or album to search for covers."), true)
+            return
+        }
+        coverJob?.cancel()
+        _state.update { it.copy(busy = true, status = tr("Buscando capas online…", "Searching covers online…"), statusIsError = false, coverOptions = emptyList(), coverNote = null) }
+        coverJob = viewModelScope.launch {
+            try {
+                val found = ArrayList<CoverOption>()
+                var failure: OnlineException? = null
+                try {
+                    val local = LocalInfo(title.ifEmpty { album }, artist, album, snap.audio?.lengthMs?.toLong() ?: s.durationMs, edited[TagField.DATE].orEmpty().take(4).toIntOrNull())
+                    val outcome = musicBrainz.search(local)
+                    val releases = outcome.candidates.filter { it.score >= 0.45 }.mapNotNull { it.release }.distinctBy { it.id }.take(4)
+                    for (r in releases) found += coverArt.forRelease(r.id).filter { it.isFront }.take(2)
+                } catch (e: OnlineException) {
+                    failure = e
+                }
+                try {
+                    found += itunes.search(listOf(artist, album.ifEmpty { title }).filter { it.isNotBlank() }.joinToString(" "))
+                } catch (e: OnlineException) {
+                    if (failure == null) failure = e
+                }
+                val options = found.distinctBy { it.fullUrl }.take(20)
+                val note = when {
+                    options.isNotEmpty() -> tr("Toque em uma capa para usá-la (só será gravada ao salvar).", "Tap a cover to use it (it is only written when you save).")
+                    failure != null -> onlineMessage(failure)
+                    else -> tr("Nenhuma capa encontrada. A capa atual foi mantida.", "No cover found. The current cover was kept.")
+                }
+                _state.update { it.copy(coverOptions = options, coverNote = note, status = null) }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                _state.update { it.copy(coverNote = tr("Erro inesperado ao buscar capas.", "Unexpected error searching covers."), status = null) }
+            } finally {
+                _state.update { it.copy(busy = false) }
             }
         }
     }

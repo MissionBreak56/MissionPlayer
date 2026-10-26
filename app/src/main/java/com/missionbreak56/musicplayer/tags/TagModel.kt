@@ -200,3 +200,19 @@ object TagCodec {
         return a.all { (k, v) -> v.contentEquals(b[k]) }
     }
 }
+
+/** Lyrics helpers. The tag holds plain text, but the online sources often return synced (LRC) lyrics. */
+object LyricsText {
+    private val timeTags = Regex("^(\\s*\\[\\d{1,3}:\\d{2}(?:[.:]\\d{1,3})?])+\\s*")
+    private val inlineTags = Regex("<\\d{1,3}:\\d{2}(?:[.:]\\d{1,3})?>")
+    private val infoTags = Regex("^\\s*\\[[A-Za-z]+:[^\\]]*]\\s*$")
+
+    /** Removes LRC time stamps and header lines ([ar:], [offset:]…), keeping only the words. */
+    fun toPlain(raw: String): String =
+        raw.replace("\r\n", "\n").lines()
+            .filterNot { infoTags.matches(it) }
+            .map { inlineTags.replace(timeTags.replace(it, ""), "").trimEnd() }
+            .joinToString("\n")
+            .replace(Regex("\n{3,}"), "\n\n")
+            .trim()
+}
