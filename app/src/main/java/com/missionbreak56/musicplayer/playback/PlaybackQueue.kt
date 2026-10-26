@@ -36,6 +36,9 @@ object PlaybackQueue {
     /** Asks the service to redraw the playback notification (e.g. after a custom cover was set). */
     val REFRESH_ART = SessionCommand("com.missionbreak56.musicplayer.REFRESH_ART", Bundle.EMPTY)
 
+    /** The tags of a song changed on disk (extra "id"): refresh its queue entries and reload the file if it is playing. */
+    val REFRESH_SONG = SessionCommand("com.missionbreak56.musicplayer.REFRESH_SONG", Bundle.EMPTY)
+
     /** Tells the service a song was just added to the queue (extras: "index", "next"). */
     val FIX_ADDED = SessionCommand("com.missionbreak56.musicplayer.FIX_ADDED", Bundle.EMPTY)
 

@@ -710,6 +710,8 @@ class PlayerActivity : PlayerBoundActivity() {
         popup.menu.add(0, 6, 5, tr("Importar capa", "Import cover"))
         popup.menu.add(0, 7, 6, tr("Buscar capa online", "Find cover online"))
         if (SongArt.has(this, song.id)) popup.menu.add(0, 8, 7, tr("Remover capa personalizada", "Remove custom cover"))
+        popup.menu.add(0, 9, 8, tr("Editar metadados", "Edit metadata"))
+        popup.menu.add(0, 10, 9, tr("Buscar informações automaticamente", "Find information automatically"))
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 2 -> actions.setRingtone(song)
@@ -718,6 +720,8 @@ class PlayerActivity : PlayerBoundActivity() {
                     LyricsStore.delete(this, song.id)
                     loadLyrics(song.id)
                 }
+                9 -> MetadataEditorActivity.start(this, song.id)
+                10 -> MetadataEditorActivity.start(this, song.id, MetadataEditorActivity.ACTION_SEARCH)
                 6 -> pickCover.launch("image/*")
                 7 -> CoverSearch.show(this, song) { refreshCover() }
                 8 -> {

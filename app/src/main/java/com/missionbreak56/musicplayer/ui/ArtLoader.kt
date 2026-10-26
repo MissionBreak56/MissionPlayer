@@ -70,6 +70,13 @@ object ArtLoader {
         }
     }
 
+    /** Forgets every cached picture of [song] (custom, album and own cover) after its tags or cover changed. Main thread. */
+    fun invalidate(song: Song) {
+        val prefixes = listOf("a${song.albumId}_", "s${song.id}_", "c${song.id}_")
+        for (k in cache.snapshot().keys) if (prefixes.any { k.startsWith(it) }) cache.remove(k)
+        missing.removeAll { k -> prefixes.any { k.startsWith(it) } }
+    }
+
     /** Blocking decode (call from a background thread). Returns null when the song has no cover. */
     fun decodeSync(context: Context, song: Song, size: Int): Bitmap? = decode(context, song, size)
 

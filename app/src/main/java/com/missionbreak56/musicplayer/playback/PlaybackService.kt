@@ -119,6 +119,7 @@ class PlaybackService : MediaSessionService() {
                 .add(PlaybackQueue.RESHUFFLE)
                 .add(PlaybackQueue.FIX_ADDED)
                 .add(PlaybackQueue.REFRESH_ART)
+                .add(PlaybackQueue.REFRESH_SONG)
                 .add(PlaybackQueue.TOGGLE_SHUFFLE)
                 .build()
             return MediaSession.ConnectionResult.AcceptedResultBuilder(session)
@@ -141,12 +142,37 @@ class PlaybackService : MediaSessionService() {
                 when (customCommand.customAction) {
                     PlaybackQueue.RESHUFFLE.customAction -> syncShuffleRound(p, newRound = true)
                     PlaybackQueue.TOGGLE_SHUFFLE.customAction -> p.shuffleModeEnabled = !p.shuffleModeEnabled
+                    PlaybackQueue.REFRESH_SONG.customAction -> refreshSong(p, args.getLong("id", -1L))
                     PlaybackQueue.FIX_ADDED.customAction ->
                         placeAddedSong(p, args.getInt("index", -1), args.getBoolean("next", false))
                 }
             }
             return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         }
+    }
+
+    /**
+     * After the metadata editor rewrote a file: queue entries get the new title/artist (an in-place update, so
+     * order and shuffle are kept) and, when that song is the one playing, the file is loaded again from the
+     * same position because the audio may now start at a different offset.
+     */
+    private fun refreshSong(p: ExoPlayer, id: Long) {
+        if (id < 0) return
+        val song = com.missionbreak56.musicplayer.data.Library.song(id) ?: return
+        val key = id.toString()
+        for (i in 0 until p.mediaItemCount) {
+            if (p.getMediaItemAt(i).mediaId == key) p.replaceMediaItem(i, song.toMediaItem())
+        }
+        if (p.currentMediaItem?.mediaId == key) {
+            val index = p.currentMediaItemIndex
+            val pos = p.currentPosition
+            val play = p.playWhenReady
+            p.stop()
+            p.prepare()
+            p.seekTo(index, pos)
+            p.playWhenReady = play
+        }
+        mediaSession?.let { onUpdateNotification(it, false) }
     }
 
     private fun applyOrder(p: ExoPlayer, order: List<Int>) {

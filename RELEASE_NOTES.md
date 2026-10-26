@@ -1,3 +1,24 @@
+## MissionPlayer v2.21.0 — Editor de metadados e busca automática
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.21.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Novidades
+- **Editar metadados** no menu de cada música (e no menu da tela do player): título, artista, artista do álbum, álbum, gênero, ano/data, faixa e total, disco e total, compositor, letrista, gravadora, álbum original, comentários e letra (texto simples). Só aparecem os campos que o formato do arquivo realmente guarda.
+- **Buscar informações automaticamente** (MusicBrainz): compara título, artista, álbum, duração e ano; diferencia versões ao vivo, remixes e remasterizações; só preenche sozinho quando há um resultado claro, senão mostra a lista para você escolher, e com correspondência fraca não altera nada. O que você já digitou à mão não é sobrescrito sem perguntar.
+- **Capas** (Cover Art Archive) e imagem do aparelho (seletor do sistema), com prévia; **remover capa** só tira a imagem das tags.
+- **Gravação segura**: cópia de segurança, gravação numa cópia de trabalho, conferência da leitura e restauração do original se algo falhar. O áudio não é recodificado e as tags desconhecidas são preservadas. Formatos: MP3, FLAC, OGG/Opus e M4A/MP4; os demais ficam só para leitura.
+- Depois de salvar, biblioteca, capas, notificação e a música em reprodução são atualizados.
+
+### Limitações
+- Busca de letras online não faz parte do editor (o app já baixa letras sozinho para uso offline); a letra gravada na tag é texto simples, sem sincronia.
+- Busca em lote ainda não foi implementada.
+- Android 10+ pede sua autorização por arquivo ao salvar.
+
+### Alterações técnicas
+- Nova dependência `io.github.kyant0:taglib:1.0.5` (TagLib para Android, Apache-2.0; o TagLib embutido é LGPL-2.1/MPL-1.1). Kotlin 1.9.24 → 2.1.21, necessário para ler os metadados dessa biblioteca.
+- Permissão `WRITE_EXTERNAL_STORAGE` só até o Android 9 (`maxSdkVersion=28`).
+- Versão: 2.20.1 → 2.21.0 (versionCode 51).
+
 ## MissionPlayer v2.20.1 — Barra de sincronia da letra sem cobrir o texto
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.20.1-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

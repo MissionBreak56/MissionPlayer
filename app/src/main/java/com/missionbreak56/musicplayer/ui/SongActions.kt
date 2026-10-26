@@ -37,6 +37,10 @@ class SongActions(
         menu.add(0, 6, 5, R.string.share)
         menu.add(0, 8, 6, R.string.hide_song)
         if (playlistKey != null) menu.add(0, 7, 7, R.string.remove_from_playlist)
+        menu.add(0, 9, 8, tr("Editar metadados", "Edit metadata"))
+        menu.add(0, 10, 9, tr("Buscar informações automaticamente", "Find information automatically"))
+        menu.add(0, 11, 10, tr("Substituir capa", "Replace cover"))
+        menu.add(0, 12, 11, tr("Remover capa", "Remove cover"))
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 1 -> controllerAction { PlaybackQueue.playNext(it, song); toast(R.string.queue_next) }
@@ -50,6 +54,10 @@ class SongActions(
                     toast(R.string.song_hidden)
                     onChanged()
                 }
+                9 -> MetadataEditorActivity.start(activity, song.id)
+                10 -> MetadataEditorActivity.start(activity, song.id, MetadataEditorActivity.ACTION_SEARCH)
+                11 -> MetadataEditorActivity.start(activity, song.id, MetadataEditorActivity.ACTION_REPLACE_COVER)
+                12 -> MetadataEditorActivity.start(activity, song.id, MetadataEditorActivity.ACTION_REMOVE_COVER)
                 7 -> {
                     if (playlistKey != null) Prefs.removeFromPlaylist(playlistKey, song.id)
                     onChanged()

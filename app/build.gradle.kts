@@ -11,8 +11,8 @@ android {
         applicationId = "com.missionbreak56.musicplayer"
         minSdk = 23
         targetSdk = 34
-        versionCode = 50
-        versionName = "2.20.1"
+        versionCode = 51
+        versionName = "2.21.0"
 
         // Author metadata -> available in the manifest as ${author}
         manifestPlaceholders["author"] = "MissionBreak56"
@@ -72,6 +72,10 @@ android {
         jvmTarget = "17"
     }
 
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
+
     buildFeatures {
         viewBinding = true
         buildConfig = true
@@ -97,9 +101,19 @@ dependencies {
     // Automatic lyrics download in the background (runs only when online)
     implementation("androidx.work:work-runtime-ktx:2.9.1")
 
+    // Reading and writing tags (MP3/FLAC/Ogg/M4A) without re-encoding: TagLib for Android (Apache-2.0 wrapper;
+    // it bundles TagLib, LGPL-2.1 / MPL-1.1, as a separate native library).
+    implementation("io.github.kyant0:taglib:1.0.5")
+
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 
     // Guarded by Media3, but pinned explicitly for the ListenableFuture used by MediaController.
     implementation("com.google.guava:guava:33.2.1-android")
+
+    // Unit tests (JVM): parsing, scoring and tag rules. org.json is the real implementation here because
+    // the stubs in android.jar do nothing on the JVM.
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.json:json:20240303")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
 }
