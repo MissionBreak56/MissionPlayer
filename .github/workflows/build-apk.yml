@@ -82,6 +82,15 @@ jobs:
           path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error
 
+      - name: TEMP publish APK to a scratch branch (feature branch only)
+        if: github.ref != 'refs/heads/main'
+        run: |
+          mkdir -p /tmp/out && cp app/build/outputs/apk/release/*.apk /tmp/out/MissionPlayer-v2.21.0-arm64-v8a.apk
+          cd /tmp/out && git init -q && git checkout -q -b apk-temp
+          git config user.name "github-actions" && git config user.email "actions@users.noreply.github.com"
+          git add . && git commit -qm "temp apk"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" apk-temp
+
       - name: Publish GitHub Release
         if: github.ref == 'refs/heads/main'
         env:
