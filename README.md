@@ -80,8 +80,31 @@ de lista com +) para escolher uma playlist existente ou criar uma nova. Músicas
 não são duplicadas, e o aviso mostra quantas foram adicionadas. O botão voltar (ou o X) sai da seleção.
 
 ### Menu da música (⋮)
-Tocar a seguir, adicionar à fila, adicionar à playlist, favoritar, definir como toque, compartilhar
-e ocultar.
+Tocar a seguir, adicionar à fila, adicionar à playlist, favoritar, definir como toque, compartilhar,
+ocultar, **Editar metadados**, **Substituir capa** e **Remover capa** (veja *Editor de metadados*).
+
+### Editor de metadados
+Menu ⋮ da música (ou do player) → **Editar metadados**. Grava as tags **dentro do arquivo** de áudio
+(MP3, FLAC, OGG/Opus e M4A/MP4; os outros formatos ficam só para leitura).
+- **Campos:** título, artista, artista do álbum, álbum, gênero, ano/data, faixa e total, disco e total,
+  compositor, letrista, gravadora, álbum original e letra (texto simples). Só aparecem os campos que o
+  formato do arquivo realmente guarda.
+- **Buscar informações automaticamente** (botão dentro da tela): consulta o **MusicBrainz** comparando
+  título, artista, álbum, duração e ano, e diferencia versões ao vivo, remixes e remasterizações. Com um
+  resultado claro, preenche os campos; com vários possíveis, mostra a lista para você escolher; com
+  correspondência fraca, não altera nada. Campos que você já digitou não são sobrescritos sem perguntar.
+- **Buscar letra online:** usa as mesmas fontes das letras automáticas; letras sincronizadas viram texto
+  simples e você revisa antes de salvar.
+- **Capa:** *Escolher imagem* (seletor do sistema), *Buscar capa online* (Cover Art Archive e iTunes) e
+  *Remover capa*. A imagem é validada e reduzida para no máximo 1200 px; só a capa frontal é trocada.
+- **Nada é gravado até você tocar em Salvar.** A gravação é segura: cópia de segurança, gravação numa
+  cópia de trabalho, conferência da leitura e restauração do original se algo falhar. O áudio não é
+  recodificado e as tags que o editor não conhece são preservadas. No Android 10+ o sistema pede a sua
+  autorização para cada arquivo modificado.
+- Depois de salvar, a biblioteca, as capas, a notificação e a música em reprodução são atualizadas.
+
+Ainda não existe edição em lote, e a letra gravada na tag não é sincronizada (o app continua guardando
+as letras sincronizadas para uso offline).
 
 ### Foto da pasta
 Em *Pastas*, menu ⋮ da pasta (ou ⋮ dentro da pasta):
@@ -289,7 +312,7 @@ tela de bloqueio.
 ### Privacidade
 Sem anúncios, sem rastreadores e sem contas. A internet é usada **só** para baixar letras que faltam
 (título, artista, álbum e duração são enviados aos serviços de letras acima) e, quando você pede, para
-*Buscar capa online* (o texto da busca vai para o iTunes Search) e, só quando você toca em *Verificar atualizações*, para consultar o último release no GitHub; a reprodução é 100% local. O backup é um arquivo local que só você guarda: o app não envia nada para lugar nenhum. Desligue
+*Buscar capa online* (o texto da busca vai para o iTunes Search), no *Editor de metadados* (título, artista, álbum e duração vão para o MusicBrainz e o Cover Art Archive, e o texto da capa para o iTunes) e, só quando você toca em *Verificar atualizações*, para consultar o último release no GitHub; a reprodução é 100% local. O backup é um arquivo local que só você guarda: o app não envia nada para lugar nenhum. Desligue
 em Configurações → *Letras automáticas* para o app não baixar letras.
 
 ## Permissões
@@ -302,11 +325,12 @@ em Configurações → *Letras automáticas* para o app não baixar letras.
 | `POST_NOTIFICATIONS` | Notificação com os controles de reprodução |
 | `MODIFY_AUDIO_SETTINGS` | Equalizador, graves, surround e aumento de volume |
 | `WRITE_SETTINGS` | Somente se você usar *Definir como toque* |
+| `WRITE_EXTERNAL_STORAGE` (só até Android 9) | Gravar as tags no *Editor de metadados*; no Android 10+ o sistema pede autorização por arquivo |
 
 ## Tecnologia
 
-Kotlin · AndroidX · Material Components 1.12 · Media3 (ExoPlayer, MediaSession) 1.4.1 · Palette ·
-View Binding · `minSdk 23` · `targetSdk 34` · `compileSdk 34`.
+Kotlin 2.1 · AndroidX · Material Components 1.12 · Media3 (ExoPlayer, MediaSession) 1.4.1 · Palette ·
+View Binding · TagLib para Android (`io.github.kyant0:taglib`, leitura e gravação de tags) · `minSdk 23` · `targetSdk 34` · `compileSdk 34`.
 
 ## Estrutura do projeto
 
@@ -321,11 +345,14 @@ app/src/main/java/com/missionbreak56/musicplayer/
 │              realmente ouvido), PlaybackQueue,
 │              PlaybackState (salvar/restaurar fila), PlayerConnection, AudioFx (equalizador e aumento
 │              de volume), SleepTimer (código mantido, sem acesso na interface)
+├── tags/      TagModel (campos e regras das tags), TagStore (leitura e gravação segura com TagLib), CoverImage
+├── online/    MusicBrainz, MatchScorer (pontuação das correspondências), CoverArt, Itunes, Http
 └── ui/        MainActivity (abas), DetailActivity, SongPickerActivity (adicionar músicas à playlist), Backup (backup e restauração), SearchActivity, PlaylistsActivity, PlayerActivity,
                EqualizerActivity, SettingsActivity (configurações), CustomizeActivity
                (personalização avançada), BgImage (imagem de fundo),
                IconManager (troca de ícone), AppName (nome do app e atalho), StatsActivity, AboutActivity, AlphaIndexBar (barra # A–Z),
                FolderArt / FolderArtPicker (foto da pasta), SongArt / CoverSearch (capas por música),
+               MetadataEditorActivity / MetadataEditorViewModel / SongRefresh (editor de metadados),
                UiHelpers, BaseActivity (tela cheia), adaptadores e diálogos
 ```
 
@@ -333,6 +360,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.21.0** | Editor de metadados: grava tags e capa no arquivo (MP3, FLAC, OGG/Opus, M4A), busca automática no MusicBrainz, busca de letra e de capa online, gravação com cópia de segurança e conferência; Kotlin 2.1 |
 | **2.20.1** | Corrige a barra de ajuste de sincronia da letra, que ficava por cima das linhas: agora ela ocupa um espaço próprio abaixo da letra |
 | **2.20.0** | Sincronia automática das letras (análise do áudio quando há certeza), botões − 0,5 s / + 0,5 s / Auto / Zerar e suporte à etiqueta `[offset]` |
 | **2.19.0** | Mais provedores de letras (QQ Music, LrcApi, Textyl e Lyrist, além de LRCLIB, NetEase, Kugou e lyrics.ovh); a página de cada release no GitHub mostra só as mudanças da própria versão |
