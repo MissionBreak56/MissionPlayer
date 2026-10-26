@@ -1,7 +1,8 @@
 name: Unit tests
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ feature/editor-metadados ]
 
 jobs:
   test:
