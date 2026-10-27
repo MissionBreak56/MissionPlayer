@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import com.missionbreak56.musicplayer.data.Library
+import com.missionbreak56.musicplayer.data.LyricsIndex
+import com.missionbreak56.musicplayer.data.LyricsStore
 import com.missionbreak56.musicplayer.data.Song
 import com.missionbreak56.musicplayer.playback.PlaybackQueue
 import com.missionbreak56.musicplayer.playback.PlayerConnection
@@ -18,11 +20,17 @@ import kotlin.coroutines.resume
 /** Brings the rest of the app up to date after a song's tags or cover were rewritten. */
 object SongRefresh {
 
-    suspend fun afterSave(context: Context, song: Song, coverChanged: Boolean) {
+    suspend fun afterSave(context: Context, song: Song, coverChanged: Boolean, lyricsChanged: Boolean = false) {
         val app = context.applicationContext
         withContext(Dispatchers.IO) {
             // A custom cover kept by the app would still hide the cover now stored in the file.
             if (coverChanged) SongArt.remove(app, song.id)
+            // The user just wrote new lyrics into the tag: a copy saved earlier by the app (downloaded or attached)
+            // would keep winning over them, so it goes away, together with what was remembered of the old tag text.
+            if (lyricsChanged) {
+                LyricsStore.delete(app, song.id)
+                LyricsIndex.forget(app, song.id)
+            }
             rescan(app, song.path)
         }
         withContext(Dispatchers.Main) { ArtLoader.invalidate(song) }

@@ -1,3 +1,10 @@
+## MissionPlayer v2.21.1 — Letra do metadado passa a valer
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.21.1-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Correção
+- Ao salvar uma **letra nova** no editor de metadados, a letra que o app tinha guardado antes (baixada ou anexada) é removida. Antes ela continuava aparecendo no lugar da letra que você acabou de gravar no arquivo. A busca por letras também passa a usar o texto novo.
+
 ## MissionPlayer v2.21.0 — Editor de metadados e busca automática
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.21.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

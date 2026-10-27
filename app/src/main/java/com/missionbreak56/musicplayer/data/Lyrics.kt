@@ -415,6 +415,15 @@ object LyricsIndex {
         index.remove(id)
     }
 
+    /** Drops what the app remembers of the lyrics inside the file (search index and the copy read from it). */
+    fun forget(context: Context, id: Long) {
+        index.remove(id)
+        try {
+            cacheFile(context, id).delete()
+        } catch (_: Exception) {
+        }
+    }
+
     /** Makes freshly downloaded lyrics searchable right away. */
     fun update(id: Long, raw: String) {
         index[id] = plain(raw)

@@ -101,6 +101,7 @@ Menu ⋮ da música (ou do player) → **Editar metadados**. Grava as tags **den
   cópia de trabalho, conferência da leitura e restauração do original se algo falhar. O áudio não é
   recodificado e as tags que o editor não conhece são preservadas. No Android 10+ o sistema pede a sua
   autorização para cada arquivo modificado.
+- Ao salvar uma **letra nova**, a letra que o app guardava antes (baixada ou anexada) é removida para a do arquivo valer.
 - Depois de salvar, a biblioteca, as capas, a notificação e a música em reprodução são atualizadas.
 
 Ainda não existe edição em lote, e a letra gravada na tag não é sincronizada (o app continua guardando
@@ -360,6 +361,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.21.1** | Salvar uma letra nova no editor de metadados remove a letra que o app guardava antes, para a letra gravada no arquivo passar a valer |
 | **2.21.0** | Editor de metadados: grava tags e capa no arquivo (MP3, FLAC, OGG/Opus, M4A), busca automática no MusicBrainz, busca de letra e de capa online, gravação com cópia de segurança e conferência; Kotlin 2.1 |
 | **2.20.1** | Corrige a barra de ajuste de sincronia da letra, que ficava por cima das linhas: agora ela ocupa um espaço próprio abaixo da letra |
 | **2.20.0** | Sincronia automática das letras (análise do áudio quando há certeza), botões − 0,5 s / + 0,5 s / Auto / Zerar e suporte à etiqueta `[offset]` |

@@ -534,13 +534,15 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
             is CoverUi.Replace -> CoverChange.Replace(cover.bytes, cover.mime)
         }
         val values = LinkedHashMap(edited)
+        val lyricsChanged = snap.format.supports(TagField.LYRICS) &&
+            values[TagField.LYRICS].orEmpty().replace("\r\n", "\n").trim() != snap.values[TagField.LYRICS].orEmpty().replace("\r\n", "\n").trim()
         searchJob?.cancel()
         _state.update { it.copy(saving = true, busy = false, status = tr("Salvando…", "Saving…"), statusIsError = false) }
         // Not tied to the screen: a save that started must also finish its bookkeeping if the user leaves.
         saveScope.launch {
             try {
                 withContext(Dispatchers.IO) { TagStore.save(app, s.uri, snap, values, change) }
-                SongRefresh.afterSave(app, s, cover !is CoverUi.Keep)
+                SongRefresh.afterSave(app, s, cover !is CoverUi.Keep, lyricsChanged)
                 val fresh = withContext(Dispatchers.IO) { TagStore.read(app, s.uri, null) }
                 snapshot = fresh
                 edited.clear()
