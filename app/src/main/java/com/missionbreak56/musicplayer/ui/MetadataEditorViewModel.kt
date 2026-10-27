@@ -403,8 +403,34 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
 
     // ----- Cover search (independent of the metadata search) -----
 
-    /** Looks for covers by the typed title/artist/album: Cover Art Archive (via MusicBrainz) and iTunes. */
-    fun searchCovers() {
+    /** The text the cover search starts with: artist and album (or title) as currently typed. */
+    fun defaultCoverTerm(): String = listOf(
+        edited[TagField.ARTIST].orEmpty().trim(),
+        edited[TagField.ALBUM].orEmpty().trim().ifEmpty { edited[TagField.TITLE].orEmpty().trim() }
+    ).filter { it.isNotEmpty() }.joinToString(" ")
+
+    /** One-line technical summary of the audio (duration, format, bitrate, sample rate) for the editor. */
+    fun audioSummary(): String {
+        val ms = snapshot?.audio?.lengthMs?.toLong()?.takeIf { it > 0 } ?: song?.durationMs ?: 0L
+        val parts = ArrayList<String>()
+        if (ms > 0) {
+            val total = (ms + 500) / 1000
+            parts += if (total >= 3600) "%d:%02d:%02d".format(total / 3600, total % 3600 / 60, total % 60)
+            else "%d:%02d".format(total / 60, total % 60)
+        }
+        snapshot?.format?.takeIf { it.label.isNotEmpty() }?.let { parts += it.label }
+        snapshot?.audio?.let { a ->
+            if (a.bitrateKbps > 0) parts += "${a.bitrateKbps} kbps"
+            if (a.sampleRate > 0) parts += "%.1f kHz".format(a.sampleRate / 1000.0)
+        }
+        return parts.joinToString(" · ")
+    }
+
+    /**
+     * Looks for covers: by [term] on the Cover Art Archive (through MusicBrainz) and on iTunes. When [term] is the
+     * default one, the typed title/artist/album are also used to find the exact releases of the song.
+     */
+    fun searchCovers(term: String = defaultCoverTerm()) {
         val snap = snapshot ?: return
         val s = song ?: return
         val st = _state.value
@@ -412,10 +438,12 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
         val title = edited[TagField.TITLE].orEmpty().trim()
         val artist = edited[TagField.ARTIST].orEmpty().trim()
         val album = edited[TagField.ALBUM].orEmpty().trim()
-        if (title.isEmpty() && album.isEmpty()) {
-            setStatus(tr("Preencha o título ou o álbum para buscar capas.", "Fill in the title or album to search for covers."), true)
+        val query = term.trim()
+        if (query.isEmpty()) {
+            setStatus(tr("Digite o que procurar (artista, álbum ou música).", "Type what to look for (artist, album or song)."), true)
             return
         }
+        val exact = query == defaultCoverTerm() && (title.isNotEmpty() || album.isNotEmpty())
         coverJob?.cancel()
         _state.update { it.copy(busy = true, status = tr("Buscando capas online…", "Searching covers online…"), statusIsError = false, coverOptions = emptyList(), coverNote = null) }
         coverJob = viewModelScope.launch {
@@ -423,15 +451,18 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
                 val found = ArrayList<CoverOption>()
                 var failure: OnlineException? = null
                 try {
-                    val local = LocalInfo(title.ifEmpty { album }, artist, album, snap.audio?.lengthMs?.toLong() ?: s.durationMs, edited[TagField.DATE].orEmpty().take(4).toIntOrNull())
-                    val outcome = musicBrainz.search(local)
-                    val releases = outcome.candidates.filter { it.score >= 0.45 }.mapNotNull { it.release }.distinctBy { it.id }.take(4)
-                    for (r in releases) found += coverArt.forRelease(r.id).filter { it.isFront }.take(2)
+                    val releaseIds = if (exact) {
+                        val local = LocalInfo(title.ifEmpty { album }, artist, album, snap.audio?.lengthMs?.toLong() ?: s.durationMs, edited[TagField.DATE].orEmpty().take(4).toIntOrNull())
+                        musicBrainz.search(local).candidates.filter { it.score >= 0.45 }.mapNotNull { it.release }.map { it.id }
+                    } else {
+                        musicBrainz.releaseIdsFor(query)
+                    }
+                    for (id in releaseIds.distinct().take(4)) found += coverArt.forRelease(id).filter { it.isFront }.take(2)
                 } catch (e: OnlineException) {
                     failure = e
                 }
                 try {
-                    found += itunes.search(listOf(artist, album.ifEmpty { title }).filter { it.isNotBlank() }.joinToString(" "))
+                    found += itunes.search(query)
                 } catch (e: OnlineException) {
                     if (failure == null) failure = e
                 }

@@ -1,3 +1,11 @@
+## MissionPlayer v2.21.3 — Duração e pesquisa de capa no editor
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.21.3-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Novidades
+- O editor de metadados mostra a **duração** da música, junto com o formato, a taxa de bits e a frequência do áudio (só leitura: a duração não é uma tag).
+- **Pesquisar capa online** agora abre uma caixa de pesquisa já preenchida com artista e álbum (ou música): edite o texto para procurar outra coisa. Procura no Cover Art Archive e no iTunes; toque numa capa para usá-la, e ela só é gravada ao salvar.
+
 ## MissionPlayer v2.21.2 — Editor mostra a capa original do arquivo
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.21.2-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

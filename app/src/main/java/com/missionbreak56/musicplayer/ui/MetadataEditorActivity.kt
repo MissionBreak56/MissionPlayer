@@ -66,6 +66,7 @@ class MetadataEditorActivity : BaseActivity() {
     private lateinit var coverNote: TextView
     private lateinit var optionsScroll: HorizontalScrollView
     private lateinit var optionsRow: LinearLayout
+    private lateinit var durationView: TextView
     private lateinit var searchBtn: MaterialButton
     private lateinit var lyricsBtn: MaterialButton
     private lateinit var coverSearchBtn: MaterialButton
@@ -216,6 +217,12 @@ class MetadataEditorActivity : BaseActivity() {
         form.addView(searchBtn, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
 
         sectionTitle(tr("Informações principais", "Main information"))
+        durationView = TextView(this).apply {
+            textSize = 14f
+            setPadding(0, dp(2), 0, dp(2))
+            contentDescription = tr("Duração e dados do áudio", "Duration and audio details")
+        }
+        form.addView(durationView)
         addField(TagField.TITLE)
         addField(TagField.ARTIST)
 
@@ -267,8 +274,8 @@ class MetadataEditorActivity : BaseActivity() {
         coverButtons.addView(undoBtn, LinearLayout.LayoutParams(0, -2, 1f))
         form.addView(coverButtons, LinearLayout.LayoutParams(-1, -2))
         coverSearchBtn = MaterialButton(this).apply {
-            text = tr("Buscar capa online", "Find cover online")
-            setOnClickListener { vm.searchCovers() }
+            text = tr("Pesquisar capa online", "Search cover online")
+            setOnClickListener { showCoverSearchDialog() }
         }
         form.addView(coverSearchBtn, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(4) })
         coverNote = TextView(this).apply {
@@ -340,6 +347,7 @@ class MetadataEditorActivity : BaseActivity() {
             populate()
         }
         val writable = s.format.writable
+        if (!s.loading) durationView.text = tr("Duração: ", "Duration: ") + vm.audioSummary()
         for ((f, til) in layouts) {
             val supported = s.format.supports(f) || s.loading
             til.visibility = if (supported) View.VISIBLE else View.GONE
@@ -453,6 +461,24 @@ class MetadataEditorActivity : BaseActivity() {
 
     private fun launchPicker() {
         pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private fun showCoverSearchDialog() {
+        val input = TextInputEditText(this)
+        input.setSingleLine()
+        input.setText(vm.defaultCoverTerm())
+        input.setSelection(input.text?.length ?: 0)
+        input.hint = tr("Artista, álbum ou música", "Artist, album or song")
+        val box = LinearLayout(this)
+        box.setPadding(dp(24), dp(8), dp(24), 0)
+        box.addView(input, LinearLayout.LayoutParams(-1, -2))
+        MaterialAlertDialogBuilder(this)
+            .setTitle(tr("Pesquisar capa", "Search cover"))
+            .setMessage(tr("Edite o texto se quiser procurar outra coisa.", "Edit the text to look for something else."))
+            .setView(box)
+            .setPositiveButton(tr("Pesquisar", "Search")) { _, _ -> vm.searchCovers(input.text?.toString().orEmpty()) }
+            .setNegativeButton(tr("Cancelar", "Cancel"), null)
+            .show()
     }
 
     private fun confirmRemoveCover() {

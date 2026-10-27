@@ -86,6 +86,7 @@ ocultar, **Editar metadados**, **Substituir capa** e **Remover capa** (veja *Edi
 ### Editor de metadados
 Menu ⋮ da música (ou do player) → **Editar metadados**. Grava as tags **dentro do arquivo** de áudio
 (MP3, FLAC, OGG/Opus e M4A/MP4; os outros formatos ficam só para leitura).
+- **Duração:** o editor mostra a duração da música, o formato, a taxa de bits e a frequência (só leitura).
 - **Campos:** título, artista, artista do álbum, álbum, gênero, ano/data, faixa e total, disco e total,
   compositor, letrista, gravadora, álbum original e letra (texto simples). Só aparecem os campos que o
   formato do arquivo realmente guarda.
@@ -95,7 +96,7 @@ Menu ⋮ da música (ou do player) → **Editar metadados**. Grava as tags **den
   correspondência fraca, não altera nada. Campos que você já digitou não são sobrescritos sem perguntar.
 - **Buscar letra online:** usa as mesmas fontes das letras automáticas; letras sincronizadas viram texto
   simples e você revisa antes de salvar.
-- **Capa:** mostra a capa original gravada no arquivo (não a personalizada do app); ao salvar uma capa nova ou remover a capa, a personalizada do app é excluída. *Escolher imagem* (seletor do sistema), *Buscar capa online* (Cover Art Archive e iTunes) e
+- **Capa:** mostra a capa original gravada no arquivo (não a personalizada do app); ao salvar uma capa nova ou remover a capa, a personalizada do app é excluída. *Escolher imagem* (seletor do sistema), *Pesquisar capa online* (caixa de pesquisa editável; Cover Art Archive e iTunes) e
   *Remover capa*. A imagem é validada e reduzida para no máximo 1200 px; só a capa frontal é trocada.
 - **Nada é gravado até você tocar em Salvar.** A gravação é segura: cópia de segurança, gravação numa
   cópia de trabalho, conferência da leitura e restauração do original se algo falhar. O áudio não é
@@ -361,6 +362,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.21.3** | O editor de metadados mostra a duração (e formato, taxa de bits e frequência) e a busca de capa online passa a ter uma caixa de pesquisa editável |
 | **2.21.2** | O editor de metadados mostra a capa original gravada no arquivo (não a personalizada do app); ao salvar uma capa nova, a personalizada do app é excluída |
 | **2.21.1** | Salvar uma letra nova no editor de metadados remove a letra que o app guardava antes, para a letra gravada no arquivo passar a valer |
 | **2.21.0** | Editor de metadados: grava tags e capa no arquivo (MP3, FLAC, OGG/Opus, M4A), busca automática no MusicBrainz, busca de letra e de capa online, gravação com cópia de segurança e conferência; Kotlin 2.1 |

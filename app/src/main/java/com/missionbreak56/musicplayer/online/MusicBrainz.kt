@@ -208,6 +208,17 @@ object MusicBrainzParser {
         return out
     }
 
+    /** Release search answer -> release ids (used to look for covers by a free search text). */
+    fun parseReleaseIds(json: String): List<String> {
+        val root = try {
+            JSONObject(json)
+        } catch (e: JSONException) {
+            throw OnlineException(OnlineError.INVALID_RESPONSE, "The answer is not valid JSON", cause = e)
+        }
+        if (!root.has("releases")) throw OnlineException(OnlineError.INVALID_RESPONSE, "The answer has no releases list")
+        return root.optJSONArray("releases").objects().map { it.str("id") }.filter { it.isNotEmpty() }
+    }
+
     private fun titleCase(s: String): String =
         s.split(' ').joinToString(" ") { w -> w.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() } }
 }
@@ -278,6 +289,14 @@ class MusicBrainzClient(
         }
         val sorted = rows.sortedByDescending { it.score }.take(12)
         return SearchOutcome(MatchScorer.classify(sorted), sorted)
+    }
+
+    /** Releases whose title matches the free [term] (best first), to look their covers up. */
+    suspend fun releaseIdsFor(term: String): List<String> {
+        val tokens = MatchScorer.plain(term)
+        if (tokens.isEmpty()) return emptyList()
+        val body = fetch("release?query=${enc("release:($tokens)")}&limit=6&fmt=json")
+        return MusicBrainzParser.parseReleaseIds(body)
     }
 
     /** Downloads the data of the chosen result: its release (album, track/disc numbers, label) and the work credits. */

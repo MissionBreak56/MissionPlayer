@@ -196,4 +196,9 @@ class OnlineTest {
         assertEquals("First line\nSecond line\n\nLast", LyricsText.toPlain(lrc))
         assertEquals("já é texto", LyricsText.toPlain("já é texto"))
     }
+
+    @Test fun releaseSearchGivesIds() {
+        assertEquals(listOf("a", "b"), MusicBrainzParser.parseReleaseIds("""{"releases":[{"id":"a","title":"X"},{"id":"b"},{"title":"no id"}]}"""))
+        try { MusicBrainzParser.parseReleaseIds("""{"x":1}"""); fail() } catch (e: OnlineException) { assertEquals(OnlineError.INVALID_RESPONSE, e.error) }
+    }
 }
