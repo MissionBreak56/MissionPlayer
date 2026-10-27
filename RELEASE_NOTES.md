@@ -1,3 +1,11 @@
+## MissionPlayer v2.21.2 — Editor mostra a capa original do arquivo
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.21.2-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Correção
+- No editor de metadados, a capa mostrada agora é a **capa original gravada no arquivo**, e não a capa personalizada que o app guarda. Se o arquivo não tem capa incorporada, o editor avisa.
+- Ao salvar uma capa nova (ou remover a capa), a capa personalizada do app é excluída e passa a valer a que você escolheu.
+
 ## MissionPlayer v2.21.1 — Letra do metadado passa a valer
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.21.1-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

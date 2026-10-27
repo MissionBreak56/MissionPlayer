@@ -407,17 +407,17 @@ class MetadataEditorActivity : BaseActivity() {
                 coverInfo.text = tr("A capa incorporada será removida ao salvar.", "The embedded cover will be removed when you save.")
             }
             is CoverUi.Keep -> {
-                coverInfo.text = tr("Capa atual", "Current cover")
+                coverInfo.text = tr("Capa original do arquivo", "Original cover of the file")
                 val song = vm.song
                 if (song == null) {
                     coverView.setImageResource(R.drawable.art_placeholder)
                 } else {
                     lifecycleScope.launch {
-                        val bmp = ArtLoader.bitmap(applicationContext, song, 600)
+                        val bmp = ArtLoader.fileCover(applicationContext, song, 600)
                         if (renderedCover == key) {
                             if (bmp != null) coverView.setImageBitmap(bmp) else {
                                 coverView.setImageResource(R.drawable.art_placeholder)
-                                coverInfo.text = tr("Esta música não tem capa", "This song has no cover")
+                                coverInfo.text = tr("O arquivo não tem capa incorporada", "The file has no embedded cover")
                             }
                         }
                     }

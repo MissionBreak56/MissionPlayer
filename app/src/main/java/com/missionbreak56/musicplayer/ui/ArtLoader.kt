@@ -80,6 +80,15 @@ object ArtLoader {
     /** Blocking decode (call from a background thread). Returns null when the song has no cover. */
     fun decodeSync(context: Context, song: Song, size: Int): Bitmap? = decode(context, song, size)
 
+    /**
+     * The picture stored inside the audio file itself, ignoring any custom cover the app keeps for the song.
+     * Used by the metadata editor, which edits the file's cover, not the app's. Null when the file has none.
+     */
+    suspend fun fileCover(context: Context, song: Song, size: Int): Bitmap? {
+        val app = context.applicationContext
+        return withContext(Dispatchers.IO) { decodeEmbedded(app, song, size) }
+    }
+
     /** Suspending variant used when the raw bitmap is needed (e.g. for colour extraction). */
     suspend fun bitmap(context: Context, song: Song, size: Int): Bitmap? {
         val k = key(context, song, size)

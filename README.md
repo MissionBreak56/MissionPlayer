@@ -95,7 +95,7 @@ Menu ⋮ da música (ou do player) → **Editar metadados**. Grava as tags **den
   correspondência fraca, não altera nada. Campos que você já digitou não são sobrescritos sem perguntar.
 - **Buscar letra online:** usa as mesmas fontes das letras automáticas; letras sincronizadas viram texto
   simples e você revisa antes de salvar.
-- **Capa:** *Escolher imagem* (seletor do sistema), *Buscar capa online* (Cover Art Archive e iTunes) e
+- **Capa:** mostra a capa original gravada no arquivo (não a personalizada do app); ao salvar uma capa nova ou remover a capa, a personalizada do app é excluída. *Escolher imagem* (seletor do sistema), *Buscar capa online* (Cover Art Archive e iTunes) e
   *Remover capa*. A imagem é validada e reduzida para no máximo 1200 px; só a capa frontal é trocada.
 - **Nada é gravado até você tocar em Salvar.** A gravação é segura: cópia de segurança, gravação numa
   cópia de trabalho, conferência da leitura e restauração do original se algo falhar. O áudio não é
@@ -361,6 +361,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.21.2** | O editor de metadados mostra a capa original gravada no arquivo (não a personalizada do app); ao salvar uma capa nova, a personalizada do app é excluída |
 | **2.21.1** | Salvar uma letra nova no editor de metadados remove a letra que o app guardava antes, para a letra gravada no arquivo passar a valer |
 | **2.21.0** | Editor de metadados: grava tags e capa no arquivo (MP3, FLAC, OGG/Opus, M4A), busca automática no MusicBrainz, busca de letra e de capa online, gravação com cópia de segurança e conferência; Kotlin 2.1 |
 | **2.20.1** | Corrige a barra de ajuste de sincronia da letra, que ficava por cima das linhas: agora ela ocupa um espaço próprio abaixo da letra |
