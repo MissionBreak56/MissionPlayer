@@ -457,6 +457,50 @@ object LyricsFetcher {
         return found.outcome
     }
 
+    /** One version of the lyrics offered by a source. [synced] means it has [mm:ss] time stamps (LRC). */
+    class Option(val source: String, val text: String, val synced: Boolean)
+
+    class Choices(val options: List<Option>, val outcome: Outcome)
+
+    /**
+     * Asks the sources and keeps every different version they return (up to [max]), synced ones first, so the
+     * user can choose. Nothing is saved. Blocking: call from a background thread.
+     */
+    fun lookupAll(song: Song, max: Int = 6): Choices {
+        if (song.title.isBlank()) return Choices(emptyList(), Outcome.NOT_FOUND)
+        val found = ArrayList<Option>()
+        val seen = HashSet<String>()
+        var answered = false
+        var failed = false
+        var skipped = false
+        for (p in providers) {
+            if (found.size >= max) break
+            val until = coolUntil[p.name] ?: 0L
+            if (System.currentTimeMillis() < until) { skipped = true; continue }
+            try {
+                val text = p.find(song)
+                answered = true
+                fails[p.name] = 0
+                if (!text.isNullOrBlank() && seen.add(text.trim().replace(Regex("\\s+"), " "))) {
+                    found += Option(p.name, text, syncedTag.containsMatchIn(text))
+                }
+            } catch (_: RateLimited) {
+                coolUntil[p.name] = System.currentTimeMillis() + COOLDOWN_MS
+                skipped = true
+            } catch (_: Exception) {
+                failed = true
+            }
+        }
+        val sorted = found.sortedByDescending { it.synced }
+        val outcome = when {
+            sorted.isNotEmpty() -> Outcome.FOUND
+            answered -> Outcome.NOT_FOUND
+            skipped && !failed -> Outcome.RATE_LIMITED
+            else -> Outcome.ERROR
+        }
+        return Choices(sorted, outcome)
+    }
+
     /** Asks the sources for the lyrics of [song] and returns them without saving. Blocking: call from a background thread. */
     fun lookup(song: Song): Lookup {
         if (song.title.isBlank()) return Lookup(null, Outcome.NOT_FOUND)

@@ -94,8 +94,9 @@ Menu ⋮ da música (ou do player) → **Editar metadados**. Grava as tags **den
   título, artista, álbum, duração e ano, e diferencia versões ao vivo, remixes e remasterizações. Com um
   resultado claro, preenche os campos; com vários possíveis, mostra a lista para você escolher; com
   correspondência fraca, não altera nada. Campos que você já digitou não são sobrescritos sem perguntar.
-- **Buscar letra online:** usa as mesmas fontes das letras automáticas; letras sincronizadas viram texto
-  simples e você revisa antes de salvar.
+- **Buscar letra online:** consulta as mesmas fontes das letras automáticas e deixa você **escolher a versão**,
+  com as **sincronizadas (LRC) primeiro** (gravadas com os tempos `[mm:ss]` na tag de letra, que o app lê como
+  letra sincronizada) e uma opção em texto simples para cada uma. Você revisa antes de salvar.
 - **Capa:** mostra a capa original gravada no arquivo (não a personalizada do app); ao salvar uma capa nova ou remover a capa, a personalizada do app é excluída. *Escolher imagem* (seletor do sistema), *Pesquisar capa online* (caixa de pesquisa editável; Cover Art Archive e iTunes) e
   *Remover capa*. A imagem é validada e reduzida para no máximo 1200 px; só a capa frontal é trocada.
 - **Nada é gravado até você tocar em Salvar.** A gravação é segura: cópia de segurança, gravação numa
@@ -105,8 +106,8 @@ Menu ⋮ da música (ou do player) → **Editar metadados**. Grava as tags **den
 - Ao salvar uma **letra nova**, a letra que o app guardava antes (baixada ou anexada) é removida para a do arquivo valer.
 - Depois de salvar, a biblioteca, as capas, a notificação e a música em reprodução são atualizadas.
 
-Ainda não existe edição em lote, e a letra gravada na tag não é sincronizada (o app continua guardando
-as letras sincronizadas para uso offline).
+Ainda não existe edição em lote. A letra sincronizada vai na tag como texto LRC (não no quadro SYLT do ID3);
+players que não entendem LRC mostram os tempos como texto.
 
 ### Foto da pasta
 Em *Pastas*, menu ⋮ da pasta (ou ⋮ dentro da pasta):
@@ -362,6 +363,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.21.4** | Buscar letra online no editor de metadados deixa escolher a versão e dá prioridade às letras sincronizadas (LRC), gravadas com os tempos na tag |
 | **2.21.3** | O editor de metadados mostra a duração (e formato, taxa de bits e frequência) e a busca de capa online passa a ter uma caixa de pesquisa editável |
 | **2.21.2** | O editor de metadados mostra a capa original gravada no arquivo (não a personalizada do app); ao salvar uma capa nova, a personalizada do app é excluída |
 | **2.21.1** | Salvar uma letra nova no editor de metadados remove a letra que o app guardava antes, para a letra gravada no arquivo passar a valer |

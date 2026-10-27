@@ -70,11 +70,14 @@ data class EditorState(
     val dirty: Boolean = false
 )
 
+/** One lyrics version the user can pick: [text] is what gets written to the tag. */
+class LyricsChoice(val label: String, val preview: String, val text: String)
+
 sealed class EditorEvent {
     class PickCandidate(val outcome: SearchOutcome, val weak: Boolean) : EditorEvent()
     class ConfirmReplaceEdits(val meta: ImportedMetadata, val conflicts: List<TagField>) : EditorEvent()
     class Toast(val text: String) : EditorEvent()
-    class ConfirmReplaceLyrics(val text: String) : EditorEvent()
+    class ChooseLyrics(val choices: List<LyricsChoice>, val replacing: Boolean) : EditorEvent()
     object Saved : EditorEvent()
     class SaveFailed(val error: TagError) : EditorEvent()
 }
@@ -361,13 +364,26 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             try {
-                val found = withContext(Dispatchers.IO) { LyricsFetcher.lookup(probe) }
-                val plain = found.text?.let { LyricsText.toPlain(it) }.orEmpty()
+                val found = withContext(Dispatchers.IO) { LyricsFetcher.lookupAll(probe) }
+                val choices = ArrayList<LyricsChoice>()
+                // Synced versions first and kept as they are (the tag then carries the time stamps); each also
+                // gets a plain-text twin for people who prefer lyrics without timing.
+                for (o in found.options.filter { it.synced }) {
+                    choices += LyricsChoice(tr("Sincronizada (LRC) · ${o.source}", "Synced (LRC) · ${o.source}"), previewOf(o.text), o.text)
+                }
+                for (o in found.options) {
+                    val plain = LyricsText.toPlain(o.text)
+                    if (plain.isEmpty()) continue
+                    val label = if (o.synced) tr("Texto simples, sem tempos · ${o.source}", "Plain text, no timing · ${o.source}")
+                    else tr("Texto simples · ${o.source}", "Plain text · ${o.source}")
+                    choices += LyricsChoice(label, previewOf(plain), plain)
+                }
                 when {
-                    plain.isNotEmpty() -> {
+                    choices.isNotEmpty() -> {
                         _state.update { it.copy(status = null) }
-                        if (edited[TagField.LYRICS].orEmpty().isBlank()) applyLyrics(plain)
-                        else _events.emit(EditorEvent.ConfirmReplaceLyrics(plain))
+                        val replacing = edited[TagField.LYRICS].orEmpty().isNotBlank()
+                        if (choices.size == 1 && !replacing) applyLyrics(choices[0].text)
+                        else _events.emit(EditorEvent.ChooseLyrics(choices, replacing))
                     }
                     found.outcome == LyricsFetcher.Outcome.RATE_LIMITED -> setStatus(
                         tr("As fontes de letra pediram para esperar. Tente de novo em instantes.", "The lyrics sources asked to wait. Try again shortly."), true
@@ -387,6 +403,9 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
         }
     }
 
+    private fun previewOf(text: String): String =
+        LyricsText.toPlain(text).lineSequence().map { it.trim() }.firstOrNull { it.isNotEmpty() }.orEmpty().take(70)
+
     /** Puts [text] in the lyrics field. Nothing is written to the file until Save. */
     fun applyLyrics(text: String) {
         edited[TagField.LYRICS] = text
@@ -395,7 +414,7 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
             it.copy(
                 fieldsRevision = it.fieldsRevision + 1, importedFields = it.importedFields + TagField.LYRICS,
                 dirty = dirtyFor(it.cover),
-                status = tr("Letra encontrada (texto simples). Revise e toque em Salvar.", "Lyrics found (plain text). Review them and tap Save."),
+                status = tr("Letra escolhida. Revise e toque em Salvar.", "Lyrics chosen. Review them and tap Save."),
                 statusIsError = false
             )
         }

@@ -1,3 +1,15 @@
+## MissionPlayer v2.21.4 — Letras sincronizadas no editor de metadados
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.21.4-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Novidades
+- **Buscar letra online** agora procura em todas as fontes e deixa você **escolher a versão**: as letras **sincronizadas (LRC)** vêm primeiro, cada uma também com a versão em texto simples (sem tempos), e depois as de texto simples. Cada opção mostra a fonte e a primeira linha.
+- A letra sincronizada é gravada **como está, com os tempos `[mm:ss]`, dentro da tag de letra** do arquivo; o app lê esse formato e mostra a letra sincronizada no player. Outros players podem mostrar os tempos como texto.
+- Só uma opção encontrada e campo vazio: ela é aplicada direto. Se já houver letra no campo, a escolha mostra que ela será substituída. Nada é gravado até tocar em Salvar.
+
+### Limitações
+- A tag guarda a letra sincronizada como texto LRC (não no quadro SYLT do ID3), que é o formato que players como este leem.
+
 ## MissionPlayer v2.21.3 — Duração e pesquisa de capa no editor
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.21.3-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

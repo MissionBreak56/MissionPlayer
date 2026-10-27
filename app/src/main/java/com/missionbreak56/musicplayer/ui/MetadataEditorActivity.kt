@@ -157,7 +157,7 @@ class MetadataEditorActivity : BaseActivity() {
         TagField.LABEL -> tr("Gravadora", "Label")
         TagField.ORIGINAL_ALBUM -> tr("Álbum ou lançamento original", "Original album")
         TagField.COMMENT -> tr("Comentários", "Comments")
-        TagField.LYRICS -> tr("Letra (texto simples, sem sincronia)", "Lyrics (plain text, not synced)")
+        TagField.LYRICS -> tr("Letra (sincronizada [mm:ss] ou texto simples)", "Lyrics (synced [mm:ss] or plain text)")
     }
 
     private fun field(f: TagField, multiline: Boolean = false, numeric: Boolean = false): TextInputLayout {
@@ -597,12 +597,12 @@ class MetadataEditorActivity : BaseActivity() {
                     showCandidates(e.outcome.candidates)
                 }
             }
-            is EditorEvent.ConfirmReplaceLyrics -> {
+            is EditorEvent.ChooseLyrics -> {
+                val items = e.choices.map { c -> c.label + (if (c.preview.isNotEmpty()) "\n" + c.preview else "") }.toTypedArray()
                 MaterialAlertDialogBuilder(this)
-                    .setTitle(tr("Substituir a letra atual?", "Replace the current lyrics?"))
-                    .setMessage(tr("Foi encontrada uma letra para esta música. Ela substituirá o texto do campo (só é gravada ao salvar).", "Lyrics were found for this song. They will replace the text in the field (only written when you save)."))
-                    .setPositiveButton(tr("Substituir", "Replace")) { _, _ -> vm.applyLyrics(e.text) }
-                    .setNegativeButton(tr("Manter a atual", "Keep current"), null)
+                    .setTitle(if (e.replacing) tr("Escolha a letra (substitui a atual)", "Choose the lyrics (replaces the current ones)") else tr("Escolha a letra", "Choose the lyrics"))
+                    .setItems(items) { _, which -> vm.applyLyrics(e.choices[which].text) }
+                    .setNegativeButton(tr("Cancelar", "Cancel"), null)
                     .show()
             }
             is EditorEvent.ConfirmReplaceEdits -> {
