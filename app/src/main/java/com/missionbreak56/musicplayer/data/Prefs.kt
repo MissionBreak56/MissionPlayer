@@ -7,6 +7,11 @@ import androidx.appcompat.app.AppCompatDelegate
 /**
  * Tiny SharedPreferences wrapper: favorites, playlists, play statistics,
  * appearance and equalizer settings. Everything is stored on-device.
+ *
+ * Hot collections (favorites, playlists, statistics) are cached in memory and
+ * written back through the same single-line format, so scrolling a long list or
+ * skipping songs never re-parses and re-serializes the whole store on the main
+ * thread.
  */
 object Prefs {
 
@@ -59,6 +64,33 @@ object Prefs {
     @Volatile
     private var sp: SharedPreferences? = null
 
+    // ----- In-memory caches for the hot collections (see class comment) -----
+
+    @Volatile
+    private var favCache: MutableSet<String>? = null
+    @Volatile
+    private var hiddenSongsCache: MutableSet<String>? = null
+    @Volatile
+    private var hiddenFoldersCache: MutableSet<String>? = null
+    @Volatile
+    private var playlistsCache: MutableMap<String, MutableList<Long>>? = null
+    @Volatile
+    private var countsCache: MutableMap<Long, Int>? = null
+    @Volatile
+    private var recentCache: List<Long>? = null
+    @Volatile
+    private var listenCache: MutableMap<Long, Long>? = null
+
+    private fun dropCaches() {
+        favCache = null
+        hiddenSongsCache = null
+        hiddenFoldersCache = null
+        playlistsCache = null
+        countsCache = null
+        recentCache = null
+        listenCache = null
+    }
+
     fun init(context: Context) {
         if (sp == null) {
             sp = context.applicationContext.getSharedPreferences(FILE, Context.MODE_PRIVATE)
@@ -84,6 +116,7 @@ object Prefs {
             }
         }
         editor.commit()
+        dropCaches()
     }
 
     fun registerListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
@@ -217,7 +250,8 @@ object Prefs {
         if (from == to) return
         val st = store()
         val raw = st.getString("$KEY_CUSTOM_ORDER$from", null) ?: return
-        val edit = st.edit().remove("$KEY_CUSTOM_ORDER$from")
+        val edit = st.edit()
+        edit.remove("$KEY_CUSTOM_ORDER$from")
         if (!st.contains("$KEY_CUSTOM_ORDER$to")) edit.putString("$KEY_CUSTOM_ORDER$to", raw)
         edit.apply()
     }
@@ -242,31 +276,50 @@ object Prefs {
     // ----- Hidden songs / folders -----
 
     fun hiddenSongs(): MutableSet<String> {
+        val cached = hiddenSongsCache
+        if (cached != null) return HashSet(cached)
         val s = sp ?: return mutableSetOf()
-        return (s.getStringSet(KEY_HIDDEN_SONGS, emptySet()) ?: emptySet()).toMutableSet()
+        val parsed = (s.getStringSet(KEY_HIDDEN_SONGS, emptySet()) ?: emptySet()).toMutableSet()
+        hiddenSongsCache = parsed
+        return HashSet(parsed)
     }
 
     fun hiddenFolders(): MutableSet<String> {
+        val cached = hiddenFoldersCache
+        if (cached != null) return HashSet(cached)
         val s = sp ?: return mutableSetOf()
-        return (s.getStringSet(KEY_HIDDEN_FOLDERS, emptySet()) ?: emptySet()).toMutableSet()
+        val parsed = (s.getStringSet(KEY_HIDDEN_FOLDERS, emptySet()) ?: emptySet()).toMutableSet()
+        hiddenFoldersCache = parsed
+        return HashSet(parsed)
     }
 
     fun setHiddenSongs(set: Set<String>) {
-        store().edit().putStringSet(KEY_HIDDEN_SONGS, HashSet(set)).apply()
+        val copy = HashSet(set)
+        hiddenSongsCache = copy
+        store().edit().putStringSet(KEY_HIDDEN_SONGS, copy).apply()
     }
 
     fun setHiddenFolders(set: Set<String>) {
-        store().edit().putStringSet(KEY_HIDDEN_FOLDERS, HashSet(set)).apply()
+        val copy = HashSet(set)
+        hiddenFoldersCache = copy
+        store().edit().putStringSet(KEY_HIDDEN_FOLDERS, copy).apply()
     }
 
     // ----- Favorites -----
 
     fun favorites(): MutableSet<String> {
+        val cached = favCache
+        if (cached != null) return HashSet(cached)
         val s = sp ?: return mutableSetOf()
-        return (s.getStringSet(KEY_FAVORITES, emptySet()) ?: emptySet()).toMutableSet()
+        val parsed = (s.getStringSet(KEY_FAVORITES, emptySet()) ?: emptySet()).toMutableSet()
+        favCache = parsed
+        return HashSet(parsed)
     }
 
-    fun isFavorite(songId: Long): Boolean = favorites().contains(songId.toString())
+    fun isFavorite(songId: Long): Boolean {
+        val cached = favCache
+        return if (cached != null) cached.contains(songId.toString()) else favorites().contains(songId.toString())
+    }
 
     /** Returns the new favorite state. */
     fun toggleFavorite(songId: Long): Boolean {
@@ -277,31 +330,41 @@ object Prefs {
         } else {
             set.add(key); true
         }
-        store().edit().putStringSet(KEY_FAVORITES, set).apply()
+        favCache = set
+        store().edit().putStringSet(KEY_FAVORITES, HashSet(set)).apply()
         return nowFavorite
     }
 
     // ----- Playlists -----
 
     fun playlists(): MutableMap<String, MutableList<Long>> {
+        val cached = playlistsCache
+        if (cached != null) {
+            return cached.entries.associateTo(LinkedHashMap()) { (k, v) -> k to v.toMutableList() }
+        }
         val raw = sp?.getString(KEY_PLAYLISTS, "") ?: ""
         val map = linkedMapOf<String, MutableList<Long>>()
-        if (raw.isBlank()) return map
-        raw.split(SEP_ENTRY).forEach { line ->
-            if (line.isBlank()) return@forEach
-            val parts = line.split(SEP_FIELD)
-            val name = parts.getOrNull(0).orEmpty()
-            if (name.isBlank()) return@forEach
-            val ids = parts.getOrNull(1)
-                ?.split(SEP_ID)
-                ?.mapNotNull { it.toLongOrNull() }
-                ?: emptyList()
-            map[name] = ids.toMutableList()
+        if (raw.isNotBlank()) {
+            raw.split(SEP_ENTRY).forEach { line ->
+                if (line.isBlank()) return@forEach
+                val parts = line.split(SEP_FIELD)
+                val name = parts.getOrNull(0).orEmpty()
+                if (name.isBlank()) return@forEach
+                val ids = parts.getOrNull(1)
+                    ?.split(SEP_ID)
+                    ?.mapNotNull { it.toLongOrNull() }
+                    ?: emptyList()
+                map[name] = ids.toMutableList()
+            }
         }
+        playlistsCache = map
         return map
     }
 
     fun savePlaylists(map: Map<String, List<Long>>) {
+        val snapshot = LinkedHashMap<String, MutableList<Long>>()
+        map.forEach { (k, v) -> snapshot[k] = v.toMutableList() }
+        playlistsCache = snapshot
         val raw = map.entries.joinToString(SEP_ENTRY) { (name, ids) ->
             val safeName = name.replace(SEP_ENTRY, " ").replace(SEP_FIELD, "/")
             safeName + SEP_FIELD + ids.joinToString(SEP_ID)
@@ -373,42 +436,54 @@ object Prefs {
     // ----- Play statistics -----
 
     fun playCounts(): Map<Long, Int> {
+        val cached = countsCache
+        if (cached != null) return HashMap(cached)
         val raw = sp?.getString(KEY_COUNTS, "") ?: ""
-        if (raw.isBlank()) return emptyMap()
         val map = HashMap<Long, Int>()
-        raw.split(",").forEach { entry ->
-            val parts = entry.split(":")
-            val id = parts.getOrNull(0)?.toLongOrNull()
-            val count = parts.getOrNull(1)?.toIntOrNull()
-            if (id != null && count != null) map[id] = count
+        if (raw.isNotBlank()) {
+            raw.split(",").forEach { entry ->
+                val parts = entry.split(":")
+                val id = parts.getOrNull(0)?.toLongOrNull()
+                val count = parts.getOrNull(1)?.toIntOrNull()
+                if (id != null && count != null) map[id] = count
+            }
         }
-        return map
+        countsCache = map
+        return HashMap(map)
     }
 
     fun recent(): List<Long> {
+        val cached = recentCache
+        if (cached != null) return cached
         val raw = sp?.getString(KEY_RECENT, "") ?: ""
-        if (raw.isBlank()) return emptyList()
-        return raw.split(",").mapNotNull { it.toLongOrNull() }
+        val parsed = if (raw.isBlank()) emptyList() else raw.split(",").mapNotNull { it.toLongOrNull() }
+        recentCache = parsed
+        return parsed
     }
 
     /** Exact time heard per song, in milliseconds. */
     fun listenedMs(): Map<Long, Long> {
+        val cached = listenCache
+        if (cached != null) return HashMap(cached)
         val raw = sp?.getString(KEY_LISTEN, "") ?: ""
-        if (raw.isBlank()) return emptyMap()
         val map = HashMap<Long, Long>()
-        raw.split(",").forEach { entry ->
-            val parts = entry.split(":")
-            val id = parts.getOrNull(0)?.toLongOrNull()
-            val ms = parts.getOrNull(1)?.toLongOrNull()
-            if (id != null && ms != null) map[id] = ms
+        if (raw.isNotBlank()) {
+            raw.split(",").forEach { entry ->
+                val parts = entry.split(":")
+                val id = parts.getOrNull(0)?.toLongOrNull()
+                val ms = parts.getOrNull(1)?.toLongOrNull()
+                if (id != null && ms != null) map[id] = ms
+            }
         }
-        return map
+        listenCache = map
+        return HashMap(map)
     }
 
     fun addListened(delta: Map<Long, Long>) {
         if (delta.isEmpty()) return
         val map = listenedMs().toMutableMap()
         delta.forEach { (id, ms) -> map[id] = (map[id] ?: 0L) + ms }
+        listenCache = map
         store().edit()
             .putString(KEY_LISTEN, map.entries.joinToString(",") { "${it.key}:${it.value}" })
             .apply()
@@ -416,14 +491,18 @@ object Prefs {
 
     /** Clears play counts and listening time (the "recently played" list is kept). */
     fun resetStats() {
+        countsCache = null
+        listenCache = null
         store().edit().remove(KEY_COUNTS).remove(KEY_LISTEN).apply()
     }
 
     fun recordPlay(songId: Long) {
         val counts = playCounts().toMutableMap()
         counts[songId] = (counts[songId] ?: 0) + 1
+        countsCache = counts
         val rawCounts = counts.entries.joinToString(",") { "${it.key}:${it.value}" }
         val newRecent = (listOf(songId) + recent().filter { it != songId }).take(100)
+        recentCache = newRecent
         store().edit()
             .putString(KEY_COUNTS, rawCounts)
             .putString(KEY_RECENT, newRecent.joinToString(","))

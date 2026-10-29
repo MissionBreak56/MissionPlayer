@@ -7,6 +7,11 @@ import android.provider.MediaStore
 /** Reads the on-device music library. Fully offline. */
 object MusicRepository {
 
+    /** True when the last [loadSongs] hit a permission or MediaStore error (its empty list then means "unknown"). */
+    @Volatile
+    var lastLoadFailed = false
+        private set
+
     private fun clean(value: String?): String {
         val t = value?.trim().orEmpty()
         return if (t.equals("<unknown>", ignoreCase = true)) "" else t
@@ -25,39 +30,55 @@ object MusicRepository {
             MediaStore.Audio.Media.DATE_ADDED,
             MediaStore.Audio.Media.TRACK,
             MediaStore.Audio.Media.DISPLAY_NAME,
+            MediaStore.Audio.Media.SIZE,
             MediaStore.Audio.Media.DATA
         )
         val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0"
         val sortOrder = "${MediaStore.Audio.Media.TITLE} COLLATE NOCASE ASC"
 
-        context.contentResolver.query(collection, projection, selection, null, sortOrder)?.use { c ->
-            val idCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
-            val titleCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
-            val artistCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
-            val albumCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
-            val albumIdCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
-            val durationCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
-            val addedCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED)
-            val trackCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK)
-            val nameCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
-            val dataCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+        // A revoked permission or a broken MediaStore must never crash the app: an empty
+        // library is shown instead, with the permission panel offering to grant access again.
+        lastLoadFailed = false
+        try {
+            context.contentResolver.query(collection, projection, selection, null, sortOrder)?.use { c ->
+                val idCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+                val titleCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
+                val artistCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
+                val albumCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
+                val albumIdCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
+                val durationCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+                val addedCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED)
+                val trackCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK)
+                val nameCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
+                val sizeCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
+                val dataCol = c.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
 
-            while (c.moveToNext()) {
-                val id = c.getLong(idCol)
-                val fileName = c.getString(nameCol).orEmpty().substringBeforeLast('.')
-                songs += Song(
-                    id = id,
-                    title = clean(c.getString(titleCol)).ifBlank { fileName },
-                    artist = clean(c.getString(artistCol)),
-                    album = clean(c.getString(albumCol)),
-                    albumId = c.getLong(albumIdCol),
-                    durationMs = c.getLong(durationCol),
-                    uri = ContentUris.withAppendedId(collection, id),
-                    dateAdded = c.getLong(addedCol),
-                    track = c.getInt(trackCol) % 1000,
-                    path = c.getString(dataCol).orEmpty()
-                )
+                while (c.moveToNext()) {
+                    // Skip zero-byte entries: interrupted downloads and failed copies crash
+                    // the decoder when the user taps them, and they can never play anyway.
+                    if (c.getLong(sizeCol) <= 0L) continue
+                    val id = c.getLong(idCol)
+                    val fileName = c.getString(nameCol).orEmpty().substringBeforeLast('.')
+                    songs += Song(
+                        id = id,
+                        title = clean(c.getString(titleCol)).ifBlank { fileName },
+                        artist = clean(c.getString(artistCol)),
+                        album = clean(c.getString(albumCol)),
+                        albumId = c.getLong(albumIdCol),
+                        durationMs = c.getLong(durationCol),
+                        uri = ContentUris.withAppendedId(collection, id),
+                        dateAdded = c.getLong(addedCol),
+                        track = c.getInt(trackCol) % 1000,
+                        path = c.getString(dataCol).orEmpty()
+                    )
+                }
             }
+        } catch (_: SecurityException) {
+            // Permission revoked while the app was in the background: act as if empty.
+            lastLoadFailed = true
+        } catch (_: Exception) {
+            // MediaStore hiccup (e.g. while the SD card is being scanned): act as if empty.
+            lastLoadFailed = true
         }
         return songs
     }

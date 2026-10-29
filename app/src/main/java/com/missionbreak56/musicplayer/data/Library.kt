@@ -72,6 +72,9 @@ object Library {
 
         // 2. The real scan (genres are no longer read: there is no Genres tab).
         val fresh = withContext(Dispatchers.IO) { MusicRepository.loadSongs(app) }
+        // A failed read (permission revoked, MediaStore busy) says nothing about the files: keep what is shown
+        // and do not overwrite the saved library with an empty one.
+        if (MusicRepository.lastLoadFailed && loaded) return
         val changed = publish(fresh)
         // Reloading on every return to the app must not rebuild the lists when nothing changed,
         // otherwise a tap right after coming back is swallowed by the refresh.

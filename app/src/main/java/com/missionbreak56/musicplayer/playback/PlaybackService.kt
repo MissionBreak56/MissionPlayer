@@ -41,12 +41,24 @@ class PlaybackService : MediaSessionService() {
     private var exo: ExoPlayer? = null
     private val handler = Handler(Looper.getMainLooper())
 
-    /** While playing, saves the position every few seconds so "last song" is accurate. */
+    /**
+     * While playing, saves the position every few seconds so "last song" is accurate.
+     * The tick only runs while music is actually playing: when the player pauses it goes
+     * quiet instead of waking the main thread every 5 s for nothing.
+     */
     private val positionTick = object : Runnable {
         override fun run() {
-            exo?.let { if (it.isPlaying) PlaybackState.savePosition(it) }
-            handler.postDelayed(this, 5000L)
+            val p = exo
+            if (p != null && p.isPlaying) {
+                PlaybackState.savePosition(p)
+                handler.postDelayed(this, 5000L)
+            }
         }
+    }
+
+    private fun startPositionTick() {
+        handler.removeCallbacks(positionTick)
+        handler.postDelayed(positionTick, 5000L)
     }
 
     /** Counts the exact time each song is heard (for the statistics screen). */
@@ -107,6 +119,8 @@ class PlaybackService : MediaSessionService() {
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             exo?.let { PlaybackState.savePosition(it) }
+            // Resume the position saver only when it has something to save.
+            if (isPlaying) startPositionTick()
         }
     }
 
@@ -312,7 +326,7 @@ class PlaybackService : MediaSessionService() {
 
         player.addListener(statsListener)
         player.addListener(stateListener)
-        handler.postDelayed(positionTick, 5000L)
+        if (player.isPlaying) startPositionTick()
         handler.postDelayed(listenTick, 1000L)
         AudioFx.attach(player.audioSessionId)
         SleepTimer.onFinish = { player.pause() }
