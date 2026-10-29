@@ -72,6 +72,23 @@ jobs:
               print('::error title=Build error::' + msg)
           PY
 
+      - name: Report lint details
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          import glob
+          out = []
+          for f in glob.glob('app/build/reports/lint-results-*.txt'):
+              out += [l.rstrip() for l in open(f, errors='replace')][:60]
+          lines = [l.rstrip() for l in open('build.log', errors='replace')]
+          for i, l in enumerate(lines):
+              if 'Lint found' in l or 'lint-results' in l:
+                  out += lines[max(0, i - 3):i + 30]
+                  break
+          if out:
+              print('::error title=Lint details::' + '%0A'.join(o.replace('%', '%25')[:400] for o in out[:60]))
+          PY
+
       - name: List APKs
         run: find app/build/outputs/apk -name "*.apk" 2>/dev/null
 
