@@ -72,6 +72,12 @@ android {
         jvmTarget = "17"
     }
 
+    lint {
+        // lifecycle 2.9's lint check crashes inside AGP 8.7's lint (IncompatibleClassChangeError on the Kotlin
+        // analysis API). The app uses no LiveData, so the check has nothing to look at here.
+        disable += "NullSafeMutableLiveData"
+    }
+
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
