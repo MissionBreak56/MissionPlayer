@@ -85,6 +85,10 @@ jobs:
               if 'Lint found' in l or 'lint-results' in l:
                   out += lines[max(0, i - 3):i + 30]
                   break
+          for i, l in enumerate(lines):
+              if 'What went wrong' in l:
+                  out += lines[i:i + 25]
+                  break
           if out:
               print('::error title=Lint details::' + '%0A'.join(o.replace('%', '%25')[:400] for o in out[:60]))
           PY
