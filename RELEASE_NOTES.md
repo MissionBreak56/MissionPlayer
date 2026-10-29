@@ -1,3 +1,19 @@
+## MissionPlayer v2.22.0 — Android 15 e melhorias de desempenho e estabilidade
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.22.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Melhorias
+- **Android 15:** o app agora é compilado para o Android 15 (targetSdk e compileSdk 35). As telas já tratavam as bordas do sistema, então o visual não muda.
+- **Mais rápido:** favoritos, playlists e estatísticas ficam em memória, em vez de serem lidos e reescritos inteiros a cada música ou a cada linha da lista.
+- **Mais estável:** se a permissão for revogada ou o MediaStore falhar, o app não fecha nem apaga a biblioteca já mostrada; arquivos de 0 byte (downloads interrompidos) deixam de aparecer e travar o player.
+- **Menos bateria:** o salvamento periódico da posição só roda enquanto a música toca.
+- Bibliotecas atualizadas: Media3 1.5.1, WorkManager 2.10.0, lifecycle 2.9.3, core-ktx 1.15.0, RecyclerView 1.4.0, coroutines 1.9.0, Guava 33.3.1.
+
+### Alterações técnicas
+- Android Gradle Plugin 8.5.2 → 8.7.3; o workflow de build passa a usar Gradle 8.9 (exigido pelo AGP).
+- O check de lint `NullSafeMutableLiveData` foi desativado: ele quebra no lint do AGP 8.7 com o lifecycle 2.9, e o app não usa LiveData.
+- Versão: 2.21.4 → 2.22.0 (versionCode 56).
+
 ## MissionPlayer v2.21.4 — Letras sincronizadas no editor de metadados
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.21.4-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

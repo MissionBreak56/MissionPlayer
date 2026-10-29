@@ -332,8 +332,8 @@ em Configurações → *Letras automáticas* para o app não baixar letras.
 
 ## Tecnologia
 
-Kotlin 2.1 · AndroidX · Material Components 1.12 · Media3 (ExoPlayer, MediaSession) 1.4.1 · Palette ·
-View Binding · TagLib para Android (`io.github.kyant0:taglib`, leitura e gravação de tags) · `minSdk 23` · `targetSdk 34` · `compileSdk 34`.
+Kotlin 2.1 · AndroidX · Material Components 1.12 · Media3 (ExoPlayer, MediaSession) 1.5.1 · Palette ·
+View Binding · TagLib para Android (`io.github.kyant0:taglib`, leitura e gravação de tags) · `minSdk 23` · `targetSdk 35` · `compileSdk 35` · Android Gradle Plugin 8.7 (Gradle 8.9).
 
 ## Estrutura do projeto
 
@@ -363,6 +363,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.22.0** | Android 15 (targetSdk/compileSdk 35), AGP 8.7 e bibliotecas atualizadas (Media3 1.5.1, WorkManager 2.10, lifecycle 2.9, core-ktx 1.15…); cache em memória de favoritos, playlists e estatísticas; biblioteca protegida contra falha do MediaStore e arquivos de 0 byte ignorados; o gravador de posição só roda tocando |
 | **2.21.4** | Buscar letra online no editor de metadados deixa escolher a versão e dá prioridade às letras sincronizadas (LRC), gravadas com os tempos na tag |
 | **2.21.3** | O editor de metadados mostra a duração (e formato, taxa de bits e frequência) e a busca de capa online passa a ter uma caixa de pesquisa editável |
 | **2.21.2** | O editor de metadados mostra a capa original gravada no arquivo (não a personalizada do app); ao salvar uma capa nova, a personalizada do app é excluída |
