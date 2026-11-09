@@ -4,12 +4,12 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.net.URLEncoder
 
-/** Album covers from the iTunes Search service (no account needed): a second source next to the Cover Art Archive. */
+/** Cover pictures (of the songs' albums) from the iTunes Search service (no account needed): a second source next to the Cover Art Archive. */
 class ItunesCoverClient(private val http: HttpFetcher) {
 
     suspend fun search(term: String): List<CoverOption> {
         val q = URLEncoder.encode(term, "UTF-8")
-        val body = http.get("https://itunes.apple.com/search?term=$q&media=music&entity=album&limit=12", maxBytes = 2 * 1024 * 1024)
+        val body = http.get("https://itunes.apple.com/search?term=$q&media=music&entity=song&limit=15", maxBytes = 2 * 1024 * 1024)
         return parse(String(body, Charsets.UTF_8))
     }
 

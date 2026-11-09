@@ -76,6 +76,7 @@ class MetadataEditorActivity : BaseActivity() {
     private lateinit var cancelBtn: MaterialButton
     private lateinit var saveBtn: MaterialButton
     private lateinit var form: LinearLayout
+    private lateinit var scroll: ScrollView
 
     private val pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) vm.pickLocalCover(uri)
@@ -104,7 +105,16 @@ class MetadataEditorActivity : BaseActivity() {
         }
         root.addView(progress, LinearLayout.LayoutParams(-1, -2))
 
-        val scroll = ScrollView(this)
+        // The status line lives outside the scrolling form: showing or hiding it must not move what the user is looking at.
+        statusView = TextView(this).apply {
+            textSize = 14f
+            visibility = View.GONE
+            setPadding(dp(16), dp(6), dp(16), dp(6))
+            accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE
+        }
+        root.addView(statusView, LinearLayout.LayoutParams(-1, -2))
+
+        scroll = ScrollView(this)
         scroll.isFillViewport = false
         form = LinearLayout(this)
         form.orientation = LinearLayout.VERTICAL
@@ -201,14 +211,6 @@ class MetadataEditorActivity : BaseActivity() {
             setPadding(0, dp(8), 0, 0)
         }
         form.addView(readOnlyNote)
-
-        statusView = TextView(this).apply {
-            textSize = 14f
-            visibility = View.GONE
-            setPadding(0, dp(8), 0, dp(4))
-            accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE
-        }
-        form.addView(statusView)
 
         searchBtn = MaterialButton(this).apply {
             text = tr("Buscar informações automaticamente", "Find information automatically")
@@ -331,6 +333,19 @@ class MetadataEditorActivity : BaseActivity() {
     }
 
     private fun render(s: EditorState) {
+        // Whatever changes in the form (a cover picked, lyrics filled, fields imported), the screen stays where the
+        // user was: the position is put back after the layout caused by this render.
+        val keepY = scroll.scrollY
+        scroll.viewTreeObserver.addOnGlobalLayoutListener(object : android.view.ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                if (scroll.viewTreeObserver.isAlive) scroll.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                if (scroll.scrollY != keepY) scroll.scrollTo(0, keepY)
+            }
+        })
+        renderContent(s)
+    }
+
+    private fun renderContent(s: EditorState) {
         val working = s.busy || s.saving || s.loading
         progress.visibility = if (working) View.VISIBLE else View.GONE
 
@@ -375,7 +390,7 @@ class MetadataEditorActivity : BaseActivity() {
             )
         }
 
-        val canAct = !working && writable
+        val canAct = !s.loading && !s.saving && writable
         searchBtn.isEnabled = canAct
         searchBtn.text = if (s.importedFields.isNotEmpty() || s.coverOptions.isNotEmpty()) tr("Pesquisar novamente", "Search again")
         else tr("Buscar informações automaticamente", "Find information automatically")

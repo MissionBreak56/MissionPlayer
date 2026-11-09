@@ -97,7 +97,7 @@ Menu ⋮ da música (ou do player) → **Editar metadados**. Grava as tags **den
 - **Buscar letra online:** consulta as mesmas fontes das letras automáticas e deixa você **escolher a versão**,
   com as **sincronizadas (LRC) primeiro** (gravadas com os tempos `[mm:ss]` na tag de letra, que o app lê como
   letra sincronizada) e uma opção em texto simples para cada uma. Você revisa antes de salvar.
-- **Capa:** mostra a capa original gravada no arquivo (não a personalizada do app); ao salvar uma capa nova ou remover a capa, a personalizada do app é excluída. *Escolher imagem* (seletor do sistema), *Pesquisar capa online* (caixa de pesquisa editável; Cover Art Archive e iTunes) e
+- **Capa:** mostra a capa original gravada no arquivo (não a personalizada do app); ao salvar uma capa nova ou remover a capa, a personalizada do app é excluída. *Escolher imagem* (seletor do sistema), *Pesquisar capa online* (caixa de pesquisa editável, já preenchida com música e artista; Cover Art Archive e iTunes) e
   *Remover capa*. A imagem é validada e reduzida para no máximo 1200 px; só a capa frontal é trocada.
 - **Nada é gravado até você tocar em Salvar.** A gravação é segura: cópia de segurança, gravação numa
   cópia de trabalho, conferência da leitura e restauração do original se algo falhar. O áudio não é
@@ -363,6 +363,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.22.1** | A pesquisa de capa começa com música e artista; o editor de metadados não volta mais ao início da tela ao escolher uma capa ou aplicar dados |
 | **2.22.0** | Android 15 (targetSdk/compileSdk 35), AGP 8.7 e bibliotecas atualizadas (Media3 1.5.1, WorkManager 2.10, lifecycle 2.9, core-ktx 1.15…); cache em memória de favoritos, playlists e estatísticas; biblioteca protegida contra falha do MediaStore e arquivos de 0 byte ignorados; o gravador de posição só roda tocando |
 | **2.21.4** | Buscar letra online no editor de metadados deixa escolher a versão e dá prioridade às letras sincronizadas (LRC), gravadas com os tempos na tag |
 | **2.21.3** | O editor de metadados mostra a duração (e formato, taxa de bits e frequência) e a busca de capa online passa a ter uma caixa de pesquisa editável |

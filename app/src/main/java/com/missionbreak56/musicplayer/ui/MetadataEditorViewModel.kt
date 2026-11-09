@@ -422,10 +422,10 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
 
     // ----- Cover search (independent of the metadata search) -----
 
-    /** The text the cover search starts with: artist and album (or title) as currently typed. */
+    /** The text the cover search starts with: song title and artist as currently typed. */
     fun defaultCoverTerm(): String = listOf(
-        edited[TagField.ARTIST].orEmpty().trim(),
-        edited[TagField.ALBUM].orEmpty().trim().ifEmpty { edited[TagField.TITLE].orEmpty().trim() }
+        edited[TagField.TITLE].orEmpty().trim(),
+        edited[TagField.ARTIST].orEmpty().trim()
     ).filter { it.isNotEmpty() }.joinToString(" ")
 
     /** One-line technical summary of the audio (duration, format, bitrate, sample rate) for the editor. */
@@ -462,7 +462,7 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
             setStatus(tr("Digite o que procurar (artista, álbum ou música).", "Type what to look for (artist, album or song)."), true)
             return
         }
-        val exact = query == defaultCoverTerm() && (title.isNotEmpty() || album.isNotEmpty())
+        val exact = query == defaultCoverTerm() && title.isNotEmpty()
         coverJob?.cancel()
         _state.update { it.copy(busy = true, status = tr("Buscando capas online…", "Searching covers online…"), statusIsError = false, coverOptions = emptyList(), coverNote = null) }
         coverJob = viewModelScope.launch {

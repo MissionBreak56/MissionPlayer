@@ -1,3 +1,11 @@
+## MissionPlayer v2.22.1 — Busca de capa por música e artista; a tela não volta mais ao início
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.22.1-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Mudanças
+- A **pesquisa de capa** agora começa com o **nome da música e o artista** (antes era artista e álbum). O texto continua editável na caixa de pesquisa; a busca no iTunes passou a procurar por músicas.
+- **Corrigido:** ao tocar numa capa (ou buscar letra, importar dados etc.) a tela do editor voltava para o início. Agora ela **fica onde você estava**. As mensagens de status saíram do meio do formulário e ficam fixas no topo, e os botões não mudam de estado enquanto a busca roda.
+
 ## MissionPlayer v2.22.0 — Android 15 e melhorias de desempenho e estabilidade
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.22.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
