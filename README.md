@@ -1,8 +1,19 @@
+<p align="center">
+  <img src="docs/images/banner.png" alt="MissionPlayer — player de música local, offline e sem anúncios para Android" width="100%">
+</p>
+
 # MissionPlayer
 
 Player de música **local, offline e sem anúncios** para Android. Lê as músicas que já estão no
 aparelho e oferece uma interface moderna, equalizador, letras sincronizadas e muita
 personalização.
+
+<p align="center">
+  <img src="docs/images/telas.png" alt="Biblioteca, tela Tocando agora e editor de metadados" width="90%">
+</p>
+
+> As imagens deste README são **ilustrações** do visual do app (nomes de músicas e capas são fictícios);
+> os ícones da seção *Ícones do app* são os arquivos reais do projeto.
 
 > Projeto original: nenhum código, recurso, texto, ícone ou marca de outro app foi copiado.
 > Pacote: `com.missionbreak56.musicplayer` · Repositório: https://github.com/MissionBreak56/MissionPlayer
@@ -26,6 +37,10 @@ personalização.
 ## Funções
 
 ### Biblioteca
+<p align="center">
+  <img src="docs/images/biblioteca.png" alt="Aba Músicas com atalhos, barra alfabética e mini player liquid glass" width="320">
+</p>
+
 - **Abas:** Músicas, Álbuns, Artistas e Pastas, que você pode **reorganizar** (Configurações → *Organizar
   abas*); a ordem fica salva.
 - **Atalhos na tela inicial:** Favoritos, Playlists e Recente.
@@ -84,6 +99,10 @@ Tocar a seguir, adicionar à fila, adicionar à playlist, favoritar, definir com
 ocultar, **Editar metadados**, **Substituir capa** e **Remover capa** (veja *Editor de metadados*).
 
 ### Editor de metadados
+<p align="center">
+  <img src="docs/images/editor.png" alt="Tela Editar metadados com busca automática, campos e letra" width="320">
+</p>
+
 Menu ⋮ da música (ou do player) → **Editar metadados**. Grava as tags **dentro do arquivo** de áudio
 (MP3, FLAC, OGG/Opus e M4A/MP4; os outros formatos ficam só para leitura).
 - **Duração:** o editor mostra a duração da música, o formato, a taxa de bits e a frequência (só leitura).
@@ -128,6 +147,16 @@ A foto aparece apenas dentro da pasta (cabeçalho do detalhe), não na lista.
   automaticamente conforme as cores da capa. Sem capa, usa as cores do tema escolhido.
 
 ### Tela Tocando agora
+<p align="center">
+  <img src="docs/images/player.png" alt="Tela Tocando agora com liquid glass" width="300">
+  &nbsp;&nbsp;
+  <img src="docs/images/letras.png" alt="Letra sincronizada com ajuste de sincronia" width="300">
+</p>
+
+<p align="center">
+  <img src="docs/images/temas.png" alt="Temas do player: Liquid glass, Preto AMOLED, Capa desfocada, Aurora, Cor sólida e Grafite" width="100%">
+</p>
+
 - **Liquid glass em tela cheia:** o fundo mistura as cores da capa com manchas de luz translúcidas e
   brilho de vidro, com transição suave ao trocar de música; título, artista, tempo, barra de
   progresso, ícones e letras ficam brancos para ler bem em qualquer capa. Sem capa, usa as cores do
@@ -223,6 +252,7 @@ Toque na engrenagem no topo da tela inicial. Tudo o que ficava no menu flutuante
 Configurações → *Personalização*. A tela abre com o visual padrão: **fundo preto puro** (no modo escuro),
 **fonte do sistema** e uma **cor de destaque azul-escuro**.
 - **Modo:** menu flutuante com *Do sistema*, *Claro* e *Escuro*.
+- **Ícones do app:** <br><img src="docs/images/icones.png" alt="Os 9 ícones do app: Original, Verde, Azul, Violeta, Dourado, Rosa, Vinil, Ondas e Fones" width="100%">
 - **Ícone do app:** menu flutuante com a imagem de cada ícone, 9 opções — *Original*, e variações *Verde, Azul, Violeta, Dourado, Rosa*, mais
   *Vinil, Ondas* e *Fones*. A troca é imediata (a tela inicial pode levar alguns segundos para
   atualizar). Os ícones também têm versão monocromática para o Android 13+ (ícones temáticos).
