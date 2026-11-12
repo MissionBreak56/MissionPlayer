@@ -12,8 +12,8 @@ personalização.
   <img src="docs/images/telas.png" alt="Biblioteca, tela Tocando agora e editor de metadados" width="90%">
 </p>
 
-> As imagens deste README são **ilustrações** do visual do app (nomes de músicas e capas são fictícios);
-> os ícones da seção *Ícones do app* são os arquivos reais do projeto.
+> As telas de biblioteca, player e editor são capturas do app com nomes de músicas, pastas e capa fictícios;
+> as de letra sincronizada e temas são ilustrações. Os ícones da seção *Ícones do app* são os arquivos reais do projeto.
 
 > Projeto original: nenhum código, recurso, texto, ícone ou marca de outro app foi copiado.
 > Pacote: `com.missionbreak56.musicplayer` · Repositório: https://github.com/MissionBreak56/MissionPlayer
