@@ -332,11 +332,15 @@ ou atrasadas. O app corrige isso de três formas:
 - Ícone adaptativo (Android 8+), com versão monocromática para o tema de ícones do Android 13+.
 - Idiomas: **português (Brasil)** e **inglês**.
 
-### Verificar atualizações
-Na tela *Sobre* (Configurações → *Sobre*), o botão **Verificar atualizações** consulta o último release
-do GitHub e compara com a versão instalada. Se houver versão mais nova, aparece **Baixar atualização**,
-que abre o APK (`arm64-v8a`) do release no navegador; se não houver APK, abre a página do release. A
-consulta só acontece quando você toca no botão, e a instalação continua sendo manual.
+### Atualização dentro do app
+Ao **abrir o app** (uma vez por abertura), ele consulta o último release do GitHub. Se houver versão mais
+nova, aparece uma janela com as novidades e os botões **Atualizar agora**, **Depois** e **Ignorar esta
+versão**. *Atualizar agora* baixa o APK (`arm64-v8a`) **dentro do app**, com barra de progresso, confere o
+tamanho e o checksum, confirma que é o próprio MissionPlayer em versão mais nova e entrega ao instalador do
+Android, que pede a sua confirmação e só aceita um APK assinado com a mesma chave. Sem internet, o app
+simplesmente não mostra nada. Também dá para verificar à mão em *Configurações → Sobre → Verificar
+atualizações*. Na primeira vez, o Android pede para permitir que o MissionPlayer instale apps; depois é só
+tocar em *Atualizar agora* de novo.
 
 ### Reprodução em segundo plano
 Serviço de mídia (Media3): continua tocando com a tela desligada, com notificação e controles na
@@ -345,7 +349,7 @@ tela de bloqueio.
 ### Privacidade
 Sem anúncios, sem rastreadores e sem contas. A internet é usada **só** para baixar letras que faltam
 (título, artista, álbum e duração são enviados aos serviços de letras acima) e, quando você pede, para
-*Buscar capa online* (o texto da busca vai para o iTunes Search), no *Editor de metadados* (título, artista, álbum e duração vão para o MusicBrainz e o Cover Art Archive, e o texto da capa para o iTunes) e, só quando você toca em *Verificar atualizações*, para consultar o último release no GitHub; a reprodução é 100% local. O backup é um arquivo local que só você guarda: o app não envia nada para lugar nenhum. Desligue
+*Buscar capa online* (o texto da busca vai para o iTunes Search), no *Editor de metadados* (título, artista, álbum e duração vão para o MusicBrainz e o Cover Art Archive, e o texto da capa para o iTunes) e, ao abrir o app e em *Verificar atualizações*, para consultar e baixar o último release no GitHub; a reprodução é 100% local. O backup é um arquivo local que só você guarda: o app não envia nada para lugar nenhum. Desligue
 em Configurações → *Letras automáticas* para o app não baixar letras.
 
 ## Permissões
@@ -358,6 +362,7 @@ em Configurações → *Letras automáticas* para o app não baixar letras.
 | `POST_NOTIFICATIONS` | Notificação com os controles de reprodução |
 | `MODIFY_AUDIO_SETTINGS` | Equalizador, graves, surround e aumento de volume |
 | `WRITE_SETTINGS` | Somente se você usar *Definir como toque* |
+| `REQUEST_INSTALL_PACKAGES` | Instalar a atualização que o app baixa dele mesmo (o Android pede a sua autorização) |
 | `WRITE_EXTERNAL_STORAGE` (só até Android 9) | Gravar as tags no *Editor de metadados*; no Android 10+ o sistema pede autorização por arquivo |
 
 ## Tecnologia
@@ -393,6 +398,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.23.0** | Atualização dentro do app: verifica ao abrir, baixa com progresso e instala sem sair; a pesquisa de capa mostra todos os resultados (rolagem até o fim) |
 | **2.22.1** | A pesquisa de capa começa com música e artista; o editor de metadados não volta mais ao início da tela ao escolher uma capa ou aplicar dados |
 | **2.22.0** | Android 15 (targetSdk/compileSdk 35), AGP 8.7 e bibliotecas atualizadas (Media3 1.5.1, WorkManager 2.10, lifecycle 2.9, core-ktx 1.15…); cache em memória de favoritos, playlists e estatísticas; biblioteca protegida contra falha do MediaStore e arquivos de 0 byte ignorados; o gravador de posição só roda tocando |
 | **2.21.4** | Buscar letra online no editor de metadados deixa escolher a versão e dá prioridade às letras sincronizadas (LRC), gravadas com os tempos na tag |

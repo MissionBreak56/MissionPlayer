@@ -35,6 +35,11 @@ import com.missionbreak56.musicplayer.tags.TagSnapshot
 import com.missionbreak56.musicplayer.tags.TagStore
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -112,13 +117,14 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
     private var searchJob: Job? = null
     private var coverJob: Job? = null
     private val thumbCache = HashMap<String, Bitmap>()
+    private val thumbGate = Semaphore(4)
 
     fun thumbnailOf(option: CoverOption): Bitmap? = thumbCache[option.thumbUrl]
 
     suspend fun loadThumbnail(option: CoverOption): Bitmap? {
         thumbCache[option.thumbUrl]?.let { return it }
         return try {
-            val bytes = coverArt.download(option.thumbUrl)
+            val bytes = thumbGate.withPermit { coverArt.download(option.thumbUrl) }
             val bmp = withContext(Dispatchers.Default) { decodePreview(bytes, 320) }
             if (bmp != null) thumbCache[option.thumbUrl] = bmp
             bmp
@@ -476,7 +482,13 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
                     } else {
                         musicBrainz.releaseIdsFor(query)
                     }
-                    for (id in releaseIds.distinct().take(4)) found += coverArt.forRelease(id).filter { it.isFront }.take(2)
+                    // Every release found is asked for its covers at the same time; one failing does not hide the others.
+                    val perRelease = coroutineScope {
+                        releaseIds.distinct().take(MAX_RELEASES).map { id ->
+                            async { try { coverArt.forRelease(id).filter { it.isFront } } catch (e: OnlineException) { emptyList() } }
+                        }.awaitAll()
+                    }
+                    for (list in perRelease) found += list
                 } catch (e: OnlineException) {
                     failure = e
                 }
@@ -485,9 +497,9 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
                 } catch (e: OnlineException) {
                     if (failure == null) failure = e
                 }
-                val options = found.distinctBy { it.fullUrl }.take(20)
+                val options = found.distinctBy { it.fullUrl }.take(MAX_COVERS)
                 val note = when {
-                    options.isNotEmpty() -> tr("Toque em uma capa para usá-la (só será gravada ao salvar).", "Tap a cover to use it (it is only written when you save).")
+                    options.isNotEmpty() -> tr("${options.size} capas encontradas: deslize para o lado para ver todas e toque em uma para usá-la (só é gravada ao salvar).", "${options.size} covers found: swipe sideways to see them all and tap one to use it (it is only written when you save).")
                     failure != null -> onlineMessage(failure)
                     else -> tr("Nenhuma capa encontrada. A capa atual foi mantida.", "No cover found. The current cover was kept.")
                 }
@@ -632,6 +644,8 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
     }
 
     private companion object {
+        const val MAX_RELEASES = 12
+        const val MAX_COVERS = 150
         val saveScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     }
 }

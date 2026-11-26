@@ -117,6 +117,24 @@ class MainActivity : PlayerBoundActivity(), LibraryHost {
         if (Library.loaded) pages.refresh()
         if (hasAudioPermission()) onPermissionGranted() else requestAudioPermission()
         maybeRequestNotificationPermission()
+        checkUpdateOnStart()
+    }
+
+    /** Once per app start: asks GitHub whether a newer release exists and, if so, offers to install it inside the app. */
+    private fun checkUpdateOnStart() {
+        if (com.missionbreak56.musicplayer.update.AppUpdater.autoChecked) return
+        com.missionbreak56.musicplayer.update.AppUpdater.autoChecked = true
+        lifecycleScope.launch {
+            val info = withContext(Dispatchers.IO) {
+                try {
+                    com.missionbreak56.musicplayer.update.AppUpdater.latestIfNewer()
+                } catch (_: Exception) {
+                    null // offline or GitHub unreachable: stay quiet, the About screen can check by hand
+                }
+            } ?: return@launch
+            if (isFinishing || isDestroyed || UpdateFlow.isSkipped(this@MainActivity, info.version)) return@launch
+            UpdateFlow.offer(this@MainActivity, info, auto = true)
+        }
     }
 
     private var mediator: TabLayoutMediator? = null

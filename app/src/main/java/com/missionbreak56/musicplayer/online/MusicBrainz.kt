@@ -295,7 +295,7 @@ class MusicBrainzClient(
     suspend fun releaseIdsFor(term: String): List<String> {
         val tokens = MatchScorer.plain(term)
         if (tokens.isEmpty()) return emptyList()
-        val body = fetch("release?query=${enc("release:($tokens)")}&limit=6&fmt=json")
+        val body = fetch("release?query=${enc("release:($tokens)")}&limit=25&fmt=json")
         return MusicBrainzParser.parseReleaseIds(body)
     }
 

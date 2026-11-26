@@ -1,3 +1,15 @@
+## MissionPlayer v2.23.0 — Atualização dentro do app e todas as capas na pesquisa
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.23.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Novidades
+- **Atualização dentro do app:** ao abrir o app, ele verifica sozinho se há uma versão nova no GitHub. Se houver, mostra as novidades e você escolhe **Atualizar agora**, **Depois** ou **Ignorar esta versão**. O APK é baixado no próprio app (com barra de progresso), verificado (tamanho, checksum e se é mesmo o MissionPlayer em versão mais nova) e entregue ao instalador do Android, que pede a sua confirmação. Nada de navegador. O botão *Sobre → Verificar atualizações* usa o mesmo caminho.
+- **Capas sem limite:** a pesquisa de capa no editor de metadados não para mais em 10 resultados. Ela mostra todos os que as fontes devolvem (até 150), numa fila que rola para o lado até o fim, e diz quantas encontrou.
+
+### Observações
+- Na primeira atualização, o Android pede para permitir que o MissionPlayer instale apps (nova permissão `REQUEST_INSTALL_PACKAGES`). Depois de permitir, toque em *Atualizar agora* de novo.
+- Se o download falhar ou não houver APK na release, o app oferece tentar de novo ou abrir a página da release.
+
 ## MissionPlayer v2.22.1 — Busca de capa por música e artista; a tela não volta mais ao início
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.22.1-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

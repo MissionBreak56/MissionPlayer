@@ -69,7 +69,7 @@ class CoverArtClient(private val http: HttpFetcher) {
                     fromOtherEdition = fromOtherEdition
                 )
             }
-            return out.sortedWith(compareByDescending<CoverOption> { it.isFront }).take(16)
+            return out.sortedWith(compareByDescending<CoverOption> { it.isFront }).take(60)
         }
     }
 }
