@@ -4,7 +4,6 @@ import com.missionbreak56.musicplayer.online.Candidate
 import com.missionbreak56.musicplayer.online.CoverArtClient
 import com.missionbreak56.musicplayer.online.HttpFetcher
 import com.missionbreak56.musicplayer.online.ItunesCoverClient
-import com.missionbreak56.musicplayer.tags.LyricsText
 import com.missionbreak56.musicplayer.online.LocalInfo
 import com.missionbreak56.musicplayer.online.MatchQuality
 import com.missionbreak56.musicplayer.online.MatchScorer
@@ -12,6 +11,7 @@ import com.missionbreak56.musicplayer.online.MusicBrainzClient
 import com.missionbreak56.musicplayer.online.MusicBrainzParser
 import com.missionbreak56.musicplayer.online.OnlineError
 import com.missionbreak56.musicplayer.online.OnlineException
+import com.missionbreak56.musicplayer.tags.LyricsText
 import com.missionbreak56.musicplayer.tags.TagField
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -25,7 +25,6 @@ import org.junit.Test
  * (these are fixtures, not recordings of live answers).
  */
 class OnlineTest {
-
     private fun rec(id: String, title: String, artist: String, length: Long, release: String, date: String, dis: String = ""): String =
         """{"id":"$id","score":100,"title":"$title","length":$length,"disambiguation":"$dis","first-release-date":"$date",
         "artist-credit":[{"name":"$artist","joinphrase":"","artist":{"id":"a1","name":"$artist"}}],
@@ -40,8 +39,12 @@ class OnlineTest {
         MusicBrainzParser.parseSearch(json) { MatchScorer.score(local, it) }.sortedByDescending { it.score }
 
     @Test fun clearMatchIsTrusted() {
-        val rows = scored(search(rec("1", "Blue Sky", "The Band", 214_500, "First Album", "2001-03-01"),
-            rec("2", "Green Sea", "Other Act", 180_000, "Other", "1999")))
+        val rows = scored(
+            search(
+                rec("1", "Blue Sky", "The Band", 214_500, "First Album", "2001-03-01"),
+                rec("2", "Green Sea", "Other Act", 180_000, "Other", "1999")
+            )
+        )
         assertEquals("1", rows[0].recordingId)
         assertEquals(MatchQuality.CLEAR, MatchScorer.classify(rows))
     }
@@ -56,23 +59,33 @@ class OnlineTest {
     }
 
     @Test fun twoSimilarRecordingsAreAmbiguous() {
-        val rows = scored(search(rec("1", "Blue Sky", "The Band", 215_000, "First Album", "2001"),
-            rec("2", "Blue Sky", "The Band", 215_500, "First Album", "2001")))
+        val rows = scored(
+            search(
+                rec("1", "Blue Sky", "The Band", 215_000, "First Album", "2001"),
+                rec("2", "Blue Sky", "The Band", 215_500, "First Album", "2001")
+            )
+        )
         assertEquals(MatchQuality.AMBIGUOUS, MatchScorer.classify(rows))
     }
 
     @Test fun liveVersionLosesToStudioVersion() {
-        val rows = scored(search(
-            rec("live", "Blue Sky (Live at Wembley)", "The Band", 262_000, "Live 2005", "2005", "live"),
-            rec("studio", "Blue Sky", "The Band", 215_000, "First Album", "2001")))
+        val rows = scored(
+            search(
+                rec("live", "Blue Sky (Live at Wembley)", "The Band", 262_000, "Live 2005", "2005", "live"),
+                rec("studio", "Blue Sky", "The Band", 215_000, "First Album", "2001")
+            )
+        )
         assertEquals("studio", rows[0].recordingId)
     }
 
     @Test fun localLiveFileMatchesLiveRecording() {
         val liveLocal = LocalInfo("Blue Sky (Live)", "The Band", "", 262_000, null)
-        val rows = MusicBrainzParser.parseSearch(search(
-            rec("live", "Blue Sky (Live at Wembley)", "The Band", 262_000, "Live 2005", "2005", "live"),
-            rec("studio", "Blue Sky", "The Band", 215_000, "First Album", "2001"))) { MatchScorer.score(liveLocal, it) }
+        val rows = MusicBrainzParser.parseSearch(
+            search(
+                rec("live", "Blue Sky (Live at Wembley)", "The Band", 262_000, "Live 2005", "2005", "live"),
+                rec("studio", "Blue Sky", "The Band", 215_000, "First Album", "2001")
+            )
+        ) { MatchScorer.score(liveLocal, it) }
             .sortedByDescending { it.score }
         assertEquals("live", rows[0].recordingId)
     }

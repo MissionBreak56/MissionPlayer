@@ -29,7 +29,6 @@ import java.util.zip.ZipOutputStream
  * is rescanned. When restoring, each song is found again by path, or by title + artist + length.
  */
 object Backup {
-
     private const val FORMAT = 1
     private const val JSON_NAME = "backup.json"
     private const val BG_IMAGE = "bg_image.jpg"

@@ -18,7 +18,6 @@ import com.missionbreak56.musicplayer.data.Prefs
  * draw edge to edge (behind the status bar, navigation bar and display cutout).
  */
 abstract class BaseActivity : AppCompatActivity() {
-
     private var appliedTheme = -1
     private var appliedLook = ""
 

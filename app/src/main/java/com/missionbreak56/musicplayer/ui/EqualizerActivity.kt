@@ -13,7 +13,6 @@ import com.missionbreak56.musicplayer.databinding.ActivityEqualizerBinding
 import com.missionbreak56.musicplayer.playback.AudioFx
 
 class EqualizerActivity : BaseActivity() {
-
     private lateinit var binding: ActivityEqualizerBinding
     private var info: AudioFx.Info? = null
     private var levels = IntArray(0)

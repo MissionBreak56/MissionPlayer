@@ -1,10 +1,10 @@
 package com.missionbreak56.musicplayer.ui
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.animation.ArgbEvaluator
-import android.animation.ValueAnimator
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -13,28 +13,26 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewConfiguration
+import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.graphics.ColorUtils
+import androidx.core.graphics.Insets
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
-import androidx.core.graphics.Insets
 import androidx.media3.common.Player
-import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.color.MaterialColors
 import com.missionbreak56.musicplayer.R
 import com.missionbreak56.musicplayer.data.Labels
 import com.missionbreak56.musicplayer.data.Library
 import com.missionbreak56.musicplayer.data.LrcParser
 import com.missionbreak56.musicplayer.data.LyricLine
-import com.missionbreak56.musicplayer.data.LyricsFetcher
 import com.missionbreak56.musicplayer.data.LyricSync
+import com.missionbreak56.musicplayer.data.LyricsFetcher
 import com.missionbreak56.musicplayer.data.LyricsIndex
 import com.missionbreak56.musicplayer.data.LyricsStore
 import com.missionbreak56.musicplayer.data.Prefs
@@ -42,13 +40,12 @@ import com.missionbreak56.musicplayer.databinding.ActivityPlayerBinding
 import com.missionbreak56.musicplayer.playback.PlaybackState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Locale
 import kotlinx.coroutines.withContext
+import java.util.Locale
 import kotlin.math.abs
 
 /** Full "Now playing" screen: art, seek bar, play modes, lyrics, sleep timer, equalizer, queue. */
 class PlayerActivity : PlayerBoundActivity() {
-
     override val allowImageBackground: Boolean get() = false
 
     private lateinit var binding: ActivityPlayerBinding
@@ -625,8 +622,13 @@ class PlayerActivity : PlayerBoundActivity() {
             updateSyncBar()
 
             // Synced lyrics that were never checked: line them up with the audio, once per song.
-            if (lines.isNotEmpty() && lines.first().timeMs >= 0 && id > 0 && song != null &&
-                Prefs.autoLyricSync && !Prefs.lyricSyncChecked(id) && syncing.add(id)
+            if (lines.isNotEmpty() &&
+                lines.first().timeMs >= 0 &&
+                id > 0 &&
+                song != null &&
+                Prefs.autoLyricSync &&
+                !Prefs.lyricSyncChecked(id) &&
+                syncing.add(id)
             ) {
                 val shift = withContext(Dispatchers.Default) { LyricSync.autoAdjust(applicationContext, song) }
                 syncing.remove(id)

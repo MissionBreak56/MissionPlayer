@@ -16,7 +16,6 @@ import com.missionbreak56.musicplayer.data.Prefs
  * shortcut exists, changing the name or the icon updates it.
  */
 object AppName {
-
     const val MAX_LENGTH = 24
 
     private const val SHORTCUT_ID = "named_launcher"

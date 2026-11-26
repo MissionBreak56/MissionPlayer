@@ -9,8 +9,8 @@ import java.util.concurrent.ConcurrentHashMap
 
 /** Custom covers the user imported or found online for single songs (private app storage). */
 object SongArt {
-
     private val stamps = ConcurrentHashMap<Long, Long>()
+
     @Volatile
     private var ready = false
 

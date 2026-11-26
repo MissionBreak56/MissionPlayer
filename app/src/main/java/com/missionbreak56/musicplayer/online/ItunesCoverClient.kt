@@ -6,7 +6,6 @@ import java.net.URLEncoder
 
 /** Cover pictures (of the songs' albums) from the iTunes Search service (no account needed): a second source next to the Cover Art Archive. */
 class ItunesCoverClient(private val http: HttpFetcher) {
-
     suspend fun search(term: String): List<CoverOption> {
         val q = URLEncoder.encode(term, "UTF-8")
         val body = http.get("https://itunes.apple.com/search?term=$q&media=music&entity=song&limit=100", maxBytes = 2 * 1024 * 1024)

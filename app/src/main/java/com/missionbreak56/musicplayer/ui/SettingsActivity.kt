@@ -1,11 +1,10 @@
 package com.missionbreak56.musicplayer.ui
 
 import android.content.Intent
-import android.net.Uri
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -27,7 +26,6 @@ import java.util.Locale
  * Settings screen: everything that used to live in the floating menu of the main screen.
  */
 class SettingsActivity : BaseActivity() {
-
     private lateinit var body: LinearLayout
 
     // The system file picker lets the user choose the folder (and the name) of the backup file.
@@ -227,11 +225,14 @@ class SettingsActivity : BaseActivity() {
         t.textSize = 14f
         t.setTypeface(t.typeface, Typeface.BOLD)
         t.setTextColor(MaterialColors.getColor(this, androidx.appcompat.R.attr.colorPrimary, 0))
-        body.addView(t, LinearLayout.LayoutParams(-1, -2).apply {
-            topMargin = dp(22)
-            bottomMargin = dp(4)
-            marginStart = dp(4)
-        })
+        body.addView(
+            t,
+            LinearLayout.LayoutParams(-1, -2).apply {
+                topMargin = dp(22)
+                bottomMargin = dp(4)
+                marginStart = dp(4)
+            }
+        )
     }
 
     private fun texts(title: String, subtitle: String): LinearLayout {

@@ -73,34 +73,34 @@
 
             <ImageButton
                 android:id="@+id/miniPlay"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/bg_circle_outline"
                 android:contentDescription="@string/cd_play_pause"
-                android:padding="9dp"
+                android:padding="12dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_play"
                 app:tint="?attr/colorOnPrimaryContainer" />
 
             <ImageButton
                 android:id="@+id/miniNext"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/cd_next"
-                android:padding="8dp"
+                android:padding="12dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_next"
                 app:tint="?attr/colorOnPrimaryContainer" />
 
             <ImageButton
                 android:id="@+id/miniQueue"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/cd_queue"
-                android:padding="8dp"
+                android:padding="12dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_queue"
                 app:tint="?attr/colorOnPrimaryContainer" />

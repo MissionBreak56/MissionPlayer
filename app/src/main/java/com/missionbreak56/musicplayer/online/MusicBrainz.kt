@@ -49,7 +49,6 @@ class ImportedMetadata(
 
 /** Pure JSON -> model parsing for the MusicBrainz web service (kept separate so it can be tested with sample answers). */
 object MusicBrainzParser {
-
     private fun JSONObject.str(name: String): String = if (isNull(name)) "" else optString(name, "")
 
     private fun JSONObject.longOrNull(name: String): Long? = if (has(name) && !isNull(name)) optLong(name, -1L).takeIf { it >= 0 } else null

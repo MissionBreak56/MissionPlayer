@@ -96,11 +96,11 @@
 
     <ImageButton
         android:id="@+id/btnMore"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/cd_more"
-        android:padding="10dp"
+        android:padding="12dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_more_vert"
         app:tint="?attr/colorOnSurfaceVariant" />

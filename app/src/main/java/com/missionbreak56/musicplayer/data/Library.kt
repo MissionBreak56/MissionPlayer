@@ -2,9 +2,9 @@ package com.missionbreak56.musicplayer.data
 
 import android.content.Context
 import com.missionbreak56.musicplayer.R
-import java.util.concurrent.CopyOnWriteArrayList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CopyOnWriteArrayList
 
 enum class Kind { ALBUM, ARTIST, FOLDER, GENRE, PLAYLIST, AUTO }
 
@@ -19,7 +19,6 @@ data class Group(
 
 /** In-memory snapshot of the device library plus the derived collections. */
 object Library {
-
     /** Every song found on the device, including hidden ones. */
     @Volatile
     var allSongs: List<Song> = emptyList()

@@ -11,18 +11,17 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import java.util.concurrent.TimeUnit
 
 /**
  * Looks up the lyrics of every song that has none, whenever the phone is online, and stores them
  * on the device. Runs by itself in the background: nothing for the user to do.
  */
 class LyricsWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
-
     override suspend fun doWork(): Result {
         val app = applicationContext
         Prefs.init(app)

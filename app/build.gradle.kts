@@ -11,8 +11,9 @@ android {
         applicationId = "com.missionbreak56.musicplayer"
         minSdk = 23
         targetSdk = 35
-        versionCode = 58
-        versionName = "2.23.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        versionCode = 59
+        versionName = "2.24.0"
 
         // Author metadata -> available in the manifest as ${author}
         manifestPlaceholders["author"] = "MissionBreak56"
@@ -41,8 +42,9 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            isShrinkResources = false
+            // R8 shrinks and obfuscates code and drops unused resources (smaller APK). The rules are in proguard-rules.pro.
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -107,6 +109,9 @@ dependencies {
     // Automatic lyrics download in the background (runs only when online)
     implementation("androidx.work:work-runtime-ktx:2.10.0")
 
+    // Installs the baseline profile (src/main/baseline-prof.txt) on the first run, also outside Google Play.
+    implementation("androidx.profileinstaller:profileinstaller:1.4.1")
+
     // Reading and writing tags (MP3/FLAC/Ogg/M4A) without re-encoding: TagLib for Android (Apache-2.0 wrapper;
     // it bundles TagLib, LGPL-2.1 / MPL-1.1, as a separate native library).
     implementation("io.github.kyant0:taglib:1.0.5")
@@ -122,4 +127,11 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20240303")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+
+    // Instrumented tests (run on a device or emulator).
+    androidTestImplementation("androidx.test:core:1.6.1")
+    androidTestImplementation("androidx.test:runner:1.6.1")
+    androidTestImplementation("androidx.test:rules:1.6.1")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 }

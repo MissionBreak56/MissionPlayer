@@ -8,7 +8,6 @@ import com.missionbreak56.musicplayer.data.Prefs
 
 /** Application entry point. Playback is offline; the internet is only used to download lyrics. */
 class App : Application() {
-
     override fun onCreate() {
         super.onCreate()
         Prefs.init(this)

@@ -1,0 +1,34 @@
+# Baseline profile (hand-written from the app's start-up and playback paths; not recorded with Macrobenchmark).
+# It tells ART which code to compile ahead of time, so the first launch and the first song start faster.
+# The androidx.profileinstaller library installs it on devices that do not get it from Google Play.
+
+# Start-up: library load, preferences, list screens
+HSPLcom/missionbreak56/musicplayer/ui/MainActivity;->**(**)**
+HSPLcom/missionbreak56/musicplayer/ui/BaseActivity;->**(**)**
+HSPLcom/missionbreak56/musicplayer/ui/LibraryPagerAdapter**;->**(**)**
+HSPLcom/missionbreak56/musicplayer/ui/Adapters**;->**(**)**
+HSPLcom/missionbreak56/musicplayer/ui/ArtLoader;->**(**)**
+HSPLcom/missionbreak56/musicplayer/ui/UiHelpers**;->**(**)**
+HSPLcom/missionbreak56/musicplayer/ui/Themes**;->**(**)**
+HSPLcom/missionbreak56/musicplayer/data/Library;->**(**)**
+HSPLcom/missionbreak56/musicplayer/data/Prefs;->**(**)**
+HSPLcom/missionbreak56/musicplayer/data/SongCache;->**(**)**
+HSPLcom/missionbreak56/musicplayer/data/MusicRepository;->**(**)**
+HSPLcom/missionbreak56/musicplayer/data/Song;->**(**)**
+
+# Playback: service, queue, connection, player screen
+HSPLcom/missionbreak56/musicplayer/playback/PlaybackService**;->**(**)**
+HSPLcom/missionbreak56/musicplayer/playback/PlaybackQueue**;->**(**)**
+HSPLcom/missionbreak56/musicplayer/playback/PlaybackState;->**(**)**
+HSPLcom/missionbreak56/musicplayer/playback/PlayerConnection;->**(**)**
+HSPLcom/missionbreak56/musicplayer/playback/SongBitmapLoader**;->**(**)**
+HSPLcom/missionbreak56/musicplayer/ui/PlayerActivity**;->**(**)**
+HSPLcom/missionbreak56/musicplayer/ui/PlayerBoundActivity;->**(**)**
+
+# Classes used on those paths (loaded and initialised at start-up)
+Lcom/missionbreak56/musicplayer/ui/MainActivity;
+Lcom/missionbreak56/musicplayer/ui/PlayerActivity;
+Lcom/missionbreak56/musicplayer/playback/PlaybackService;
+Lcom/missionbreak56/musicplayer/data/Library;
+Lcom/missionbreak56/musicplayer/data/Prefs;
+Lcom/missionbreak56/musicplayer/data/Song;

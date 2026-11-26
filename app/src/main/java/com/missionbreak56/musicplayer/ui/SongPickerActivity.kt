@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 
 /** Lets the user tick songs from the whole library and add them to one playlist. */
 class SongPickerActivity : BaseActivity() {
-
     private lateinit var binding: ActivitySongPickerBinding
     private lateinit var adapter: SongAdapter
     private var playlist = ""

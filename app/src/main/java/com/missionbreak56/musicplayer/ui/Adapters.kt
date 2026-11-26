@@ -7,13 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.missionbreak56.musicplayer.R
 import com.missionbreak56.musicplayer.data.Group
 import com.missionbreak56.musicplayer.data.Kind
-import com.missionbreak56.musicplayer.data.LyricLine
 import com.missionbreak56.musicplayer.data.Library
+import com.missionbreak56.musicplayer.data.LyricLine
 import com.missionbreak56.musicplayer.data.Song
 import com.missionbreak56.musicplayer.databinding.ItemLyricBinding
 import com.missionbreak56.musicplayer.databinding.ItemSongBinding
@@ -22,7 +21,6 @@ class SongAdapter(
     private val onClick: (List<Song>, Int) -> Unit,
     private val onMore: (View, Song) -> Unit
 ) : RecyclerView.Adapter<SongAdapter.VH>() {
-
     private var items: List<Song> = emptyList()
 
     /** Optional per-song line shown instead of "artist | album" (e.g. a lyrics match). */
@@ -177,7 +175,6 @@ class GroupAdapter(
     private val grid: Boolean,
     private val onClick: (Group) -> Unit
 ) : RecyclerView.Adapter<GroupAdapter.VH>() {
-
     private var items: List<Group> = emptyList()
 
     fun current(): List<Group> = items
@@ -271,7 +268,6 @@ class QueueAdapter(
     private var currentIndex: Int,
     private val onClick: (Int) -> Unit
 ) : RecyclerView.Adapter<QueueAdapter.VH>() {
-
     /** Set when the queue can be reordered: each row then shows a drag handle that calls this. */
     var onStartDrag: ((RecyclerView.ViewHolder) -> Unit)? = null
 
@@ -327,7 +323,6 @@ class QueueAdapter(
 class LyricsAdapter(
     private val onLineClick: (LyricLine) -> Unit
 ) : RecyclerView.Adapter<LyricsAdapter.VH>() {
-
     private var lines: List<LyricLine> = emptyList()
     private var current = -1
 

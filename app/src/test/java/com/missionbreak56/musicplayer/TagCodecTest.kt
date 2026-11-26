@@ -11,7 +11,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class TagCodecTest {
-
     private fun props(vararg p: Pair<String, List<String>>): HashMap<String, Array<String>> {
         val m = HashMap<String, Array<String>>()
         for ((k, v) in p) m[k] = v.toTypedArray()
@@ -47,7 +46,7 @@ class TagCodecTest {
         val edited = LinkedHashMap(orig); edited[TagField.TITLE] = "New"
         val out = TagCodec.apply(AudioTagFormat.MP3, mp3, orig, edited)
         assertArrayEquals(arrayOf("New"), out["TITLE"])
-        assertArrayEquals(arrayOf("A1", "A2"), out["ARTIST"])   // multi-value untouched
+        assertArrayEquals(arrayOf("A1", "A2"), out["ARTIST"]) // multi-value untouched
         assertArrayEquals(arrayOf("keep me"), out["MY_CUSTOM"]) // unknown tag preserved
         assertArrayEquals(arrayOf("3/12"), out["TRACKNUMBER"])
     }

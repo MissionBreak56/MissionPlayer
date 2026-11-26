@@ -30,7 +30,6 @@ interface HttpFetcher {
 
 /** [HttpFetcher] over HttpURLConnection: https only, follows redirects by hand, size limited, cancellable. */
 class UrlConnectionFetcher(private val userAgent: String) : HttpFetcher {
-
     override suspend fun get(url: String, accept: String, maxBytes: Int): ByteArray =
         suspendCancellableCoroutine { cont ->
             val current = AtomicReference<HttpURLConnection?>(null)

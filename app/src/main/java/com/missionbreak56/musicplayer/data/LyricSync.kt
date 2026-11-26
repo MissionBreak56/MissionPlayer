@@ -4,7 +4,6 @@ import android.content.Context
 
 /** Ties the pieces together: reads a song's lyric, measures its audio and moves the lyric if it is off. */
 object LyricSync {
-
     /** Analyse this much of the beginning of the song (the first lines are enough). */
     private const val ANALYSE_MS = 160_000L
 

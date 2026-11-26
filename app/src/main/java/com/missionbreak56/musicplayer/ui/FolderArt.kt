@@ -9,7 +9,6 @@ import java.security.MessageDigest
 
 /** Custom pictures the user picked for folders, kept in the app's private storage. */
 object FolderArt {
-
     private fun dir(context: Context) = File(context.filesDir, "folder_art")
 
     fun file(context: Context, path: String): File {

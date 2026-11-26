@@ -34,7 +34,6 @@ enum class MatchQuality {
  * (what counts as the same song, how live/remix versions are told apart) can be unit tested.
  */
 object MatchScorer {
-
     private val accents = Regex("\\p{M}+")
     private val brackets = Regex("[(\\[{][^)\\]}]*[)\\]}]")
     private val nonWord = Regex("[^\\p{L}\\p{N}]+")

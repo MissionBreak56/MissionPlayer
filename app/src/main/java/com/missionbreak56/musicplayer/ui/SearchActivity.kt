@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SearchActivity : PlayerBoundActivity() {
-
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: SongAdapter
     private lateinit var actions: SongActions

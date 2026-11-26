@@ -35,7 +35,6 @@ class ReleaseInfo(
  * Android still shows its own confirmation, and refuses an APK signed with another key.
  */
 object AppUpdater {
-
     private const val LATEST = "https://api.github.com/repos/MissionBreak56/MissionPlayer/releases/latest"
     const val ACTION_RESULT = "com.missionbreak56.musicplayer.UPDATE_RESULT"
 

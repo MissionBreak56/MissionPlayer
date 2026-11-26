@@ -20,7 +20,6 @@ import kotlinx.coroutines.withContext
 
 /** Loads album art from MediaStore into ImageViews, with a small in-memory cache. */
 object ArtLoader {
-
     private val cache = object : LruCache<String, Bitmap>(24 * 1024 * 1024) {
         override fun sizeOf(key: String, value: Bitmap): Int = value.byteCount
     }
@@ -32,7 +31,6 @@ object ArtLoader {
         if (custom > 0L) return "c${song.id}_${custom}_$size"
         return if (song.albumId > 0 && song.album.isNotBlank()) "a${song.albumId}_$size" else "s${song.id}_$size"
     }
-
 
     private fun decode(context: Context, song: Song, size: Int): Bitmap? {
         if (SongArt.has(context, song.id)) SongArt.decode(context, song.id, size)?.let { return it }

@@ -1,9 +1,7 @@
 package com.missionbreak56.musicplayer.ui
 
-import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.view.Gravity
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -11,8 +9,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,7 +26,6 @@ import java.net.URLEncoder
 
 /** Searches album covers online (iTunes Search, no account needed) and applies one to a song. */
 object CoverSearch {
-
     private class Hit(val thumbUrl: String, val bigUrl: String, val label: String)
 
     private fun get(url: String): ByteArray {
@@ -108,6 +105,7 @@ object CoverSearch {
                 iv.scaleType = ImageView.ScaleType.CENTER_CROP
                 iv.roundedBackground(0x22888888, 8)
                 iv.clipToOutline = true
+                iv.contentDescription = tr("Capa encontrada: toque para usar", "Cover found: tap to use")
                 val size = maxOf(parent.width, activity.dp(300)) / 3 - activity.dp(6)
                 iv.layoutParams = RecyclerView.LayoutParams(size, size).apply {
                     setMargins(activity.dp(3), activity.dp(3), activity.dp(3), activity.dp(3))

@@ -370,6 +370,21 @@ em Configurações → *Letras automáticas* para o app não baixar letras.
 Kotlin 2.1 · AndroidX · Material Components 1.12 · Media3 (ExoPlayer, MediaSession) 1.5.1 · Palette ·
 View Binding · TagLib para Android (`io.github.kyant0:taglib`, leitura e gravação de tags) · `minSdk 23` · `targetSdk 35` · `compileSdk 35` · Android Gradle Plugin 8.7 (Gradle 8.9).
 
+## Qualidade do código e do build
+
+- **R8 ligado** na versão release: código reduzido e ofuscado e recursos não usados removidos (APK menor).
+  As regras ficam em `app/proguard-rules.pro` (o TagLib é mantido sem renomeação).
+- **Análise estática:** ktlint e detekt rodam no GitHub Actions (`.github/workflows/lint.yml`); regras em
+  `.editorconfig` e `config/detekt/detekt.yml`, com os achados antigos em `config/detekt/baseline.xml`.
+- **Testes:** JVM em `app/src/test` (`gradle :app:testDebugUnitTest`) e instrumentados em `app/src/androidTest`
+  (gravação real de tags, tela principal, MediaStore, favoritos e backup; precisam de aparelho arm64:
+  `gradle :app:connectedDebugAndroidTest`).
+- **Perfil de inicialização** (`baseline-prof.txt`, escrito à mão) instalado por `androidx.profileinstaller`.
+- **Acessibilidade:** alvos de toque de pelo menos 48 dp nos botões da lista, do mini player e da busca, e
+  descrições para as imagens de capa e ícones.
+- Veja também **[ARCHITECTURE.md](ARCHITECTURE.md)**: papel de cada pacote, fluxo de dados e as decisões sobre
+  injeção de dependência, módulos e paginação.
+
 ## Estrutura do projeto
 
 ```
@@ -398,6 +413,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.24.0** | R8 e redução de recursos ligados, ktlint/detekt no CI, testes instrumentados, perfil de inicialização, alvos de toque de 48 dp, ARCHITECTURE.md |
 | **2.23.0** | Atualização dentro do app: verifica ao abrir, baixa com progresso e instala sem sair; a pesquisa de capa mostra todos os resultados (rolagem até o fim) |
 | **2.22.1** | A pesquisa de capa começa com música e artista; o editor de metadados não volta mais ao início da tela ao escolher uma capa ou aplicar dados |
 | **2.22.0** | Android 15 (targetSdk/compileSdk 35), AGP 8.7 e bibliotecas atualizadas (Media3 1.5.1, WorkManager 2.10, lifecycle 2.9, core-ktx 1.15…); cache em memória de favoritos, playlists e estatísticas; biblioteca protegida contra falha do MediaStore e arquivos de 0 byte ignorados; o gravador de posição só roda tocando |

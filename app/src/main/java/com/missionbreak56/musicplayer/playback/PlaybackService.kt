@@ -23,11 +23,11 @@ import androidx.media3.session.SessionResult
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import kotlin.random.Random
 import com.missionbreak56.musicplayer.R
 import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.ui.MainActivity
 import com.missionbreak56.musicplayer.ui.tr
+import kotlin.random.Random
 
 /**
  * Background audio playback. Exposes a MediaSession so the system media
@@ -36,7 +36,6 @@ import com.missionbreak56.musicplayer.ui.tr
  */
 @OptIn(UnstableApi::class)
 class PlaybackService : MediaSessionService() {
-
     private var mediaSession: MediaSession? = null
     private var exo: ExoPlayer? = null
     private val handler = Handler(Looper.getMainLooper())
@@ -110,7 +109,8 @@ class PlaybackService : MediaSessionService() {
             PlaybackState.savePosition(p)
             // Every song that starts, however it started (end of the previous one, next, previous,
             // a tap in the queue), is registered in the shuffle round. "Repeat one" is not a new song.
-            if (p.shuffleModeEnabled && mediaItem != null &&
+            if (p.shuffleModeEnabled &&
+                mediaItem != null &&
                 reason != Player.MEDIA_ITEM_TRANSITION_REASON_REPEAT
             ) {
                 syncShuffleRound(p, newRound = false)

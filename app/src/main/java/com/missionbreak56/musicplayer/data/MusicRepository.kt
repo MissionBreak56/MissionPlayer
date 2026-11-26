@@ -6,7 +6,6 @@ import android.provider.MediaStore
 
 /** Reads the on-device music library. Fully offline. */
 object MusicRepository {
-
     /** True when the last [loadSongs] hit a permission or MediaStore error (its empty list then means "unknown"). */
     @Volatile
     var lastLoadFailed = false

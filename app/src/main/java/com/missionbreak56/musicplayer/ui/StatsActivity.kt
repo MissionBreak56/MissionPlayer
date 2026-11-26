@@ -13,7 +13,6 @@ import com.missionbreak56.musicplayer.playback.ListenTracker
 
 /** Listening statistics: totals, favourites and your top songs, artists and albums. */
 class StatsActivity : BaseActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val root = LinearLayout(this)
@@ -173,10 +172,13 @@ class StatsActivity : BaseActivity() {
         t.text = title
         t.textSize = 17f
         t.setTypeface(t.typeface, android.graphics.Typeface.BOLD)
-        parent.addView(t, LinearLayout.LayoutParams(-1, -2).apply {
-            topMargin = dp(24)
-            bottomMargin = dp(8)
-        })
+        parent.addView(
+            t,
+            LinearLayout.LayoutParams(-1, -2).apply {
+                topMargin = dp(24)
+                bottomMargin = dp(8)
+            }
+        )
     }
 
     private fun empty(parent: LinearLayout) {

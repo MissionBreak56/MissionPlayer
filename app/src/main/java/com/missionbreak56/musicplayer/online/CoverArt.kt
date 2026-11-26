@@ -19,7 +19,6 @@ class CoverOption(
 
 /** Client of the Cover Art Archive (https://musicbrainz.org/doc/Cover_Art_Archive/API). */
 class CoverArtClient(private val http: HttpFetcher) {
-
     /** Pictures of one release. An empty list means the release has none (the archive answers 404). */
     suspend fun forRelease(releaseId: String): List<CoverOption> = list("release/$releaseId", false)
 

@@ -24,7 +24,6 @@ class InvalidImageException(message: String) : Exception(message)
  * and stored as JPEG.
  */
 object CoverImage {
-
     const val MAX_SIDE = 1200
     private const val KEEP_BYTES = 3 * 1024 * 1024
     private const val MAX_PIXELS = 100_000_000L

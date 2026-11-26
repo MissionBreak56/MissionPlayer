@@ -8,7 +8,6 @@ import com.missionbreak56.musicplayer.data.Song
 
 /** Saves the queue and the current song / position so playback can be resumed next time. */
 object PlaybackState {
-
     /** Saves the whole queue (song ids) and the current position. */
     fun saveQueue(player: Player) {
         val n = player.mediaItemCount

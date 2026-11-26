@@ -18,7 +18,6 @@ import kotlin.math.sqrt
  * per [LyricAligner.HOP_MS]. The values are logarithmic. Nothing is saved or sent anywhere.
  */
 object AudioEnvelope {
-
     private const val TIMEOUT_US = 10_000L
     private const val GIVE_UP_MS = 25_000L
 

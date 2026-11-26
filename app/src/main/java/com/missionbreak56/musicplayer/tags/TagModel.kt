@@ -77,7 +77,6 @@ sealed class CoverChange {
  * here, away from file access, is what lets them be unit tested on the JVM.
  */
 object TagCodec {
-
     private const val JOIN = "; "
 
     /** "3/12" -> ("3", "12"); "3" -> ("3", ""). */

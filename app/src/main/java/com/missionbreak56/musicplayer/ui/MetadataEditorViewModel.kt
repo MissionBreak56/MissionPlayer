@@ -8,14 +8,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.missionbreak56.musicplayer.BuildConfig
 import com.missionbreak56.musicplayer.data.Library
+import com.missionbreak56.musicplayer.data.LyricsFetcher
 import com.missionbreak56.musicplayer.data.Song
 import com.missionbreak56.musicplayer.online.Candidate
 import com.missionbreak56.musicplayer.online.CoverArtClient
 import com.missionbreak56.musicplayer.online.CoverOption
-import com.missionbreak56.musicplayer.online.ItunesCoverClient
-import com.missionbreak56.musicplayer.data.LyricsFetcher
-import com.missionbreak56.musicplayer.tags.LyricsText
 import com.missionbreak56.musicplayer.online.ImportedMetadata
+import com.missionbreak56.musicplayer.online.ItunesCoverClient
 import com.missionbreak56.musicplayer.online.LocalInfo
 import com.missionbreak56.musicplayer.online.MatchQuality
 import com.missionbreak56.musicplayer.online.MusicBrainzClient
@@ -27,6 +26,7 @@ import com.missionbreak56.musicplayer.tags.AudioTagFormat
 import com.missionbreak56.musicplayer.tags.CoverChange
 import com.missionbreak56.musicplayer.tags.CoverImage
 import com.missionbreak56.musicplayer.tags.InvalidImageException
+import com.missionbreak56.musicplayer.tags.LyricsText
 import com.missionbreak56.musicplayer.tags.PreparedCover
 import com.missionbreak56.musicplayer.tags.TagError
 import com.missionbreak56.musicplayer.tags.TagException
@@ -35,20 +35,20 @@ import com.missionbreak56.musicplayer.tags.TagSnapshot
 import com.missionbreak56.musicplayer.tags.TagStore
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 
 /** What happens to the cover when the user saves. */
@@ -93,7 +93,6 @@ sealed class EditorEvent {
  * search never overwrites manual edits without asking.
  */
 class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(app) {
-
     private val _state = MutableStateFlow(EditorState())
     val state: StateFlow<EditorState> = _state
 

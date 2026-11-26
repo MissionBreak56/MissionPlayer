@@ -42,6 +42,7 @@ object Themes {
         R.style.Overlay_Accent8, R.style.Overlay_Accent9, R.style.Overlay_Accent10, R.style.Overlay_Accent11,
         R.style.Overlay_Accent12, R.style.Overlay_Accent13, R.style.Overlay_Accent14, R.style.Overlay_Accent15
     )
+
     /**
      * Font options. Index 0 follows the theme; the rest are overlays that also replace the theme's
      * text view style (several complete themes set their own font there and would win otherwise).
@@ -127,6 +128,7 @@ object Themes {
     private val backgroundOverlays = intArrayOf(
         0, R.style.Overlay_Bg1, R.style.Overlay_Bg2, R.style.Overlay_Bg3, R.style.Overlay_Bg4, R.style.Overlay_Bg5
     )
+
     /** Light / night preview colors of each background option (index 0 = the default look). */
     val backgroundPreviews = arrayOf(
         intArrayOf(0xFFF6F6FA.toInt(), 0xFF000000.toInt()),

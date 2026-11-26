@@ -40,7 +40,6 @@ class TagSnapshot(
  * never decoded or re-encoded: TagLib only rewrites the tag area.
  */
 object TagStore {
-
     private const val TMP_DIR = "tagedit"
     private const val COPY_BUFFER = 256 * 1024
     private const val SPACE_MARGIN = 16L * 1024 * 1024

@@ -48,7 +48,6 @@ import kotlinx.coroutines.launch
  * replacement/removal and lyrics. Nothing reaches the file until the user taps Save.
  */
 class MetadataEditorActivity : BaseActivity() {
-
     private lateinit var vm: MetadataEditorViewModel
     private val inputs = HashMap<TagField, TextInputEditText>()
     private val layouts = HashMap<TagField, TextInputLayout>()
@@ -125,9 +124,12 @@ class MetadataEditorActivity : BaseActivity() {
         setContentView(root)
 
         buildForm()
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() = handleBack()
-        })
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() = handleBack()
+            }
+        )
 
         vm.load(intent.getLongExtra(EXTRA_ID, -1L))
         lifecycleScope.launch {
@@ -301,7 +303,6 @@ class MetadataEditorActivity : BaseActivity() {
             setOnClickListener { vm.searchLyrics() }
         }
         form.addView(lyricsBtn, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
-
     }
 
     private fun buildBottomBar(): LinearLayout {
@@ -438,7 +439,9 @@ class MetadataEditorActivity : BaseActivity() {
                     lifecycleScope.launch {
                         val bmp = ArtLoader.fileCover(applicationContext, song, 600)
                         if (renderedCover == key) {
-                            if (bmp != null) coverView.setImageBitmap(bmp) else {
+                            if (bmp != null) {
+                                coverView.setImageBitmap(bmp)
+                            } else {
                                 coverView.setImageResource(R.drawable.art_placeholder)
                                 coverInfo.text = tr("O arquivo não tem capa incorporada", "The file has no embedded cover")
                             }
@@ -450,7 +453,9 @@ class MetadataEditorActivity : BaseActivity() {
     }
 
     private fun renderOptions(s: EditorState) {
-        if (s.coverNote.isNullOrBlank()) coverNote.visibility = View.GONE else {
+        if (s.coverNote.isNullOrBlank()) {
+            coverNote.visibility = View.GONE
+        } else {
             coverNote.visibility = View.VISIBLE
             coverNote.text = s.coverNote
         }

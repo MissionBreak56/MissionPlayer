@@ -14,7 +14,6 @@ import java.io.File
  * while the real MediaStore scan runs in the background.
  */
 object SongCache {
-
     private const val FILE_NAME = "song_cache.bin"
     private const val VERSION = 1
 

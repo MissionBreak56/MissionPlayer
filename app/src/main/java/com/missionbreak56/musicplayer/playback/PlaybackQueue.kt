@@ -1,7 +1,5 @@
 package com.missionbreak56.musicplayer.playback
 
-import android.content.ContentUris
-import android.net.Uri
 import android.os.Bundle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -9,8 +7,6 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
 import com.missionbreak56.musicplayer.data.Song
 import kotlin.random.Random
-
-private val ART_BASE: Uri = Uri.parse("content://media/external/audio/albumart")
 
 fun Song.toMediaItem(): MediaItem = MediaItem.Builder()
     .setMediaId(id.toString())
@@ -29,7 +25,6 @@ fun Song.toMediaItem(): MediaItem = MediaItem.Builder()
 
 /** Helpers that turn "play this list" gestures into player commands. */
 object PlaybackQueue {
-
     /** Asks the service to rebuild the shuffle order so every song plays once before any repeats. */
     val RESHUFFLE = SessionCommand("com.missionbreak56.musicplayer.RESHUFFLE", Bundle.EMPTY)
 

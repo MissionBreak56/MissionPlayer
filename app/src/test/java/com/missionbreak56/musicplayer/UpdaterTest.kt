@@ -9,7 +9,6 @@ import org.junit.Test
 import java.io.IOException
 
 class UpdaterTest {
-
     @Test fun comparesVersionsNumerically() {
         assertTrue(AppUpdater.compareVersions("2.23.0", "2.22.1") > 0)
         assertTrue(AppUpdater.compareVersions("v2.10.0", "2.9.9") > 0)

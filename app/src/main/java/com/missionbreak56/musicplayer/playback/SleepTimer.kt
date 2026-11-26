@@ -9,7 +9,6 @@ import android.os.SystemClock
  * (pause the player); the UI only starts, cancels and reads the remaining time.
  */
 object SleepTimer {
-
     private val handler = Handler(Looper.getMainLooper())
     private var endAt = 0L
 

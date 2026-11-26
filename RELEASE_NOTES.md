@@ -1,3 +1,18 @@
+## MissionPlayer v2.24.0 — APK reduzido e mais qualidade de código
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.24.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Mudanças
+- **APK menor:** a versão release agora usa o R8 (reduz e ofusca o código) e remove recursos não usados. Regras de proteção para o TagLib (gravação de tags) em `proguard-rules.pro`.
+- **Inicialização mais rápida:** perfil de inicialização (Baseline Profile) instalado pelo `profileinstaller`, inclusive fora da Play Store. É um perfil escrito à mão para os caminhos de abertura e de reprodução, não gravado com Macrobenchmark.
+- **Acessibilidade:** botões de mais (⋮), mini player, busca e "Adicionar letra" com alvo de toque de pelo menos 48 dp, e descrições para as capas encontradas na pesquisa; ícones decorativos ignorados pelo leitor de tela.
+- **Código:** ktlint e detekt no CI (com `.editorconfig`, configuração e baseline), código formatado e uma constante sem uso removida.
+- **Testes instrumentados** (gravação real de tags em MP3/FLAC/OGG/M4A, capa, tela principal, MediaStore, favoritos e backup) e documento **ARCHITECTURE.md**.
+
+### O que ficou de fora, e por quê
+- **Hilt, módulos separados e Paging 3** não foram adotados: são refatorações grandes demais para fazer sem testes de tela e sem aparelho. O motivo e o caminho sugerido estão em `ARCHITECTURE.md`.
+- O app já é bilíngue (português e inglês); o Accessibility Scanner precisa de um aparelho e não pôde ser executado, então a revisão de acessibilidade foi feita lendo os layouts.
+
 ## MissionPlayer v2.23.0 — Atualização dentro do app e todas as capas na pesquisa
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.23.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

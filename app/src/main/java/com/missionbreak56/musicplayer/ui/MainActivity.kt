@@ -29,7 +29,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : PlayerBoundActivity(), LibraryHost {
-
     private lateinit var binding: ActivityMainBinding
     private lateinit var pages: LibraryPagerAdapter
     private lateinit var actions: SongActions

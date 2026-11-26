@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ComplexCondition:PlayerActivity.kt$PlayerActivity$lines.isNotEmpty() &amp;&amp; lines.first().timeMs &gt;= 0 &amp;&amp; id &gt; 0 &amp;&amp; song != null &amp;&amp; Prefs.autoLyricSync &amp;&amp; !Prefs.lyricSyncChecked(id) &amp;&amp; syncing.add(id)</ID>
+    <ID>CyclomaticComplexMethod:AudioEnvelope.kt$AudioEnvelope$fun compute(context: Context, uri: Uri, maxMs: Long): FloatArray?</ID>
+    <ID>CyclomaticComplexMethod:MetadataEditorActivity.kt$MetadataEditorActivity$private fun renderContent(s: EditorState)</ID>
+    <ID>CyclomaticComplexMethod:TagStore.kt$TagStore$@Synchronized fun save( context: Context, uri: Uri, snapshot: TagSnapshot, edited: Map&lt;TagField, String&gt;, cover: CoverChange )</ID>
+    <ID>EmptyCatchBlock:UpdaterTest.kt$UpdaterTest${ }</ID>
+    <ID>EmptyFunctionBlock:BgImage.kt$BgImage.&lt;no name provided&gt;${}</ID>
+    <ID>EmptyFunctionBlock:CustomizeActivity.kt$CustomizeActivity.&lt;no name provided&gt;${}</ID>
+    <ID>EmptyFunctionBlock:Dialogs.kt$Dialogs.&lt;no name provided&gt;${}</ID>
+    <ID>EmptyFunctionBlock:PlayerBoundActivity.kt$PlayerBoundActivity.&lt;no name provided&gt;${}</ID>
+    <ID>EmptyFunctionBlock:SearchActivity.kt$SearchActivity.&lt;no name provided&gt;${}</ID>
+    <ID>EmptyFunctionBlock:SongPickerActivity.kt$SongPickerActivity.&lt;no name provided&gt;${}</ID>
+    <ID>EmptyFunctionBlock:SongReorder.kt$SongReorder.&lt;no name provided&gt;${}</ID>
+    <ID>LoopWithTooManyJumpStatements:AppUpdater.kt$AppUpdater$for</ID>
+    <ID>LoopWithTooManyJumpStatements:CoverArt.kt$CoverArtClient.Companion$for</ID>
+    <ID>LoopWithTooManyJumpStatements:CoverSearch.kt$CoverSearch$for</ID>
+    <ID>LoopWithTooManyJumpStatements:GlassColors.kt$GlassColors$for</ID>
+    <ID>LoopWithTooManyJumpStatements:ItunesCoverClient.kt$ItunesCoverClient.Companion$for</ID>
+    <ID>LoopWithTooManyJumpStatements:LyricAligner.kt$LyricAligner$for</ID>
+    <ID>LoopWithTooManyJumpStatements:Lyrics.kt$EmbeddedLyrics$while</ID>
+    <ID>LoopWithTooManyJumpStatements:Lyrics.kt$LrcParser$for</ID>
+    <ID>LoopWithTooManyJumpStatements:LyricsFetcher.kt$Kugou$for</ID>
+    <ID>LoopWithTooManyJumpStatements:LyricsFetcher.kt$LrcLib$for</ID>
+    <ID>LoopWithTooManyJumpStatements:LyricsFetcher.kt$LyricsFetcher$for</ID>
+    <ID>LoopWithTooManyJumpStatements:LyricsFetcher.kt$QQMusic$for</ID>
+    <ID>LoopWithTooManyJumpStatements:MetadataEditorViewModel.kt$MetadataEditorViewModel$for</ID>
+    <ID>LoopWithTooManyJumpStatements:TagStore.kt$TagStore$for</ID>
+    <ID>NestedBlockDepth:AudioEnvelope.kt$AudioEnvelope$fun compute(context: Context, uri: Uri, maxMs: Long): FloatArray?</ID>
+    <ID>SwallowedException:CoverImage.kt$CoverImage$e: IOException</ID>
+    <ID>SwallowedException:CoverImage.kt$CoverImage$e: OutOfMemoryError</ID>
+    <ID>SwallowedException:MetadataEditorActivity.kt$MetadataEditorActivity$e: SecurityException</ID>
+    <ID>SwallowedException:MetadataEditorActivity.kt$MetadataEditorActivity$e: java.io.IOException</ID>
+    <ID>SwallowedException:MetadataEditorViewModel.kt$MetadataEditorViewModel$e: InvalidImageException</ID>
+    <ID>SwallowedException:MetadataEditorViewModel.kt$MetadataEditorViewModel$e: OnlineException</ID>
+    <ID>SwallowedException:MetadataEditorViewModel.kt$MetadataEditorViewModel$e: Throwable</ID>
+    <ID>SwallowedException:SettingsActivity.kt$SettingsActivity$e: Exception</ID>
+    <ID>SwallowedException:UpdateFlow.kt$UpdateFlow$e: Exception</ID>
+    <ID>SwallowedException:UpdaterTest.kt$UpdaterTest$e: IOException</ID>
+    <ID>TooGenericExceptionCaught:AppUpdater.kt$AppUpdater$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:Backup.kt$Backup$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:Http.kt$UrlConnectionFetcher$e: Throwable</ID>
+    <ID>TooGenericExceptionCaught:MetadataEditorViewModel.kt$MetadataEditorViewModel$e: Throwable</ID>
+    <ID>TooGenericExceptionCaught:SettingsActivity.kt$SettingsActivity$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:TagStore.kt$TagStore$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:UpdateFlow.kt$UpdateFlow$e: Exception</ID>
+    <ID>UnusedParameter:EqualizerActivity.kt$EqualizerActivity$eq: AudioFx.Info</ID>
+    <ID>UnusedParameter:TagModel.kt$TagCodec$format: AudioTagFormat</ID>
+    <ID>UnusedPrivateProperty:AudioEnvelope.kt$AudioEnvelope$c</ID>
+    <ID>UnusedPrivateProperty:LyricAligner.kt$LyricAligner$val total = cum[n]</ID>
+    <ID>UseCheckOrError:CoverSearch.kt$CoverSearch$throw IllegalStateException("HTTP ${conn.responseCode}")</ID>
+  </CurrentIssues>
+</SmellBaseline>

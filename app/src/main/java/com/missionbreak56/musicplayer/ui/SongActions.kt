@@ -20,7 +20,6 @@ class SongActions(
     private val activity: PlayerBoundActivity,
     private val onChanged: () -> Unit
 ) {
-
     private fun toast(res: Int) = Toast.makeText(activity, res, Toast.LENGTH_SHORT).show()
 
     fun showMenu(anchor: View, song: Song, playlistKey: String? = null) {

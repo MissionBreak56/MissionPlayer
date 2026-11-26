@@ -21,7 +21,6 @@ import java.util.concurrent.Executors
  */
 @OptIn(UnstableApi::class)
 class SongBitmapLoader(private val context: Context) : BitmapLoader {
-
     private val fallback = DataSourceBitmapLoader(context)
     private val executor = Executors.newSingleThreadExecutor()
 

@@ -1,0 +1,46 @@
+# Detekt on top of its defaults. Rules that only reflect the style of this code base are relaxed; everything
+# else stays on. Existing findings live in baseline.xml so new code is held to the rules from now on.
+build:
+  maxIssues: 0
+
+style:
+  MagicNumber:
+    active: false
+  MaxLineLength:
+    active: false
+  ReturnCount:
+    active: false
+  ThrowsCount:
+    active: false
+  UnusedPrivateMember:
+    active: true
+  WildcardImport:
+    active: false
+  ForbiddenComment:
+    active: false
+  NewLineAtEndOfFile:
+    active: false
+
+complexity:
+  LongMethod:
+    threshold: 120
+  LongParameterList:
+    functionThreshold: 8
+    constructorThreshold: 10
+  CyclomaticComplexMethod:
+    threshold: 30
+  NestedBlockDepth:
+    threshold: 6
+  TooManyFunctions:
+    active: false
+  LargeClass:
+    threshold: 1200
+  ComplexCondition:
+    threshold: 6
+
+naming:
+  FunctionNaming:
+    ignoreAnnotated: ['Composable']
+  TopLevelPropertyNaming:
+    active: false
+

@@ -24,7 +24,6 @@ import kotlinx.coroutines.withContext
 
 /** The screens of an in-app update: the offer, the permission hint, the download progress and the hand-off to Android. */
 object UpdateFlow {
-
     private const val PREFS = "updates"
     private const val KEY_SKIPPED = "skipped_version"
 

@@ -2,18 +2,18 @@ package com.missionbreak56.musicplayer.data
 
 import android.content.Context
 import android.util.Base64
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
 import java.text.Normalizer
 import java.util.concurrent.ConcurrentHashMap
-import org.json.JSONArray
-import org.json.JSONObject
 
 // ----- Intervals (all at their practical minimum) -----
 private const val RETRY_MISS_AFTER_MS = 15L * 60 * 1000 // same cadence as the background job
-private const val COOLDOWN_MS = 15_000L                 // pause for a source that answered 429
+private const val COOLDOWN_MS = 15_000L // pause for a source that answered 429
 private const val FAILS_BEFORE_COOLDOWN = 3
 private const val CONNECT_TIMEOUT_MS = 5_000
 private const val READ_TIMEOUT_MS = 8_000
@@ -24,7 +24,6 @@ private const val PREF = "lyrics_fetch"
 
 private val syncedTag = Regex("""\[\d{1,3}:\d{2}""")
 
-
 private class Http(val code: Int, val body: String)
 private class RateLimited : Exception()
 
@@ -33,10 +32,8 @@ private abstract class Provider(val name: String) {
     abstract fun find(song: Song): String?
 }
 
-
 private val coolUntil = ConcurrentHashMap<String, Long>()
 private val fails = ConcurrentHashMap<String, Int>()
-
 
 // ----- Shared helpers -----
 
@@ -112,7 +109,6 @@ private fun jsonText(body: String): String {
     val t = body.trim()
     return if (t.startsWith("{") || t.startsWith("[")) t else t.substringAfter('(').substringBeforeLast(')')
 }
-
 
 // ----- 1. LRCLIB -----
 
@@ -276,7 +272,6 @@ private object LyricsOvh : Provider("lyricsovh") {
     }
 }
 
-
 // ----- 5. QQ Music (synced) -----
 
 private object QQMusic : Provider("qqmusic") {
@@ -391,7 +386,6 @@ private object Lyrist : Provider("lyrist") {
     }
 }
 
-
 private val providers: List<Provider> =
     listOf(LrcLib, NetEase, Kugou, QQMusic, LrcApi, Textyl, LyricsOvh, Lyrist)
 
@@ -414,7 +408,6 @@ private val providers: List<Provider> =
  * skipped for a short while, so one bad source never blocks the others.
  */
 object LyricsFetcher {
-
     enum class Outcome { FOUND, NOT_FOUND, ERROR, RATE_LIMITED }
 
     // ----- Miss bookkeeping -----
@@ -507,9 +500,9 @@ object LyricsFetcher {
 
         var plainFallback: String? = null
         var synced: String? = null
-        var answered = false   // at least one source replied properly (even "not found")
-        var failed = false     // at least one source errored
-        var skipped = false    // at least one source was cooling down
+        var answered = false // at least one source replied properly (even "not found")
+        var failed = false // at least one source errored
+        var skipped = false // at least one source was cooling down
 
         for (p in providers) {
             val until = coolUntil[p.name] ?: 0L

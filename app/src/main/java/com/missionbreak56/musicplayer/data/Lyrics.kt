@@ -10,7 +10,6 @@ data class LyricLine(val timeMs: Long, val text: String)
 
 /** Parses `.lrc` files. Plain text is returned with timestamps of -1 (not synced). */
 object LrcParser {
-
     private val tag = Regex("""\[(\d{1,3}):(\d{1,2})(?:[.:](\d{1,3}))?]""")
 
     /** `[offset:+250]`: standard LRC tag, a positive value makes every line appear that many ms earlier. */
@@ -57,7 +56,6 @@ object LrcParser {
 
 /** Lyrics the user attached to a song, kept in the app's private storage. */
 object LyricsStore {
-
     private fun file(context: Context, songId: Long): File =
         File(File(context.filesDir, "lyrics"), "$songId.lrc")
 
@@ -109,8 +107,10 @@ object LyricsStore {
 
     /** How much later (positive) or earlier (negative) than the file says the lines are shown. */
     fun shiftOf(raw: String): Long =
-        -(raw.lineSequence().mapNotNull { LrcParser.offsetTag.matchEntire(it.trim().trimStart('\uFEFF')) }
-            .firstOrNull()?.groupValues?.get(1)?.toLongOrNull() ?: 0L)
+        -(
+            raw.lineSequence().mapNotNull { LrcParser.offsetTag.matchEntire(it.trim().trimStart('\uFEFF')) }
+                .firstOrNull()?.groupValues?.get(1)?.toLongOrNull() ?: 0L
+        )
 
     private fun withShift(raw: String, shiftMs: Long): String {
         val body = raw.lineSequence()
@@ -138,7 +138,6 @@ object LyricsStore {
  * MP4 ©lyr) or in a `.lrc` file with the same name next to it. Best effort, never throws.
  */
 object EmbeddedLyrics {
-
     private const val MAX_TAG = 6 * 1024 * 1024
 
     fun read(context: Context, song: Song): String? {
@@ -266,7 +265,7 @@ object EmbeddedLyrics {
             2 -> Charsets.UTF_16BE
             else -> Charsets.UTF_8
         }
-        return String(b, p, end - p, charset).trim('\u0000', ' ', '﻿')
+        return String(b, p, end - p, charset).trim('\u0000', ' ', '')
     }
 
     // ----- FLAC / Ogg Vorbis -----
@@ -352,7 +351,9 @@ object EmbeddedLyrics {
         val marker = byteArrayOf(0xA9.toByte(), 'l'.code.toByte(), 'y'.code.toByte(), 'r'.code.toByte())
         var i = 0
         while (i + 4 <= n) {
-            if (data[i] == marker[0] && data[i + 1] == marker[1] && data[i + 2] == marker[2] &&
+            if (data[i] == marker[0] &&
+                data[i + 1] == marker[1] &&
+                data[i + 2] == marker[2] &&
                 data[i + 3] == marker[3]
             ) {
                 // layout: [size]['©lyr'][size]['data'][type 4][locale 4][text]
@@ -377,7 +378,6 @@ object EmbeddedLyrics {
  * Built lazily in the background; text read from files is cached on disk.
  */
 object LyricsIndex {
-
     private val index = java.util.concurrent.ConcurrentHashMap<Long, String>()
 
     @Volatile

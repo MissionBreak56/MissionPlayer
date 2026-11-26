@@ -1,0 +1,37 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{kt,kts}]
+indent_style = space
+indent_size = 4
+max_line_length = off
+ktlint_code_style = ktlint_official
+# The project writes bilingual strings inline (tr("pt", "en")) and long Material builder chains.
+ktlint_standard_no-wildcard-imports = disabled
+ktlint_standard_function-signature = disabled
+ktlint_standard_function-expression-body = disabled
+ktlint_standard_class-signature = disabled
+ktlint_standard_property-naming = disabled
+ktlint_standard_filename = disabled
+ktlint_standard_multiline-expression-wrapping = disabled
+ktlint_standard_string-template-indent = disabled
+ktlint_standard_blank-line-before-declaration = disabled
+ktlint_standard_statement-wrapping = disabled
+ktlint_standard_if-else-wrapping = disabled
+ktlint_standard_chain-method-continuation = disabled
+ktlint_standard_try-catch-finally-spacing = disabled
+ktlint_standard_no-consecutive-comments = disabled
+ktlint_standard_comment-wrapping = disabled
+ktlint_standard_discouraged-comment-location = disabled
+ktlint_standard_value-argument-comment = disabled
+ktlint_standard_blank-line-between-when-conditions = disabled
+# Style choices of this code base (kept as they are rather than mass-reformatted).
+ktlint_standard_trailing-comma-on-call-site = disabled
+ktlint_standard_trailing-comma-on-declaration-site = disabled
+ktlint_standard_argument-list-wrapping = disabled
+ktlint_standard_multiline-if-else = disabled

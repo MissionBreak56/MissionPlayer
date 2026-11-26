@@ -22,12 +22,12 @@ import java.io.File
  * the theme's background color so text stays readable.
  */
 object BgImage {
-
     private const val MAX_SIDE = 1600
 
     private fun file(context: Context) = File(context.filesDir, "bg_image.jpg")
 
     @Volatile private var cached: Bitmap? = null
+
     @Volatile private var cachedStamp = 0L
 
     val active: Boolean get() = Prefs.bgImageStamp != 0L
@@ -107,6 +107,7 @@ object BgImage {
             override fun draw(canvas: Canvas) { canvas.drawRect(bounds, paint) }
             override fun setAlpha(alpha: Int) {}
             override fun setColorFilter(colorFilter: ColorFilter?) {}
+
             @Suppress("OVERRIDE_DEPRECATION")
             override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
         }
@@ -138,6 +139,7 @@ object BgImage {
 
         override fun setAlpha(alpha: Int) { paint.alpha = alpha }
         override fun setColorFilter(colorFilter: ColorFilter?) { paint.colorFilter = colorFilter }
+
         @Suppress("OVERRIDE_DEPRECATION")
         override fun getOpacity(): Int = PixelFormat.OPAQUE
     }

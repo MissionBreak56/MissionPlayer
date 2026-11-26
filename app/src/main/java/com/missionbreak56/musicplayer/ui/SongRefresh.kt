@@ -19,7 +19,6 @@ import kotlin.coroutines.resume
 
 /** Brings the rest of the app up to date after a song's tags or cover were rewritten. */
 object SongRefresh {
-
     suspend fun afterSave(context: Context, song: Song, coverChanged: Boolean, lyricsChanged: Boolean = false) {
         val app = context.applicationContext
         withContext(Dispatchers.IO) {

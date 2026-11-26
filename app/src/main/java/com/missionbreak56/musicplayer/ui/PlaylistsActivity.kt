@@ -19,7 +19,6 @@ import kotlinx.coroutines.withContext
 
 /** All playlists: the automatic ones (favorites, recent...) and the ones the user created. */
 class PlaylistsActivity : PlayerBoundActivity() {
-
     private lateinit var binding: ActivityPlaylistsBinding
     private lateinit var adapter: GroupAdapter
 

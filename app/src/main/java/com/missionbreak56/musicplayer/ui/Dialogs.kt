@@ -3,14 +3,14 @@ package com.missionbreak56.musicplayer.ui
 import android.app.Activity
 import android.view.Gravity
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.missionbreak56.musicplayer.R
 import com.missionbreak56.musicplayer.data.Library
@@ -18,7 +18,6 @@ import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.playback.SleepTimer
 
 object Dialogs {
-
     /** Lets the user drag the library tabs into the order they prefer. */
     fun reorderTabs(activity: Activity, order: List<Int>, onSave: (List<Int>) -> Unit) {
         val titles = activity.resources.getStringArray(R.array.tabs)

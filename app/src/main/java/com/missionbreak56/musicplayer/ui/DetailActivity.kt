@@ -23,7 +23,6 @@ import kotlinx.coroutines.withContext
 
 /** Songs of one album, artist, folder, genre or playlist. */
 class DetailActivity : PlayerBoundActivity() {
-
     private lateinit var binding: ActivityDetailBinding
     private lateinit var adapter: SongAdapter
     private lateinit var actions: SongActions

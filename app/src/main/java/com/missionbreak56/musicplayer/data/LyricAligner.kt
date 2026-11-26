@@ -18,7 +18,6 @@ import kotlin.math.sqrt
  * to the voice the thresholds below never moved a correct lyric and never gave a wrong shift.)
  */
 object LyricAligner {
-
     const val HOP_MS = 50
 
     /** Window (each side) used to remove slow loudness changes: 160 hops = 8 s. */
@@ -31,10 +30,10 @@ object LyricAligner {
     private const val MIN_LINES = 6
 
     // Decision thresholds, in "standard deviations of loudness".
-    private const val MIN_SCORE = 0.45        // the lines must really start where the audio steps up
-    private const val MIN_GAIN = 0.30         // ...and be clearly better than where it is now
-    private const val MIN_PEAK_LEAD = 0.15    // ...and than every shift further than 1.5 s away
-    private const val MIN_SHIFT_MS = 300L     // smaller shifts are not worth moving
+    private const val MIN_SCORE = 0.45 // the lines must really start where the audio steps up
+    private const val MIN_GAIN = 0.30 // ...and be clearly better than where it is now
+    private const val MIN_PEAK_LEAD = 0.15 // ...and than every shift further than 1.5 s away
+    private const val MIN_SHIFT_MS = 300L // smaller shifts are not worth moving
     private const val PEAK_EXCLUDE_MS = 1_500L
 
     /**

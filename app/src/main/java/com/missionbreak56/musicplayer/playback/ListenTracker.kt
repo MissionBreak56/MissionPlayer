@@ -9,7 +9,6 @@ import com.missionbreak56.musicplayer.data.Prefs
  * (big jumps) and paused time are not counted.
  */
 object ListenTracker {
-
     private var lastId = -1L
     private var lastPos = 0L
     private var ticks = 0

@@ -38,7 +38,6 @@ class LibraryPagerAdapter(
     private val context: Context,
     private val host: LibraryHost
 ) : RecyclerView.Adapter<LibraryPagerAdapter.PageHolder>() {
-
     var order: List<Int> = Prefs.tabOrder()
         set(value) {
             field = value
@@ -130,7 +129,6 @@ class LibraryPagerAdapter(
     override fun getItemCount(): Int = order.size
 
     inner class PageHolder(private val b: PageListBinding) : RecyclerView.ViewHolder(b.root) {
-
         fun bind(page: Int) {
             val ctx = b.root.context
             val adapter: RecyclerView.Adapter<*> =

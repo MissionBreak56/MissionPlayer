@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AboutActivity : BaseActivity() {
-
     private lateinit var binding: ActivityAboutBinding
     private var latest: ReleaseInfo? = null
 
@@ -88,5 +87,4 @@ class AboutActivity : BaseActivity() {
             Toast.makeText(this, R.string.update_open_link_failed, Toast.LENGTH_SHORT).show()
         }
     }
-
 }

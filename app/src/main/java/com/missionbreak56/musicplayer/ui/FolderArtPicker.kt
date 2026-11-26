@@ -19,7 +19,6 @@ import kotlinx.coroutines.withContext
 
 /** Lets the user pick the picture of a folder from the covers of the songs inside it. */
 object FolderArtPicker {
-
     private const val THUMB = 192
     private const val FULL = 768
     private const val MAX_CANDIDATES = 100

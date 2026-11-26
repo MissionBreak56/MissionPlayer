@@ -10,13 +10,14 @@ import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import android.view.Choreographer
+import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.lifecycleScope
-import androidx.palette.graphics.Palette
+import androidx.media3.common.Player
+import androidx.media3.session.MediaController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,8 +32,6 @@ import com.missionbreak56.musicplayer.data.Song
 import com.missionbreak56.musicplayer.databinding.SheetQueueBinding
 import com.missionbreak56.musicplayer.playback.PlaybackState
 import com.missionbreak56.musicplayer.playback.PlayerConnection
-import androidx.media3.common.Player
-import androidx.media3.session.MediaController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -43,7 +42,6 @@ import kotlinx.coroutines.withContext
  * disconnects on stop, and drives the mini player if the layout includes one.
  */
 abstract class PlayerBoundActivity : BaseActivity() {
-
     var controller: MediaController? = null
         private set
 

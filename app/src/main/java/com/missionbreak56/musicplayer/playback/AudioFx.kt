@@ -12,7 +12,6 @@ import com.missionbreak56.musicplayer.data.Prefs
  * Settings live in [Prefs]; any change to an `fx_*` key is re-applied immediately.
  */
 object AudioFx {
-
     private var eq: Equalizer? = null
     private var bass: BassBoost? = null
     private var virt: Virtualizer? = null

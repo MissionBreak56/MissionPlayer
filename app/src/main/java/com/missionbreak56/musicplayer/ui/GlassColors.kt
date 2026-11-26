@@ -7,7 +7,6 @@ import kotlin.math.abs
 
 /** Picks the main colours of a cover for the "liquid glass" backgrounds. */
 object GlassColors {
-
     const val COUNT = 4
 
     private fun hue(color: Int): Float {

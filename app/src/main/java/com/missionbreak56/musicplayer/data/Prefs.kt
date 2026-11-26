@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatDelegate
  * thread.
  */
 object Prefs {
-
     private const val FILE = "mission_player_prefs"
     private const val KEY_FAVORITES = "favorites"
     private const val KEY_PLAYLISTS = "playlists"
@@ -68,16 +67,22 @@ object Prefs {
 
     @Volatile
     private var favCache: MutableSet<String>? = null
+
     @Volatile
     private var hiddenSongsCache: MutableSet<String>? = null
+
     @Volatile
     private var hiddenFoldersCache: MutableSet<String>? = null
+
     @Volatile
     private var playlistsCache: MutableMap<String, MutableList<Long>>? = null
+
     @Volatile
     private var countsCache: MutableMap<Long, Int>? = null
+
     @Volatile
     private var recentCache: List<Long>? = null
+
     @Volatile
     private var listenCache: MutableMap<Long, Long>? = null
 

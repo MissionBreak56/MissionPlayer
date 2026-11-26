@@ -10,7 +10,6 @@ import com.missionbreak56.musicplayer.R
  * (each one has its own icon) and disabling the others. Index 0 is the original icon.
  */
 object IconManager {
-
     /** Same as the manifest namespace; aliases are declared relative to it. */
     private const val NAMESPACE = "com.missionbreak56.musicplayer"
 

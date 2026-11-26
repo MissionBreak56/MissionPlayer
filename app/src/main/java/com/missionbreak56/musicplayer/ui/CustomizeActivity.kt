@@ -15,8 +15,8 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.SeekBar
 import android.widget.ScrollView
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,7 +34,6 @@ import kotlinx.coroutines.withContext
  * Look settings are layered over the chosen theme (see [Themes.applyOverlays]).
  */
 class CustomizeActivity : BaseActivity() {
-
     private lateinit var scroll: ScrollView
     private lateinit var body: LinearLayout
 
@@ -116,10 +115,13 @@ class CustomizeActivity : BaseActivity() {
         t.text = title
         t.textSize = 17f
         t.setTypeface(t.typeface, Typeface.BOLD)
-        body.addView(t, LinearLayout.LayoutParams(-1, -2).apply {
-            topMargin = dp(24)
-            bottomMargin = if (hint.isBlank()) dp(8) else dp(2)
-        })
+        body.addView(
+            t,
+            LinearLayout.LayoutParams(-1, -2).apply {
+                topMargin = dp(24)
+                bottomMargin = if (hint.isBlank()) dp(8) else dp(2)
+            }
+        )
         if (hint.isNotBlank()) {
             val h = TextView(this)
             h.text = hint
@@ -269,6 +271,7 @@ class CustomizeActivity : BaseActivity() {
         val img = ImageView(this)
         img.setImageResource(IconManager.icons[index])
         roundClip(img, 10)
+        img.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO // the icon's name is the label next to it
         button.addView(img, LinearLayout.LayoutParams(dp(40), dp(40)))
         val label = TextView(this)
         label.text = names[index]
@@ -368,6 +371,7 @@ class CustomizeActivity : BaseActivity() {
                 val pic = ImageView(this@CustomizeActivity)
                 pic.setImageResource(IconManager.icons[position])
                 roundClip(pic, 10)
+                pic.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO // the icon's name is the label next to it
                 row.addView(pic, LinearLayout.LayoutParams(dp(40), dp(40)))
                 val t = TextView(this@CustomizeActivity)
                 t.text = names[position]
