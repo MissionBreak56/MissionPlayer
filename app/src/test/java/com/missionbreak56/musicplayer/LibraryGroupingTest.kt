@@ -7,7 +7,6 @@ import org.junit.Assert.assertNotEquals
 import org.junit.Test
 
 class LibraryGroupingTest {
-
     @Test fun artistNamesThatDifferOnlyInCaseOrSpacesAreTheSame() {
         assertEquals(sameText("Kamaitachi"), sameText("kamaitachi"))
         assertEquals(sameText("Kamaitachi"), sameText("  Kamaitachi  "))
