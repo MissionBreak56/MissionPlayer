@@ -18,7 +18,9 @@ jobs:
         with:
           gradle-version: '8.9'
       - name: Unit tests and instrumented-test compilation
-        run: gradle :app:testDebugUnitTest :app:assembleDebugAndroidTest --no-daemon --console=plain 2>&1 | tee verify.log
+        run: |
+          set -o pipefail
+          gradle :app:testDebugUnitTest :app:assembleDebugAndroidTest --no-daemon --console=plain 2>&1 | tee verify.log
       - name: Summary
         if: always()
         run: |

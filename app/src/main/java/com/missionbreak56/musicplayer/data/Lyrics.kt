@@ -265,7 +265,7 @@ object EmbeddedLyrics {
             2 -> Charsets.UTF_16BE
             else -> Charsets.UTF_8
         }
-        return String(b, p, end - p, charset).trim('\u0000', ' ', '')
+        return String(b, p, end - p, charset).trim('\u0000', ' ', '\uFEFF')
     }
 
     // ----- FLAC / Ogg Vorbis -----
