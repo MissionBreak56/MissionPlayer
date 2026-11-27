@@ -1,3 +1,12 @@
+## MissionPlayer v2.24.4 — Álbuns e artistas duplicados
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.24.4-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Correção
+- O mesmo álbum aparecia duas vezes (uma música em cada) quando o nome do artista estava escrito com maiúsculas diferentes nas tags, como "Kamaitachi" e "kamaitachi". O Android atribui ids de álbum diferentes nesse caso. Agora álbuns com o mesmo título e o mesmo artista, sem considerar maiúsculas nem espaços sobrando, viram um só.
+- A aba **Artistas** tinha o mesmo problema e recebeu a mesma correção. O nome mostrado é a grafia mais usada.
+- Compilações (vários artistas) e músicas sem nome de álbum continuam agrupadas como antes.
+
 ## MissionPlayer v2.24.3 — Abas acompanham a fonte escolhida
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.24.3-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

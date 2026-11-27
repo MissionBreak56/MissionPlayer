@@ -197,23 +197,56 @@ object Library {
     private class Derived(val songs: List<Song>) {
         val byTitle: List<Song> by lazy { songs.sortedByText { it.displayTitle } }
 
-        val albums: List<Group> by lazy {
-            songs.groupBy { it.albumId }.map { (albumId, list) ->
-                val first = list.first()
-                val artists = list.map { it.displayArtist }.distinct()
+        /** Albums, plus every old album key (MediaStore id) -> the key of the album it was merged into. */
+        private class Grouped(val groups: List<Group>, val alias: Map<String, String>)
+
+        private val albumData: Grouped by lazy {
+            // MediaStore gives the same album different ids when only the capitalisation of the artist differs
+            // ("Kamaitachi" / "kamaitachi"). Albums with the same title and the same single artist, compared
+            // without case or extra spaces, are one album. Compilations (several artists) and songs without an
+            // album name stay as MediaStore has them.
+            val merged = LinkedHashMap<String, MutableList<Song>>()
+            val ids = HashMap<String, MutableList<Long>>()
+            for ((albumId, list) in songs.groupBy { it.albumId }) {
+                val artists = list.map { sameText(it.displayArtist) }.distinct()
+                val named = list.first().album.isNotBlank()
+                val key = if (artists.size == 1 && named) "${sameText(list.first().album)}\u0000${artists[0]}" else "id:$albumId"
+                merged.getOrPut(key) { ArrayList() }.addAll(list)
+                ids.getOrPut(key) { ArrayList() }.add(albumId)
+            }
+            val alias = HashMap<String, String>()
+            val groups = merged.map { (mergeKey, list) ->
+                val albumIds = ids.getValue(mergeKey)
+                val shownKey = albumIds.min().toString()
+                for (id in albumIds) alias[id.toString()] = shownKey
+                val artists = list.map { sameText(it.displayArtist) }.distinct()
                 Group(
-                    Kind.ALBUM, albumId.toString(), first.displayAlbum,
-                    if (artists.size == 1) artists[0] else "",
+                    Kind.ALBUM, shownKey, list.first().displayAlbum,
+                    if (artists.size == 1) commonSpelling(list.map { it.displayArtist }) else "",
                     list.sortedWith(compareBy({ it.track }, { it.displayTitle.lowercase() }))
                 )
             }.sortedByText { it.title }
+            Grouped(groups, alias)
         }
 
-        val artists: List<Group> by lazy {
-            songs.groupBy { it.displayArtist }.map { (name, list) ->
-                Group(Kind.ARTIST, name, name, "", list.sortedByText { it.displayTitle })
+        val albums: List<Group> get() = albumData.groups
+
+        private val artistData: Grouped by lazy {
+            val alias = HashMap<String, String>()
+            val groups = songs.groupBy { sameText(it.displayArtist) }.map { (_, list) ->
+                val names = list.map { it.displayArtist }
+                val shown = commonSpelling(names)
+                for (n in names.distinct()) alias[n] = shown
+                Group(Kind.ARTIST, shown, shown, "", list.sortedByText { it.displayTitle })
             }.sortedByText { it.title }
+            Grouped(groups, alias)
         }
+
+        val artists: List<Group> get() = artistData.groups
+
+        fun albumKey(key: String): String = albumData.alias[key] ?: key
+
+        fun artistKey(key: String): String = artistData.alias[key] ?: key
 
         val folders: List<Group> by lazy {
             songs.groupBy { it.folderPath }.map { (path, list) ->
@@ -259,13 +292,20 @@ object Library {
     }
 
     fun group(context: Context, kind: Kind, key: String): Group? = when (kind) {
-        Kind.ALBUM -> albums().firstOrNull { it.key == key }
-        Kind.ARTIST -> artists().firstOrNull { it.key == key }
+        Kind.ALBUM -> derived.albumKey(key).let { k -> albums().firstOrNull { it.key == k } }
+        Kind.ARTIST -> derived.artistKey(key).let { k -> artists().firstOrNull { it.key == k } }
         Kind.FOLDER -> folders().firstOrNull { it.key == key }
         Kind.GENRE -> genres().firstOrNull { it.key == key }
         Kind.PLAYLIST, Kind.AUTO -> playlists(context).firstOrNull { it.kind == kind && it.key == key }
     }
 }
+
+/** Text compared without regard to capitalisation or repeated spaces ("Kamaitachi " == "kamaitachi"). */
+internal fun sameText(text: String): String = text.trim().replace(Regex("\\s+"), " ").lowercase()
+
+/** Among spellings of the same name, the one used most often (the first one wins a tie). */
+internal fun commonSpelling(names: List<String>): String =
+    names.groupingBy { it }.eachCount().entries.maxByOrNull { it.value }?.key ?: names.first()
 
 /** Sorts by the accent-free text of [text], computing each key only once. */
 private fun <T> List<T>.sortedByText(text: (T) -> String): List<T> =
