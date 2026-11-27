@@ -12,8 +12,8 @@ android {
         minSdk = 23
         targetSdk = 35
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        versionCode = 60
-        versionName = "2.24.1"
+        versionCode = 61
+        versionName = "2.24.2"
 
         // Author metadata -> available in the manifest as ${author}
         manifestPlaceholders["author"] = "MissionBreak56"

@@ -21,7 +21,7 @@ import kotlinx.coroutines.withContext
 object FolderArtPicker {
     private const val THUMB = 192
     private const val FULL = 768
-    private const val MAX_CANDIDATES = 100
+    private const val BATCH = 24
 
     private class Candidate(val song: Song, val thumb: Bitmap)
 
@@ -31,21 +31,13 @@ object FolderArtPicker {
      */
     fun pickFromSongs(activity: AppCompatActivity, path: String, songs: List<Song>, onChanged: () -> Unit) {
         val app = activity.applicationContext
+        // Every distinct album (or single song) is considered, not just the first ones: the covers are decoded in
+        // small batches in the background and appear in the grid as they are found, so large libraries are not
+        // cut off and the dialog opens at once.
+        val pending = songs.distinctBy { if (it.albumId > 0 && it.album.isNotBlank()) "a${it.albumId}" else "s${it.id}" }
+        val candidates = ArrayList<Candidate>()
+        var finished = false
         activity.lifecycleScope.launch {
-            val candidates = withContext(Dispatchers.IO) {
-                songs
-                    .distinctBy { if (it.albumId > 0 && it.album.isNotBlank()) "a${it.albumId}" else "s${it.id}" }
-                    .take(MAX_CANDIDATES)
-                    .mapNotNull { song ->
-                        ArtLoader.decodeSync(app, song, THUMB)?.let { Candidate(song, it) }
-                    }
-            }
-            if (activity.isFinishing || activity.isDestroyed) return@launch
-            if (candidates.isEmpty()) {
-                Toast.makeText(activity, R.string.folder_no_song_art, Toast.LENGTH_SHORT).show()
-                return@launch
-            }
-
             var dialog: AlertDialog? = null
             val gridAdapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 override fun getItemCount(): Int = candidates.size
@@ -82,7 +74,28 @@ object FolderArtPicker {
                 .setTitle(R.string.folder_pick_from_songs)
                 .setView(list)
                 .setNegativeButton(R.string.cancel, null)
+                .setOnDismissListener { finished = true }
                 .show()
+
+            // Background batches: decode, then add the ones that have a cover to the grid.
+            var index = 0
+            while (index < pending.size && !finished) {
+                val batch = pending.subList(index, minOf(index + BATCH, pending.size))
+                index += batch.size
+                val found = withContext(Dispatchers.IO) {
+                    batch.mapNotNull { song -> ArtLoader.decodeSync(app, song, THUMB)?.let { Candidate(song, it) } }
+                }
+                if (activity.isFinishing || activity.isDestroyed || finished) return@launch
+                if (found.isNotEmpty()) {
+                    val start = candidates.size
+                    candidates.addAll(found)
+                    gridAdapter.notifyItemRangeInserted(start, found.size)
+                }
+            }
+            if (candidates.isEmpty() && !finished) {
+                dialog?.dismiss()
+                Toast.makeText(activity, R.string.folder_no_song_art, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

@@ -1,3 +1,10 @@
+## MissionPlayer v2.24.2 — Foto da pasta: todas as capas
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.24.2-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Correção
+- Ao escolher a foto de uma pasta a partir das músicas, a grade mostrava só as 100 primeiras capas. Agora ela considera todos os álbuns e músicas da pasta: as capas aparecem aos poucos, enquanto são carregadas em segundo plano, então bibliotecas grandes não ficam cortadas e a janela abre na hora.
+
 ## MissionPlayer v2.24.1 — Limpeza de uma configuração sem efeito
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.24.1-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
