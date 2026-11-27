@@ -413,6 +413,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.24.1** | Remove a preferência de cantos arredondados, que não tinha tela nem efeito; o backup deixa de guardá-la |
 | **2.24.0** | R8 e redução de recursos ligados, ktlint/detekt no CI, testes instrumentados, perfil de inicialização, alvos de toque de 48 dp, ARCHITECTURE.md |
 | **2.23.0** | Atualização dentro do app: verifica ao abrir, baixa com progresso e instala sem sair; a pesquisa de capa mostra todos os resultados (rolagem até o fim) |
 | **2.22.1** | A pesquisa de capa começa com música e artista; o editor de metadados não volta mais ao início da tela ao escolher uma capa ou aplicar dados |

@@ -1,3 +1,11 @@
+## MissionPlayer v2.24.1 — Limpeza de uma configuração sem efeito
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.24.1-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Mudanças
+- Removida a preferência interna de "cantos arredondados". Ela era salva e incluída no backup, mas não tinha tela e não alterava nada. Nenhuma função visível do app muda.
+- Backups antigos que tenham essa configuração continuam restaurando; ela apenas não é usada.
+
 ## MissionPlayer v2.24.0 — APK reduzido e mais qualidade de código
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.24.0-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

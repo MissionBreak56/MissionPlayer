@@ -41,7 +41,6 @@ object Prefs {
     private const val KEY_AUTO_LYRICS = "auto_lyrics"
     private const val KEY_ACCENT = "custom_accent"
     private const val KEY_FONT = "custom_font"
-    private const val KEY_CORNERS = "custom_corners"
     private const val KEY_BG = "custom_background"
     private const val KEY_ICON = "custom_icon"
     private const val KEY_APP_NAME = "custom_app_name"
@@ -193,10 +192,6 @@ object Prefs {
         get() = (sp?.getInt(KEY_FONT, DEFAULT_FONT) ?: DEFAULT_FONT).let { if (it == 0) DEFAULT_FONT else it }
         set(value) { store().edit().putInt(KEY_FONT, value).apply() }
 
-    var cornerStyle: Int
-        get() = sp?.getInt(KEY_CORNERS, 0) ?: 0
-        set(value) { store().edit().putInt(KEY_CORNERS, value).apply() }
-
     /** 1 = pure (pure black in dark mode) is the default; the old "default" option (0) was removed. */
     var backgroundStyle: Int
         get() = (sp?.getInt(KEY_BG, DEFAULT_BG) ?: DEFAULT_BG).let { if (it == 0) DEFAULT_BG else it }
@@ -223,10 +218,10 @@ object Prefs {
         set(value) { store().edit().putInt(KEY_BG_VISIBLE, value.coerceIn(10, 100)).apply() }
 
     /** Changes whenever a look setting changes, so open screens know to redraw. */
-    fun customSignature(): String = "$accent|$fontStyle|$cornerStyle|$backgroundStyle|$bgImageStamp|$bgImageVisible"
+    fun customSignature(): String = "$accent|$fontStyle|$backgroundStyle|$bgImageStamp|$bgImageVisible"
 
     fun resetCustomization() {
-        store().edit().putInt(KEY_ACCENT, DEFAULT_ACCENT).putInt(KEY_FONT, DEFAULT_FONT).putInt(KEY_CORNERS, 0)
+        store().edit().putInt(KEY_ACCENT, DEFAULT_ACCENT).putInt(KEY_FONT, DEFAULT_FONT)
             .putInt(KEY_BG, DEFAULT_BG).putInt(KEY_THEME, 0).putInt(KEY_NIGHT, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM).putLong(KEY_BG_IMAGE, 0L).putInt(KEY_BG_VISIBLE, 55).putString(KEY_APP_NAME, "").apply()
     }
 
