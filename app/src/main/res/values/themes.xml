@@ -33,6 +33,9 @@
         <item name="android:textSize">17sp</item>
         <item name="android:textStyle">bold</item>
         <item name="textAllCaps">false</item>
+        <!-- The parent text appearance sets its own font family, which hid the font the user picked in Customize:
+             take the family from the theme (where the font overlay puts it) instead. -->
+        <item name="android:fontFamily">?android:attr/fontFamily</item>
     </style>
 
     <style name="Shape.Rounded8" parent="">

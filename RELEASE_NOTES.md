@@ -1,3 +1,10 @@
+## MissionPlayer v2.24.3 — Abas acompanham a fonte escolhida
+
+APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.24.3-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
+
+### Correção
+- Ao mudar a fonte do app em Personalizar, os nomes das abas (Pastas, Músicas, Álbuns, Artistas) continuavam na fonte antiga. O estilo das abas trazia uma fonte própria que sobrepunha a escolhida; agora ele usa a fonte do tema, como o resto do app.
+
 ## MissionPlayer v2.24.2 — Foto da pasta: todas as capas
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.24.2-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).
