@@ -181,4 +181,8 @@
     <string name="playlist_change_photo">Change playlist photo</string>
     <string name="playlist_remove_photo">Remove playlist photo</string>
     <string name="sort_custom">Custom</string>
+    <string name="lyrics_translate">Translate lyrics to Portuguese</string>
+    <string name="lyrics_hide_translation">Hide translation</string>
+    <string name="lyrics_translation_loading">Translating…</string>
+    <string name="lyrics_translation_failed">Translation unavailable. Original lyrics were kept.</string>
 </resources>
