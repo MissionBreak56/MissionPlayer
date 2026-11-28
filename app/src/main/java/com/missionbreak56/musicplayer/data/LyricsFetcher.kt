@@ -462,7 +462,14 @@ object LyricsFetcher {
     }
 
     /** One version of the lyrics offered by a source. [synced] means it has [mm:ss] time stamps (LRC). */
-    class Option(val source: String, val text: String, val synced: Boolean)
+    class Option(
+        val source: String,
+        val text: String,
+        val synced: Boolean,
+        /** Title used for this targeted query; this is a search hint, not verified provider metadata. */
+        val searchTitle: String = "",
+        val requestedVersion: LyricsVersionKind = LyricsVersionKind.ORIGINAL
+    )
 
     class Choices(val options: List<Option>, val outcome: Outcome)
 
@@ -477,25 +484,73 @@ object LyricsFetcher {
         var answered = false
         var failed = false
         var skipped = false
-        for (p in providers) {
-            if (found.size >= max) break
-            val until = coolUntil[p.name] ?: 0L
-            if (System.currentTimeMillis() < until) { skipped = true; continue }
-            try {
-                val text = p.find(song)
-                answered = true
-                fails[p.name] = 0
-                if (!text.isNullOrBlank() && seen.add(text.trim().replace(Regex("\\s+"), " "))) {
-                    found += Option(p.name, text, syncedTag.containsMatchIn(text))
+
+        // The editor's explicit search also probes common recording variants. These are
+        // query hints only: the provider does not expose enough metadata to certify a version.
+        val requestedKind = LyricsVersionMatcher.detectVersion(song.title, song.album)
+        val queryTitles = if (requestedKind == LyricsVersionKind.ORIGINAL) {
+            listOf(
+                song.title,
+                "${cleanTitle(song.title)} (Live)",
+                "${cleanTitle(song.title)} (Remix)",
+                "${cleanTitle(song.title)} (Acoustic)"
+            ).distinct()
+        } else {
+            listOf(song.title)
+        }
+
+        search@ for (p in providers) {
+            for (queryTitle in queryTitles) {
+                if (found.size >= max) break@search
+                val until = coolUntil[p.name] ?: 0L
+                if (System.currentTimeMillis() < until) { skipped = true; continue }
+                try {
+                    val querySong = if (queryTitle == song.title) song else song.copy(title = queryTitle)
+                    val text = p.find(querySong)
+                    answered = true
+                    fails[p.name] = 0
+                    if (!text.isNullOrBlank() && seen.add(text.trim().replace(Regex("\\s+"), " "))) {
+                        found += Option(
+                            p.name,
+                            text,
+                            syncedTag.containsMatchIn(text),
+                            queryTitle,
+                            LyricsVersionMatcher.detectVersion(queryTitle, song.album)
+                        )
+                    }
+                } catch (_: RateLimited) {
+                    coolUntil[p.name] = System.currentTimeMillis() + COOLDOWN_MS
+                    skipped = true
+                } catch (_: Exception) {
+                    failed = true
                 }
-            } catch (_: RateLimited) {
-                coolUntil[p.name] = System.currentTimeMillis() + COOLDOWN_MS
-                skipped = true
-            } catch (_: Exception) {
-                failed = true
             }
         }
-        val sorted = found.sortedByDescending { it.synced }
+
+        // Prefer the requested recording identity, then close title/artist matches. Keep
+        // synced results ahead of plain text when their matching scores are equal.
+        val ranked = LyricsVersionMatcher.rank(
+            requestedTitle = song.title,
+            requestedArtist = song.artist,
+            requestedAlbum = song.album,
+            requestedDurationMs = song.durationMs,
+            candidates = found.mapIndexed { index, option ->
+                LyricsVersionCandidate(
+                    id = index.toString(),
+                    source = option.source,
+                    title = option.searchTitle,
+                    artist = song.artist,
+                    album = song.album,
+                    durationMs = song.durationMs,
+                    lyrics = option.text,
+                    synced = option.synced
+                )
+            }
+        )
+        val byId = found.withIndex().associate { it.index.toString() to it.value }
+        val sorted = ranked.mapNotNull { byId[it.candidate.id] }
+            .sortedWith(compareByDescending<Option> { it.synced }
+                .thenByDescending { it.requestedVersion == requestedKind })
         val outcome = when {
             sorted.isNotEmpty() -> Outcome.FOUND
             answered -> Outcome.NOT_FOUND
