@@ -35,10 +35,12 @@ import com.missionbreak56.musicplayer.data.LyricSync
 import com.missionbreak56.musicplayer.data.LyricsFetcher
 import com.missionbreak56.musicplayer.data.LyricsIndex
 import com.missionbreak56.musicplayer.data.LyricsStore
+import com.missionbreak56.musicplayer.data.LyricsTranslationManager
 import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.databinding.ActivityPlayerBinding
 import com.missionbreak56.musicplayer.playback.PlaybackState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
@@ -59,6 +61,9 @@ class PlayerActivity : PlayerBoundActivity() {
     private var lyricIndex = -1
     private val triedOnline = HashSet<Long>()
     private val syncing = HashSet<Long>()
+    private val translationManager = LyricsTranslationManager()
+    private var translationEnabled = false
+    private var translationJob: Job? = null
 
     private var closePending = false
     private var restoreTried = false
@@ -98,6 +103,8 @@ class PlayerActivity : PlayerBoundActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        translationEnabled = getSharedPreferences("lyrics_translation", MODE_PRIVATE)
+            .getBoolean("enabled", false)
         actions = SongActions(this) { onPlayerChanged() }
         lyricsAdapter = LyricsAdapter { line ->
             if (line.timeMs >= 0) controller?.seekTo(line.timeMs)
@@ -131,6 +138,20 @@ class PlayerActivity : PlayerBoundActivity() {
             startActivity(Intent(this, EqualizerActivity::class.java))
         }
         binding.btnLyrics.setOnClickListener { toggleLyrics() }
+        binding.btnTranslateLyrics.setOnClickListener {
+            translationEnabled = !translationEnabled
+            getSharedPreferences("lyrics_translation", MODE_PRIVATE).edit()
+                .putBoolean("enabled", translationEnabled).apply()
+            if (translationEnabled) {
+                translateCurrentLyrics()
+            } else {
+                translationJob?.cancel()
+                translationJob = null
+                lyricsAdapter.setTranslations(null)
+                binding.btnTranslateLyrics.text = getString(R.string.lyrics_translate)
+                binding.btnTranslateLyrics.isEnabled = true
+            }
+        }
         binding.btnSyncEarlier.text = tr("− 0,5 s", "− 0.5 s")
         binding.btnSyncLater.text = tr("+ 0,5 s", "+ 0.5 s")
         binding.btnSyncAuto.text = tr("Auto", "Auto")
@@ -600,6 +621,9 @@ class PlayerActivity : PlayerBoundActivity() {
     }
 
     private fun loadLyrics(id: Long) {
+        translationJob?.cancel()
+        translationJob = null
+        lyricsAdapter.setTranslations(null)
         lifecycleScope.launch {
             val song = Library.song(id)
             val lines = if (id > 0 && song != null) {
@@ -616,10 +640,19 @@ class PlayerActivity : PlayerBoundActivity() {
             lyricsAdapter.submit(lines)
             binding.lyricsList.visibility = if (lines.isEmpty()) View.GONE else View.VISIBLE
             binding.lyricsEmpty.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
+            binding.btnTranslateLyrics.visibility = if (lines.isEmpty()) View.GONE else View.VISIBLE
+            binding.btnTranslateLyrics.text = if (translationEnabled) {
+                getString(R.string.lyrics_hide_translation)
+            } else {
+                getString(R.string.lyrics_translate)
+            }
+            binding.btnTranslateLyrics.isEnabled = true
             binding.textLyricsHint.text = if (lines.isEmpty()) getString(R.string.no_lyrics_short) else ""
             binding.textLyricsHint.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
             binding.btnAddLyrics.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
             updateSyncBar()
+
+            if (translationEnabled && lines.isNotEmpty()) translateCurrentLyrics()
 
             // Synced lyrics that were never checked: line them up with the audio, once per song.
             if (lines.isNotEmpty() &&
@@ -653,6 +686,47 @@ class PlayerActivity : PlayerBoundActivity() {
                         LyricsFetcher.fetch(applicationContext, song) == LyricsFetcher.Outcome.FOUND
                 }
                 if (found && shownId == id) loadLyrics(id)
+            }
+        }
+    }
+
+    /** Starts translation only after the user has enabled it in the lyrics panel. */
+    private fun translateCurrentLyrics() {
+        val id = shownId
+        val song = Library.song(id) ?: return
+        if (!translationEnabled || id <= 0 || lyricsLines.isEmpty()) return
+        translationJob?.cancel()
+        val lines = lyricsLines.toList()
+        binding.btnTranslateLyrics.isEnabled = false
+        binding.btnTranslateLyrics.text = getString(R.string.lyrics_translation_loading)
+        translationJob = lifecycleScope.launch {
+            try {
+                val translated = withContext(Dispatchers.IO) {
+                    val source = LyricsIndex.fullText(applicationContext, song)
+                        ?: throw IllegalStateException("Lyrics source is unavailable")
+                    translationManager.translate(applicationContext, id, source, lines, "pt-BR")
+                }
+                if (shownId == id && translationEnabled) {
+                    lyricsAdapter.setTranslations(translated.map { it.translatedText })
+                    binding.btnTranslateLyrics.text = getString(R.string.lyrics_hide_translation)
+                    binding.btnTranslateLyrics.isEnabled = true
+                }
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                if (shownId == id) {
+                    translationEnabled = false
+                    getSharedPreferences("lyrics_translation", MODE_PRIVATE).edit()
+                        .putBoolean("enabled", false).apply()
+                    lyricsAdapter.setTranslations(null)
+                    binding.btnTranslateLyrics.text = getString(R.string.lyrics_translate)
+                    binding.btnTranslateLyrics.isEnabled = true
+                    Toast.makeText(
+                        this@PlayerActivity,
+                        R.string.lyrics_translation_failed,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
     }
