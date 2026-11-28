@@ -33,6 +33,7 @@ object Backup {
     private const val JSON_NAME = "backup.json"
     private const val BG_IMAGE = "bg_image.jpg"
     private val ART_NAME = Regex("[0-9a-f]{40}\\.jpg")
+    private val TRANSLATION_NAME = Regex("(\\d+)_([0-9a-f]{64})_([A-Za-z0-9-]+)\\.json")
 
     /** Playback state, not a user change: kept as it is on this device. */
     private val EXCLUDED = setOf("last_queue", "last_index", "last_position")
@@ -58,12 +59,17 @@ object Backup {
             val folderArt = File(filesDir, "folder_art").listFiles { f -> ART_NAME.matches(f.name) }.orEmpty()
             val songArt = File(filesDir, "song_art").listFiles { f -> f.name.endsWith(".jpg") }.orEmpty()
             val lyrics = File(filesDir, "lyrics").listFiles { f -> f.name.endsWith(".lrc") }.orEmpty()
+            val translations = File(filesDir, "lyrics_translations")
+                .listFiles { f -> TRANSLATION_NAME.matches(f.name) }.orEmpty()
             val bgImage = File(filesDir, BG_IMAGE).takeIf { it.exists() }
 
             // every song the saved data refers to, so it can be found again on restore
             val ids = referencedIds(prefs).toMutableSet()
             songArt.forEach { f -> f.nameWithoutExtension.toLongOrNull()?.let { ids.add(it) } }
             lyrics.forEach { f -> f.nameWithoutExtension.toLongOrNull()?.let { ids.add(it) } }
+            translations.forEach { f ->
+                TRANSLATION_NAME.matchEntire(f.name)?.groupValues?.get(1)?.toLongOrNull()?.let { ids.add(it) }
+            }
             val songs = JSONArray()
             val known = HashSet<Long>()
             ids.forEach { id ->
@@ -100,6 +106,10 @@ object Backup {
                     .forEach { add("song_art/${it.name}", it) }
                 lyrics.filter { it.nameWithoutExtension.toLongOrNull()?.let { id -> id in known } == true }
                     .forEach { add("lyrics/${it.name}", it) }
+                translations.filter { file ->
+                    TRANSLATION_NAME.matchEntire(file.name)?.groupValues?.get(1)?.toLongOrNull()
+                        ?.let { id -> id in known } == true
+                }.forEach { add("lyrics_translations/${it.name}", it) }
                 if (bgImage != null) add(BG_IMAGE, bgImage)
             }
 
@@ -163,7 +173,7 @@ object Backup {
 
                 // pictures and lyrics: swap the old ones for the restored ones
                 val filesDir = app.filesDir
-                for (dir in listOf("folder_art", "song_art", "lyrics")) {
+                for (dir in listOf("folder_art", "song_art", "lyrics", "lyrics_translations")) {
                     File(filesDir, dir).deleteRecursively()
                     val src = File(tmp, dir)
                     if (src.exists()) src.copyRecursively(File(filesDir, dir), overwrite = true)
@@ -195,6 +205,15 @@ object Backup {
             val old = name.removePrefix("lyrics/").removeSuffix(".lrc").toLongOrNull()
             val new = old?.let { idMap[it] }
             if (new != null) File(tmp, "lyrics/$new.lrc") else null
+        }
+        name.startsWith("lyrics_translations/") -> {
+            val file = name.removePrefix("lyrics_translations/")
+            val match = TRANSLATION_NAME.matchEntire(file)
+            val old = match?.groupValues?.get(1)?.toLongOrNull()
+            val new = old?.let { idMap[it] }
+            if (match != null && new != null) {
+                File(tmp, "lyrics_translations/${new}_${match.groupValues[2]}_${match.groupValues[3]}.json")
+            } else null
         }
         else -> null
     }
