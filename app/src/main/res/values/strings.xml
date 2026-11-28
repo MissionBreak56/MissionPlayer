@@ -186,6 +186,6 @@
     <string name="lyrics_translation_loading">Translating…</string>
     <string name="lyrics_translation_failed">Translation unavailable. Original lyrics were kept.</string>
     <string name="lyrics_translation_notice_title">External translation service</string>
-    <string name="lyrics_translation_notice_body">When you translate, the lyrics text is sent to MyMemory, a third-party service. Its free endpoint has usage limits and may be unavailable. The original lyrics and timestamps on your device are not changed.</string>
+    <string name="lyrics_translation_notice_body">When you translate, lyric text is sent to MyMemory, a third-party service. Anonymous free use is limited to 5,000 characters per day, and the service may be unavailable. No API key is required. The original lyrics and timestamps on your device are not changed.</string>
     <string name="lyrics_translation_continue">Continue</string>
 </resources>
