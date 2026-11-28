@@ -648,7 +648,7 @@ class PlayerActivity : PlayerBoundActivity() {
             binding.lyricsEmpty.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
             binding.btnTranslateLyrics.visibility = if (lines.isEmpty() && !translationEnabled) View.GONE else View.VISIBLE
             binding.btnTranslateLyrics.text = if (translationEnabled) {
-                getString(R.string.lyrics_hide_translation)
+                getString(R.string.lyrics_disable_translation)
             } else {
                 getString(R.string.lyrics_translate)
             }
@@ -729,18 +729,17 @@ class PlayerActivity : PlayerBoundActivity() {
                 }
                 if (shownId == id && translationEnabled) {
                     lyricsAdapter.setTranslations(translated.map { it.translatedText })
-                    binding.btnTranslateLyrics.text = getString(R.string.lyrics_hide_translation)
+                    binding.btnTranslateLyrics.text = getString(R.string.lyrics_disable_translation)
                     binding.btnTranslateLyrics.isEnabled = true
                 }
             } catch (cancelled: kotlinx.coroutines.CancellationException) {
                 throw cancelled
             } catch (_: Exception) {
                 if (shownId == id) {
-                    translationEnabled = false
-                    getSharedPreferences("lyrics_translation", MODE_PRIVATE).edit()
-                        .putBoolean("enabled", false).apply()
+                    // A temporary provider failure must not turn off the user's global preference.
+                    // Keep the switch enabled so the next track is translated automatically.
                     lyricsAdapter.setTranslations(null)
-                    binding.btnTranslateLyrics.text = getString(R.string.lyrics_translate)
+                    binding.btnTranslateLyrics.text = getString(R.string.lyrics_disable_translation)
                     binding.btnTranslateLyrics.isEnabled = true
                     Toast.makeText(
                         this@PlayerActivity,
