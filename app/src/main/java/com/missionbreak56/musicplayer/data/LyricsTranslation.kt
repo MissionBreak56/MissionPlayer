@@ -9,7 +9,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.delay
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
@@ -27,6 +26,8 @@ data class TranslatedLyricLine(
 /** Translation is only started by an explicit user action in the player. */
 interface LyricsTranslationProvider {
     suspend fun translate(text: String, targetLanguage: String): String
+    suspend fun translateBatch(texts: List<String>, targetLanguage: String): List<String> =
+        texts.map { translate(it, targetLanguage) }
 }
 
 /**
@@ -156,20 +157,40 @@ class LyricsTranslationManager(
         val translated = if (cached != null && cached.size == lines.size) {
             cached
         } else {
-            // Translate several lines at once instead of waiting for one HTTP round-trip
-            // per verse. A small concurrency cap keeps the free endpoint from being flooded.
-            val semaphore = Semaphore(2)
+            // Group verses to avoid one HTTP round-trip per lyric line.
             val uniqueTexts = lines.map { it.text.trim() }
                 .filter { it.isNotBlank() && it !in setOf("♪", "♫", "♬") }
                 .distinct()
+            val batches = mutableListOf<List<String>>()
+            var currentBatch = mutableListOf<String>()
+            var currentLength = 0
+            uniqueTexts.forEach { text ->
+                val extraLength = text.length + 24
+                if (currentBatch.isNotEmpty() &&
+                    (currentLength + extraLength > 1_200 || currentBatch.size >= 8)
+                ) {
+                    batches += currentBatch
+                    currentBatch = mutableListOf()
+                    currentLength = 0
+                }
+                currentBatch += text
+                currentLength += extraLength
+            }
+            if (currentBatch.isNotEmpty()) batches += currentBatch
+
+            val semaphore = Semaphore(3)
             val translatedByText = coroutineScope {
-                uniqueTexts.map { text ->
+                batches.map { batch ->
                     async(Dispatchers.IO) {
-                        text to semaphore.withPermit {
-                            provider.translate(text, targetLanguage).trim()
+                        semaphore.withPermit {
+                            val translatedBatch = provider.translateBatch(batch, targetLanguage)
+                            if (translatedBatch.size != batch.size || translatedBatch.any { it.isBlank() }) {
+                                throw IOException("Incomplete translation batch")
+                            }
+                            batch.zip(translatedBatch)
                         }
                     }
-                }.map { it.await() }.toMap()
+                }.map { it.await() }.flatten().toMap()
             }
             val results = lines.map { line ->
                 val text = line.text.trim()
@@ -198,7 +219,49 @@ class LyricsTranslationManager(
  * Google Translate's web endpoint is a secondary provider. It is undocumented and can change
  * or throttle requests, so it must never be the only translation path.
  */
+/**
+ * Google web endpoint; supports batching several verses into a single HTTP request.
+ * It is undocumented and may throttle requests, so independent fallbacks remain available.
+ */
 class GoogleWebTranslationProvider : LyricsTranslationProvider {
+    override suspend fun translateBatch(texts: List<String>, targetLanguage: String): List<String> =
+        withContext(Dispatchers.IO) {
+            if (texts.isEmpty()) return@withContext emptyList()
+            if (texts.size == 1) return@withContext listOf(translate(texts[0], targetLanguage))
+            val marker = "__MP_LINE_SPLIT_7F3A__"
+            val combined = texts.joinToString("\n$marker\n")
+            val target = targetLanguage.substringBefore('-').ifBlank { "pt" }
+            val query = URLEncoder.encode(combined, "UTF-8")
+            val url = URL(
+                "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=$target&dt=t&q=$query"
+            )
+            val connection = url.openConnection() as HttpURLConnection
+            try {
+                connection.connectTimeout = 5_000
+                connection.readTimeout = 12_000
+                connection.requestMethod = "GET"
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0 MissionPlayer")
+                val code = connection.responseCode
+                if (code !in 200..299) throw IOException("Google translation HTTP $code")
+                val body = connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                val segments = JSONArray(body).optJSONArray(0)
+                    ?: throw IOException("Invalid Google translation response")
+                val translated = buildString {
+                    for (index in 0 until segments.length()) {
+                        val segment = segments.optJSONArray(index) ?: continue
+                        append(segment.optString(0))
+                    }
+                }.trim()
+                val parts = translated.split(marker).map { it.trim() }
+                if (parts.size != texts.size || parts.any { it.isBlank() }) {
+                    throw IOException("Google translation changed the verse separators")
+                }
+                parts
+            } finally {
+                connection.disconnect()
+            }
+        }
+
     override suspend fun translate(text: String, targetLanguage: String): String =
         withContext(Dispatchers.IO) {
             if (text.isBlank()) return@withContext ""
@@ -210,7 +273,7 @@ class GoogleWebTranslationProvider : LyricsTranslationProvider {
             val connection = url.openConnection() as HttpURLConnection
             try {
                 connection.connectTimeout = 5_000
-                connection.readTimeout = 10_000
+                connection.readTimeout = 12_000
                 connection.requestMethod = "GET"
                 connection.setRequestProperty("User-Agent", "Mozilla/5.0 MissionPlayer")
                 val code = connection.responseCode
@@ -282,18 +345,21 @@ class ApertiumEnglishPortugueseProvider : LyricsTranslationProvider {
 /** Tries independent providers in order and propagates cancellation immediately. */
 class FallbackLyricsTranslationProvider(
     private val providers: List<LyricsTranslationProvider> = listOf(
-        MyMemoryTranslationProvider(),
         GoogleWebTranslationProvider(),
+        MyMemoryTranslationProvider(),
         ApertiumEnglishPortugueseProvider()
     )
 ) : LyricsTranslationProvider {
-    override suspend fun translate(text: String, targetLanguage: String): String {
+    override suspend fun translate(text: String, targetLanguage: String): String =
+        translateBatch(listOf(text), targetLanguage).first()
+
+    override suspend fun translateBatch(texts: List<String>, targetLanguage: String): List<String> {
         var lastError: Exception? = null
         for (provider in providers) {
             try {
-                val result = provider.translate(text, targetLanguage).trim()
-                if (result.isNotBlank()) return result
-                lastError = IOException("Translation provider returned an empty result")
+                val result = provider.translateBatch(texts, targetLanguage).map { it.trim() }
+                if (result.size == texts.size && result.all { it.isNotBlank() }) return result
+                lastError = IOException("Translation provider returned an incomplete batch")
             } catch (cancelled: kotlinx.coroutines.CancellationException) {
                 throw cancelled
             } catch (error: Exception) {
