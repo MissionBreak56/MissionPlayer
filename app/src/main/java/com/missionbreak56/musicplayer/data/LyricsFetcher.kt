@@ -549,8 +549,6 @@ object LyricsFetcher {
         )
         val byId = found.withIndex().associate { it.index.toString() to it.value }
         val sorted = ranked.mapNotNull { byId[it.candidate.id] }
-            .sortedWith(compareByDescending<Option> { it.synced }
-                .thenByDescending { it.requestedVersion == requestedKind })
         val outcome = when {
             sorted.isNotEmpty() -> Outcome.FOUND
             answered -> Outcome.NOT_FOUND
