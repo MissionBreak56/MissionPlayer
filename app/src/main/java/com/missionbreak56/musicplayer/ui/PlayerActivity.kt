@@ -646,7 +646,7 @@ class PlayerActivity : PlayerBoundActivity() {
             lyricsAdapter.submit(lines)
             binding.lyricsList.visibility = if (lines.isEmpty()) View.GONE else View.VISIBLE
             binding.lyricsEmpty.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
-            binding.btnTranslateLyrics.visibility = if (lines.isEmpty()) View.GONE else View.VISIBLE
+            binding.btnTranslateLyrics.visibility = if (lines.isEmpty() && !translationEnabled) View.GONE else View.VISIBLE
             binding.btnTranslateLyrics.text = if (translationEnabled) {
                 getString(R.string.lyrics_hide_translation)
             } else {
@@ -718,7 +718,7 @@ class PlayerActivity : PlayerBoundActivity() {
         if (!translationEnabled || id <= 0 || lyricsLines.isEmpty()) return
         translationJob?.cancel()
         val lines = lyricsLines.toList()
-        binding.btnTranslateLyrics.isEnabled = false
+        binding.btnTranslateLyrics.isEnabled = true
         binding.btnTranslateLyrics.text = getString(R.string.lyrics_translation_loading)
         translationJob = lifecycleScope.launch {
             try {
