@@ -658,8 +658,6 @@ class PlayerActivity : PlayerBoundActivity() {
             binding.btnAddLyrics.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
             updateSyncBar()
 
-            if (translationEnabled && lines.isNotEmpty()) translateCurrentLyrics()
-
             // Synced lyrics that were never checked: line them up with the audio, once per song.
             if (lines.isNotEmpty() &&
                 lines.first().timeMs >= 0 &&
@@ -684,6 +682,8 @@ class PlayerActivity : PlayerBoundActivity() {
                     return@launch
                 }
             }
+
+            if (translationEnabled && lines.isNotEmpty()) translateCurrentLyrics()
 
             // No lyrics yet: try to download them now (once per song per session), then reload.
             if (lines.isEmpty() && id > 0 && song != null && Prefs.autoLyrics && triedOnline.add(id)) {
