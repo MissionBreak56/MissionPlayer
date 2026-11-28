@@ -69,4 +69,12 @@ class LyricsVersionMatcherTest {
         val option = candidate("lrc", "Faixa").copy(lyrics = original)
         assertEquals(original, option.lyrics)
     }
-}
+
+    @Test fun translationCacheIdentityChangesWhenOriginalLyricsChange() {
+        val first = LyricsTranslationStore.sourceHash("[00:01.00]Primeira linha")
+        val unchanged = LyricsTranslationStore.sourceHash("[00:01.00]Primeira linha")
+        val changed = LyricsTranslationStore.sourceHash("[00:01.00]Linha revisada")
+        assertEquals(first, unchanged)
+        assertTrue(first != changed)
+    }
+}\n
