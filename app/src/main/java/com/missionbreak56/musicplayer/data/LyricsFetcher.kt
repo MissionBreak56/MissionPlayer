@@ -17,7 +17,16 @@ private const val COOLDOWN_MS = 15_000L // pause for a source that answered 429
 private const val FAILS_BEFORE_COOLDOWN = 3
 private const val CONNECT_TIMEOUT_MS = 5_000
 private const val READ_TIMEOUT_MS = 8_000
-private const val DURATION_TOLERANCE_MS = 3_500L
+private const val DEFAULT_DURATION_TOLERANCE_MS = 3_500L
+
+/** Live, remix and extended recordings can legitimately differ greatly in duration. */
+private fun durationTolerance(song: Song): Long = when (
+    LyricsVersionMatcher.detectVersion(song.title, song.album)
+) {
+    LyricsVersionKind.LIVE, LyricsVersionKind.REMIX, LyricsVersionKind.EXTENDED -> 120_000L
+    LyricsVersionKind.ACOUSTIC, LyricsVersionKind.REMASTERED, LyricsVersionKind.RADIO_EDIT -> 45_000L
+    else -> DEFAULT_DURATION_TOLERANCE_MS
+}
 
 private const val UA = "MissionPlayer/2.7 (https://github.com/MissionBreak56/MissionPlayer)"
 private const val PREF = "lyrics_fetch"
@@ -41,10 +50,12 @@ private fun enc(s: String): String = URLEncoder.encode(s, "UTF-8")
 
 /** "Song (feat. X) [Remastered]" -> "Song" */
 private fun cleanTitle(title: String): String =
-    title.replace(Regex("""\s*[(\[][^)\]]*[)\]]"""), "")
-        .replace(Regex("""\s+-\s+(remaster(ed)?|live|version|mono|stereo).*""", RegexOption.IGNORE_CASE), "")
-        .trim()
-        .ifBlank { title }
+    // Remove guest credits only. Live/Remix/Acoustic/Remastered descriptors identify
+    // a different recording and must remain part of the search query.
+    title.replace(
+        Regex("""\s*[[(]\s*(feat\.?|ft\.?|featuring)\s+[^)\]]*[)\]]""", RegexOption.IGNORE_CASE),
+        ""
+    ).trim().ifBlank { title }
 
 private fun norm(s: String): String =
     Normalizer.normalize(s.lowercase(), Normalizer.Form.NFD)
@@ -90,7 +101,7 @@ private fun fitsDuration(lrc: String, song: Song): Boolean {
         val ms = m.groupValues[1].toLong() * 60_000 + m.groupValues[2].toLong() * 1000
         if (ms > last) last = ms
     }
-    return last <= song.durationMs + 20_000L
+    return last <= song.durationMs + 20_000L + durationTolerance(song)
 }
 
 private fun lrcTime(ms: Long): String {
@@ -153,7 +164,7 @@ private object LrcLib : Provider("lrclib") {
             var score = 0L
             if (song.durationMs > 0 && o.has("duration") && !o.isNull("duration")) {
                 val diff = Math.abs((o.optDouble("duration") * 1000).toLong() - song.durationMs)
-                if (diff > DURATION_TOLERANCE_MS) continue
+                if (diff > durationTolerance(song)) continue
                 score += diff
             } else if (song.artist.isBlank()) {
                 continue // no artist and no duration to compare: too risky
@@ -197,7 +208,7 @@ private object NetEase : Provider("netease") {
             val dur = o.optLong("duration", o.optLong("dt", 0))
             if (song.durationMs > 0 && dur > 0) {
                 val diff = Math.abs(dur - song.durationMs)
-                if (diff <= DURATION_TOLERANCE_MS && (titleOk || artistOk) && diff < bestDiff) {
+                if (diff <= durationTolerance(song) && (titleOk || artistOk) && diff < bestDiff) {
                     bestDiff = diff; chosen = o.optLong("id", -1)
                 }
             } else if (titleOk && artistOk && chosen < 0) {
@@ -235,7 +246,7 @@ private object Kugou : Provider("kugou") {
             val o = list.optJSONObject(i) ?: continue
             val dur = o.optLong("duration", 0)
             val diff = if (song.durationMs > 0 && dur > 0) Math.abs(dur - song.durationMs) else 0L
-            if (song.durationMs > 0 && dur > 0 && diff > DURATION_TOLERANCE_MS) continue
+            if (song.durationMs > 0 && dur > 0 && diff > durationTolerance(song)) continue
             if (!similar(o.optString("song"), title) && !similar(o.optString("singer"), song.artist)) continue
             if (diff < bestDiff) {
                 bestDiff = diff
@@ -303,7 +314,7 @@ private object QQMusic : Provider("qqmusic") {
             }
             val dur = o.optLong("interval", 0) * 1000
             val diff = if (song.durationMs > 0 && dur > 0) Math.abs(dur - song.durationMs) else 0L
-            if (song.durationMs > 0 && dur > 0 && diff > DURATION_TOLERANCE_MS) continue
+            if (song.durationMs > 0 && dur > 0 && diff > durationTolerance(song)) continue
             if (!titleOk || !artistOk) continue
             if (diff < bestDiff) {
                 bestDiff = diff
