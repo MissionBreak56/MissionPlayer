@@ -185,4 +185,7 @@
     <string name="lyrics_hide_translation">Ocultar tradução</string>
     <string name="lyrics_translation_loading">Traduzindo…</string>
     <string name="lyrics_translation_failed">Tradução indisponível. A letra original foi mantida.</string>
+    <string name="lyrics_translation_notice_title">Serviço externo de tradução</string>
+    <string name="lyrics_translation_notice_body">Ao traduzir, o texto da letra será enviado ao MyMemory, um serviço de terceiros. O acesso gratuito tem limites de uso e pode ficar indisponível. A letra original e seus tempos no aparelho não serão alterados.</string>
+    <string name="lyrics_translation_continue">Continuar</string>
 </resources>
