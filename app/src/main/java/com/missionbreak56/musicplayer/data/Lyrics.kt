@@ -89,8 +89,10 @@ object LyricsStore {
 
     private fun write(context: Context, songId: Long, text: String) {
         val f = file(context, songId)
+        val previous = try { if (f.isFile) f.readText() else null } catch (_: Exception) { null }
         f.parentFile?.mkdirs()
         f.writeText(text)
+        if (previous != text) LyricsTranslationStore.clear(context, songId)
         LyricsIndex.invalidate(songId)
     }
 

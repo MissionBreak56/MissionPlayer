@@ -116,6 +116,17 @@
             android:paddingTop="80dp"
             android:paddingBottom="120dp" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTranslateLyrics"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="8dp"
+            android:minHeight="40dp"
+            android:text="@string/lyrics_translate"
+            android:visibility="gone" />
+
         <LinearLayout
             android:id="@+id/lyricsEmpty"
             android:layout_width="match_parent"

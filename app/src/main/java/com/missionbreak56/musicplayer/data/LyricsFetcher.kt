@@ -17,7 +17,16 @@ private const val COOLDOWN_MS = 15_000L // pause for a source that answered 429
 private const val FAILS_BEFORE_COOLDOWN = 3
 private const val CONNECT_TIMEOUT_MS = 5_000
 private const val READ_TIMEOUT_MS = 8_000
-private const val DURATION_TOLERANCE_MS = 3_500L
+private const val DEFAULT_DURATION_TOLERANCE_MS = 3_500L
+
+/** Live, remix and extended recordings can legitimately differ greatly in duration. */
+private fun durationTolerance(song: Song): Long = when (
+    LyricsVersionMatcher.detectVersion(song.title, song.album)
+) {
+    LyricsVersionKind.LIVE, LyricsVersionKind.REMIX, LyricsVersionKind.EXTENDED -> 120_000L
+    LyricsVersionKind.ACOUSTIC, LyricsVersionKind.REMASTERED, LyricsVersionKind.RADIO_EDIT -> 45_000L
+    else -> DEFAULT_DURATION_TOLERANCE_MS
+}
 
 private const val UA = "MissionPlayer/2.7 (https://github.com/MissionBreak56/MissionPlayer)"
 private const val PREF = "lyrics_fetch"
@@ -39,12 +48,14 @@ private val fails = ConcurrentHashMap<String, Int>()
 
 private fun enc(s: String): String = URLEncoder.encode(s, "UTF-8")
 
-/** "Song (feat. X) [Remastered]" -> "Song" */
+/** Removes guest credits while preserving recording-version descriptors. */
 private fun cleanTitle(title: String): String =
-    title.replace(Regex("""\s*[(\[][^)\]]*[)\]]"""), "")
-        .replace(Regex("""\s+-\s+(remaster(ed)?|live|version|mono|stereo).*""", RegexOption.IGNORE_CASE), "")
-        .trim()
-        .ifBlank { title }
+    // Remove guest credits only. Live/Remix/Acoustic/Remastered descriptors identify
+    // a different recording and must remain part of the search query.
+    title.replace(
+        Regex("""\s*(?:\(|\[)\s*(feat\.?|ft\.?|featuring)\s+.*?(?:\)|\])""", RegexOption.IGNORE_CASE),
+        ""
+    ).trim().ifBlank { title }
 
 private fun norm(s: String): String =
     Normalizer.normalize(s.lowercase(), Normalizer.Form.NFD)
@@ -90,7 +101,7 @@ private fun fitsDuration(lrc: String, song: Song): Boolean {
         val ms = m.groupValues[1].toLong() * 60_000 + m.groupValues[2].toLong() * 1000
         if (ms > last) last = ms
     }
-    return last <= song.durationMs + 20_000L
+    return last <= song.durationMs + 20_000L + durationTolerance(song)
 }
 
 private fun lrcTime(ms: Long): String {
@@ -153,7 +164,7 @@ private object LrcLib : Provider("lrclib") {
             var score = 0L
             if (song.durationMs > 0 && o.has("duration") && !o.isNull("duration")) {
                 val diff = Math.abs((o.optDouble("duration") * 1000).toLong() - song.durationMs)
-                if (diff > DURATION_TOLERANCE_MS) continue
+                if (diff > durationTolerance(song)) continue
                 score += diff
             } else if (song.artist.isBlank()) {
                 continue // no artist and no duration to compare: too risky
@@ -197,7 +208,7 @@ private object NetEase : Provider("netease") {
             val dur = o.optLong("duration", o.optLong("dt", 0))
             if (song.durationMs > 0 && dur > 0) {
                 val diff = Math.abs(dur - song.durationMs)
-                if (diff <= DURATION_TOLERANCE_MS && (titleOk || artistOk) && diff < bestDiff) {
+                if (diff <= durationTolerance(song) && titleOk && artistOk && diff < bestDiff) {
                     bestDiff = diff; chosen = o.optLong("id", -1)
                 }
             } else if (titleOk && artistOk && chosen < 0) {
@@ -235,8 +246,9 @@ private object Kugou : Provider("kugou") {
             val o = list.optJSONObject(i) ?: continue
             val dur = o.optLong("duration", 0)
             val diff = if (song.durationMs > 0 && dur > 0) Math.abs(dur - song.durationMs) else 0L
-            if (song.durationMs > 0 && dur > 0 && diff > DURATION_TOLERANCE_MS) continue
-            if (!similar(o.optString("song"), title) && !similar(o.optString("singer"), song.artist)) continue
+            if (song.durationMs > 0 && dur > 0 && diff > durationTolerance(song)) continue
+            if (!similar(o.optString("song"), title)) continue
+            if (song.artist.isNotBlank() && !similar(o.optString("singer"), song.artist)) continue
             if (diff < bestDiff) {
                 bestDiff = diff
                 id = o.optString("id"); key = o.optString("accesskey")
@@ -303,7 +315,7 @@ private object QQMusic : Provider("qqmusic") {
             }
             val dur = o.optLong("interval", 0) * 1000
             val diff = if (song.durationMs > 0 && dur > 0) Math.abs(dur - song.durationMs) else 0L
-            if (song.durationMs > 0 && dur > 0 && diff > DURATION_TOLERANCE_MS) continue
+            if (song.durationMs > 0 && dur > 0 && diff > durationTolerance(song)) continue
             if (!titleOk || !artistOk) continue
             if (diff < bestDiff) {
                 bestDiff = diff
@@ -451,7 +463,14 @@ object LyricsFetcher {
     }
 
     /** One version of the lyrics offered by a source. [synced] means it has [mm:ss] time stamps (LRC). */
-    class Option(val source: String, val text: String, val synced: Boolean)
+    class Option(
+        val source: String,
+        val text: String,
+        val synced: Boolean,
+        /** Title used for this targeted query; this is a search hint, not verified provider metadata. */
+        val searchTitle: String = "",
+        val requestedVersion: LyricsVersionKind = LyricsVersionKind.ORIGINAL
+    )
 
     class Choices(val options: List<Option>, val outcome: Outcome)
 
@@ -466,25 +485,79 @@ object LyricsFetcher {
         var answered = false
         var failed = false
         var skipped = false
-        for (p in providers) {
-            if (found.size >= max) break
-            val until = coolUntil[p.name] ?: 0L
-            if (System.currentTimeMillis() < until) { skipped = true; continue }
-            try {
-                val text = p.find(song)
-                answered = true
-                fails[p.name] = 0
-                if (!text.isNullOrBlank() && seen.add(text.trim().replace(Regex("\\s+"), " "))) {
-                    found += Option(p.name, text, syncedTag.containsMatchIn(text))
+
+        // The editor's explicit search also probes common recording variants. These are
+        // query hints only: the provider does not expose enough metadata to certify a version.
+        val requestedKind = LyricsVersionMatcher.detectVersion(song.title, song.album)
+        val queryTitles = if (requestedKind == LyricsVersionKind.ORIGINAL) {
+            listOf(
+                song.title,
+                "${cleanTitle(song.title)} (Live)",
+                "${cleanTitle(song.title)} (Remix)"
+            ).distinct()
+        } else {
+            listOf(song.title)
+        }
+
+        search@ for (p in providers) {
+            // The two broadest catalogs receive the extra variant queries; the remaining
+            // sources are still queried once for the exact title to avoid excessive requests.
+            val titlesForProvider = if (p.name == "lrclib" || p.name == "netease") {
+                queryTitles
+            } else {
+                listOf(song.title)
+            }
+            for (queryTitle in titlesForProvider) {
+                if (found.size >= max) break@search
+                val until = coolUntil[p.name] ?: 0L
+                if (System.currentTimeMillis() < until) { skipped = true; continue }
+                try {
+                    val querySong = if (queryTitle == song.title) song else song.copy(title = queryTitle)
+                    val text = p.find(querySong)
+                    answered = true
+                    fails[p.name] = 0
+                    if (!text.isNullOrBlank() && seen.add(text.trim().replace(Regex("\\s+"), " "))) {
+                        found += Option(
+                            p.name,
+                            text,
+                            syncedTag.containsMatchIn(text),
+                            queryTitle,
+                            LyricsVersionMatcher.detectVersion(queryTitle, song.album)
+                        )
+                    }
+                } catch (_: RateLimited) {
+                    coolUntil[p.name] = System.currentTimeMillis() + COOLDOWN_MS
+                    skipped = true
+                } catch (_: Exception) {
+                    failed = true
                 }
-            } catch (_: RateLimited) {
-                coolUntil[p.name] = System.currentTimeMillis() + COOLDOWN_MS
-                skipped = true
-            } catch (_: Exception) {
-                failed = true
             }
         }
-        val sorted = found.sortedByDescending { it.synced }
+
+        // Prefer the requested recording identity, then close title/artist matches. Keep
+        // synced results ahead of plain text when their matching scores are equal.
+        val ranked = LyricsVersionMatcher.rank(
+            requestedTitle = song.title,
+            requestedArtist = song.artist,
+            requestedAlbum = song.album,
+            requestedDurationMs = song.durationMs,
+            candidates = found.mapIndexed { index, option ->
+                LyricsVersionCandidate(
+                    id = index.toString(),
+                    source = option.source,
+                    title = option.searchTitle,
+                    // The providers return lyric text only, not verified candidate metadata.
+                    // Leave unavailable fields unknown instead of borrowing the local track's values.
+                    artist = "",
+                    album = "",
+                    durationMs = 0L,
+                    lyrics = option.text,
+                    synced = option.synced
+                )
+            }
+        )
+        val byId = found.withIndex().associate { it.index.toString() to it.value }
+        val sorted = ranked.mapNotNull { byId[it.candidate.id] }
         val outcome = when {
             sorted.isNotEmpty() -> Outcome.FOUND
             answered -> Outcome.NOT_FOUND

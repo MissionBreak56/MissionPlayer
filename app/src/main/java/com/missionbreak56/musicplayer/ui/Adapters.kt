@@ -324,6 +324,7 @@ class LyricsAdapter(
     private val onLineClick: (LyricLine) -> Unit
 ) : RecyclerView.Adapter<LyricsAdapter.VH>() {
     private var lines: List<LyricLine> = emptyList()
+    private var translations: List<String>? = null
     private var current = -1
 
     /** Optional colours (used by the full-screen player's coloured background). */
@@ -332,8 +333,14 @@ class LyricsAdapter(
 
     fun submit(list: List<LyricLine>) {
         lines = list
+        translations = null
         current = -1
         notifyDataSetChanged()
+    }
+
+    fun setTranslations(values: List<String>?) {
+        translations = values?.takeIf { it.size == lines.size }
+        if (lines.isNotEmpty()) notifyItemRangeChanged(0, lines.size)
     }
 
     fun setCurrent(index: Int) {
@@ -352,14 +359,20 @@ class LyricsAdapter(
 
     inner class VH(private val b: ItemLyricBinding) : RecyclerView.ViewHolder(b.root) {
         fun bind(line: LyricLine, position: Int) {
-            val tv = b.root
-            tv.text = line.text.ifBlank { "\u266A" }
+            val original = b.textOriginal
             val active = position == current
-            tv.setTextColor(
-                if (active) colorActive ?: tv.primaryColor() else colorIdle ?: tv.onSurfaceVariantColor()
+            original.text = line.text.ifBlank { "\u266A" }
+            original.setTextColor(
+                if (active) colorActive ?: original.primaryColor()
+                else colorIdle ?: original.onSurfaceVariantColor()
             )
-            tv.textSize = if (active) 24f else 20f
-            tv.setOnClickListener { onLineClick(line) }
+            original.textSize = if (active) 24f else 20f
+
+            val translated = translations?.getOrNull(position).orEmpty()
+            b.textTranslation.text = translated
+            b.textTranslation.visibility = if (translated.isBlank()) View.GONE else View.VISIBLE
+            b.textTranslation.setTextColor(colorIdle ?: b.textTranslation.onSurfaceVariantColor())
+            b.root.setOnClickListener { onLineClick(line) }
         }
     }
 }

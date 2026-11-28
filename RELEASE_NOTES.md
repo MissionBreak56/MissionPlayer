@@ -1,3 +1,21 @@
+## MissionPlayer v2.25.0 — Tradução de letras e busca aprimorada
+
+### Novidades
+- **Tradução opcional das letras sincronizadas:** as traduções aparecem abaixo de cada linha original, sem alterar a sincronização nem o texto da letra.
+- **Controle no player:** a opção foi movida para o menu ⋮ da tela Tocando agora e permanece ativa ao trocar de música.
+- **Cache local:** traduções já obtidas são reutilizadas; o processamento agrupa versos para reduzir requisições e tempo de espera.
+- **Detecção de português:** letras identificadas como português, incluindo expressões brasileiras informais, não são traduzidas novamente.
+- **Provedores alternativos:** a tradução tenta serviços diferentes para reduzir falhas de disponibilidade. Serviços públicos podem impor limites ou ficar temporariamente indisponíveis.
+- **Busca de letras por versão:** melhora a identificação de versões ao vivo, remixes e outras variantes, evitando aplicar automaticamente uma letra que não corresponda à gravação.
+- **Backup completo das traduções:** o ZIP inclui as traduções em cache e a restauração remapeia os IDs das músicas para que elas continuem associadas à faixa correta em outro aparelho.
+
+### Privacidade
+A tradução é opcional. Quando solicitada, o texto da letra é enviado aos serviços externos de tradução. Letras identificadas como português são ignoradas pelo processo de tradução.
+
+### Observações
+- A identificação do idioma é heurística; letras curtas ou com vários idiomas podem exigir uma avaliação diferente.
+- A tradução depende de conexão e disponibilidade dos provedores. A letra original permanece preservada se a tradução falhar.
+
 ## MissionPlayer v2.24.4 — Álbuns e artistas duplicados
 
 APK já compilado (arm64-v8a) em anexo: `MissionPlayer-v2.24.4-arm64-v8a.apk`. Atualiza por cima da versão anterior (mesma chave de assinatura).

@@ -35,10 +35,12 @@ import com.missionbreak56.musicplayer.data.LyricSync
 import com.missionbreak56.musicplayer.data.LyricsFetcher
 import com.missionbreak56.musicplayer.data.LyricsIndex
 import com.missionbreak56.musicplayer.data.LyricsStore
+import com.missionbreak56.musicplayer.data.LyricsTranslationManager
 import com.missionbreak56.musicplayer.data.Prefs
 import com.missionbreak56.musicplayer.databinding.ActivityPlayerBinding
 import com.missionbreak56.musicplayer.playback.PlaybackState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
@@ -59,6 +61,9 @@ class PlayerActivity : PlayerBoundActivity() {
     private var lyricIndex = -1
     private val triedOnline = HashSet<Long>()
     private val syncing = HashSet<Long>()
+    private val translationManager = LyricsTranslationManager()
+    private var translationEnabled = false
+    private var translationJob: Job? = null
 
     private var closePending = false
     private var restoreTried = false
@@ -98,6 +103,8 @@ class PlayerActivity : PlayerBoundActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        translationEnabled = getSharedPreferences("lyrics_translation", MODE_PRIVATE)
+            .getBoolean("enabled", false)
         actions = SongActions(this) { onPlayerChanged() }
         lyricsAdapter = LyricsAdapter { line ->
             if (line.timeMs >= 0) controller?.seekTo(line.timeMs)
@@ -131,6 +138,8 @@ class PlayerActivity : PlayerBoundActivity() {
             startActivity(Intent(this, EqualizerActivity::class.java))
         }
         binding.btnLyrics.setOnClickListener { toggleLyrics() }
+        // Translation is controlled from the player's three-dot menu to keep this screen clean.
+        binding.btnTranslateLyrics.visibility = View.GONE
         binding.btnSyncEarlier.text = tr("− 0,5 s", "− 0.5 s")
         binding.btnSyncLater.text = tr("+ 0,5 s", "+ 0.5 s")
         binding.btnSyncAuto.text = tr("Auto", "Auto")
@@ -600,6 +609,9 @@ class PlayerActivity : PlayerBoundActivity() {
     }
 
     private fun loadLyrics(id: Long) {
+        translationJob?.cancel()
+        translationJob = null
+        lyricsAdapter.setTranslations(null)
         lifecycleScope.launch {
             val song = Library.song(id)
             val lines = if (id > 0 && song != null) {
@@ -616,6 +628,13 @@ class PlayerActivity : PlayerBoundActivity() {
             lyricsAdapter.submit(lines)
             binding.lyricsList.visibility = if (lines.isEmpty()) View.GONE else View.VISIBLE
             binding.lyricsEmpty.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
+            binding.btnTranslateLyrics.visibility = View.GONE
+            binding.btnTranslateLyrics.text = if (translationEnabled) {
+                getString(R.string.lyrics_disable_translation)
+            } else {
+                getString(R.string.lyrics_translate)
+            }
+            binding.btnTranslateLyrics.isEnabled = true
             binding.textLyricsHint.text = if (lines.isEmpty()) getString(R.string.no_lyrics_short) else ""
             binding.textLyricsHint.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
             binding.btnAddLyrics.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
@@ -646,6 +665,8 @@ class PlayerActivity : PlayerBoundActivity() {
                 }
             }
 
+            if (translationEnabled && lines.isNotEmpty()) translateCurrentLyrics()
+
             // No lyrics yet: try to download them now (once per song per session), then reload.
             if (lines.isEmpty() && id > 0 && song != null && Prefs.autoLyrics && triedOnline.add(id)) {
                 val found = withContext(Dispatchers.IO) {
@@ -653,6 +674,82 @@ class PlayerActivity : PlayerBoundActivity() {
                         LyricsFetcher.fetch(applicationContext, song) == LyricsFetcher.Outcome.FOUND
                 }
                 if (found && shownId == id) loadLyrics(id)
+            }
+        }
+    }
+
+    private fun toggleLyricsTranslation() {
+        if (translationEnabled) {
+            setLyricsTranslationEnabled(false)
+            return
+        }
+        val preferences = getSharedPreferences("lyrics_translation", MODE_PRIVATE)
+        if (preferences.getBoolean("privacy_notice_accepted", false)) {
+            setLyricsTranslationEnabled(true)
+        } else {
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.lyrics_translation_notice_title)
+                .setMessage(R.string.lyrics_translation_notice_body)
+                .setPositiveButton(R.string.lyrics_translation_continue) { _, _ ->
+                    preferences.edit().putBoolean("privacy_notice_accepted", true).apply()
+                    setLyricsTranslationEnabled(true)
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        }
+    }
+
+    private fun setLyricsTranslationEnabled(enabled: Boolean) {
+        translationEnabled = enabled
+        getSharedPreferences("lyrics_translation", MODE_PRIVATE).edit()
+            .putBoolean("enabled", enabled).apply()
+        if (enabled) {
+            translateCurrentLyrics()
+        } else {
+            translationJob?.cancel()
+            translationJob = null
+            lyricsAdapter.setTranslations(null)
+            binding.btnTranslateLyrics.text = getString(R.string.lyrics_translate)
+            binding.btnTranslateLyrics.isEnabled = true
+        }
+    }
+
+    /** Starts translation only after the user has enabled it in the lyrics panel. */
+    private fun translateCurrentLyrics() {
+        val id = shownId
+        val song = Library.song(id) ?: return
+        if (!translationEnabled || id <= 0 || lyricsLines.isEmpty()) return
+        translationJob?.cancel()
+        val lines = lyricsLines.toList()
+        binding.btnTranslateLyrics.isEnabled = true
+        binding.btnTranslateLyrics.text = getString(R.string.lyrics_translation_loading)
+        translationJob = lifecycleScope.launch {
+            try {
+                val translated = withContext(Dispatchers.IO) {
+                    val source = LyricsIndex.fullText(applicationContext, song)
+                        ?: throw IllegalStateException("Lyrics source is unavailable")
+                    translationManager.translate(applicationContext, id, source, lines, "pt-BR")
+                }
+                if (shownId == id && translationEnabled) {
+                    lyricsAdapter.setTranslations(translated.map { it.translatedText })
+                    binding.btnTranslateLyrics.text = getString(R.string.lyrics_disable_translation)
+                    binding.btnTranslateLyrics.isEnabled = true
+                }
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                if (shownId == id) {
+                    // A temporary provider failure must not turn off the user's global preference.
+                    // Keep the switch enabled so the next track is translated automatically.
+                    lyricsAdapter.setTranslations(null)
+                    binding.btnTranslateLyrics.text = getString(R.string.lyrics_disable_translation)
+                    binding.btnTranslateLyrics.isEnabled = true
+                    Toast.makeText(
+                        this@PlayerActivity,
+                        R.string.lyrics_translation_failed,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
     }
@@ -709,6 +806,10 @@ class PlayerActivity : PlayerBoundActivity() {
         popup.menu.add(0, 2, 1, R.string.set_ringtone)
         popup.menu.add(0, 3, 2, R.string.share)
         if (LyricsStore.has(this, song.id)) popup.menu.add(0, 5, 4, R.string.remove_lyrics)
+        popup.menu.add(0, 10, 3, tr("Tradução das letras", "Lyrics translation")).apply {
+            isCheckable = true
+            isChecked = translationEnabled
+        }
         popup.menu.add(0, 6, 5, tr("Importar capa", "Import cover"))
         popup.menu.add(0, 7, 6, tr("Buscar capa online", "Find cover online"))
         if (SongArt.has(this, song.id)) popup.menu.add(0, 8, 7, tr("Remover capa personalizada", "Remove custom cover"))
@@ -721,6 +822,7 @@ class PlayerActivity : PlayerBoundActivity() {
                     LyricsStore.delete(this, song.id)
                     loadLyrics(song.id)
                 }
+                10 -> toggleLyricsTranslation()
                 9 -> MetadataEditorActivity.start(this, song.id)
                 6 -> pickCover.launch("image/*")
                 7 -> CoverSearch.show(this, song) { refreshCover() }

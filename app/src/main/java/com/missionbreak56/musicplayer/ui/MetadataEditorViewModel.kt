@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.missionbreak56.musicplayer.BuildConfig
 import com.missionbreak56.musicplayer.data.Library
 import com.missionbreak56.musicplayer.data.LyricsFetcher
+import com.missionbreak56.musicplayer.data.LyricsVersionKind
+import com.missionbreak56.musicplayer.data.LyricsVersionMatcher
 import com.missionbreak56.musicplayer.data.Song
 import com.missionbreak56.musicplayer.online.Candidate
 import com.missionbreak56.musicplayer.online.CoverArtClient
@@ -373,22 +375,39 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
                 val choices = ArrayList<LyricsChoice>()
                 // Synced versions first and kept as they are (the tag then carries the time stamps); each also
                 // gets a plain-text twin for people who prefer lyrics without timing.
+                fun versionHint(kind: LyricsVersionKind): String = when (kind) {
+                    LyricsVersionKind.LIVE -> tr(" · consulta: ao vivo", " · query: live")
+                    LyricsVersionKind.REMIX -> tr(" · consulta: remix", " · query: remix")
+                    LyricsVersionKind.ACOUSTIC -> tr(" · consulta: acústica", " · query: acoustic")
+                    LyricsVersionKind.INSTRUMENTAL -> tr(" · consulta: instrumental", " · query: instrumental")
+                    LyricsVersionKind.REMASTERED -> tr(" · consulta: remasterizada", " · query: remastered")
+                    LyricsVersionKind.EXTENDED -> tr(" · consulta: estendida", " · query: extended")
+                    LyricsVersionKind.RADIO_EDIT -> tr(" · consulta: edição de rádio", " · query: radio edit")
+                    LyricsVersionKind.OTHER, LyricsVersionKind.ORIGINAL -> ""
+                }
                 for (o in found.options.filter { it.synced }) {
-                    choices += LyricsChoice(tr("Sincronizada (LRC) · ${o.source}", "Synced (LRC) · ${o.source}"), previewOf(o.text), o.text)
+                    val label = tr("Sincronizada (LRC) · ${o.source}", "Synced (LRC) · ${o.source}") + versionHint(o.requestedVersion)
+                    choices += LyricsChoice(label, previewOf(o.text), o.text)
                 }
                 for (o in found.options) {
                     val plain = LyricsText.toPlain(o.text)
                     if (plain.isEmpty()) continue
                     val label = if (o.synced) tr("Texto simples, sem tempos · ${o.source}", "Plain text, no timing · ${o.source}")
                     else tr("Texto simples · ${o.source}", "Plain text · ${o.source}")
-                    choices += LyricsChoice(label, previewOf(plain), plain)
+                    choices += LyricsChoice(label + versionHint(o.requestedVersion), previewOf(plain), plain)
                 }
                 when {
                     choices.isNotEmpty() -> {
                         _state.update { it.copy(status = null) }
                         val replacing = edited[TagField.LYRICS].orEmpty().isNotBlank()
-                        if (choices.size == 1 && !replacing) applyLyrics(choices[0].text)
-                        else _events.emit(EditorEvent.ChooseLyrics(choices, replacing))
+                        val requestedVersion = LyricsVersionMatcher.detectVersion(probe.title, probe.album)
+                        val singleResultMatchesRequestedVersion = found.options.size == 1 &&
+                            found.options[0].requestedVersion == requestedVersion
+                        if (choices.size == 1 && !replacing && singleResultMatchesRequestedVersion) {
+                            applyLyrics(choices[0].text)
+                        } else {
+                            _events.emit(EditorEvent.ChooseLyrics(choices, replacing))
+                        }
                     }
                     found.outcome == LyricsFetcher.Outcome.RATE_LIMITED -> setStatus(
                         tr("As fontes de letra pediram para esperar. Tente de novo em instantes.", "The lyrics sources asked to wait. Try again shortly."), true
