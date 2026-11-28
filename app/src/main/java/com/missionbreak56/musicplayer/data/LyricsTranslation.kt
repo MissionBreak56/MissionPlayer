@@ -141,7 +141,7 @@ object LyricsTranslationStore {
  * unchanged; blank and instrumental placeholder lines do not generate network requests.
  */
 class LyricsTranslationManager(
-    private val provider: LyricsTranslationProvider = MyMemoryTranslationProvider()
+    private val provider: LyricsTranslationProvider = FallbackLyricsTranslationProvider()
 ) {
     suspend fun translate(
         context: Context,
@@ -190,5 +190,116 @@ class LyricsTranslationManager(
     private inline fun <T> List<T>.anyIndexed(predicate: (Int, T) -> Boolean): Boolean {
         forEachIndexed { index, item -> if (predicate(index, item)) return true }
         return false
+    }
+}
+
+
+/**
+ * Google Translate's web endpoint is a secondary provider. It is undocumented and can change
+ * or throttle requests, so it must never be the only translation path.
+ */
+class GoogleWebTranslationProvider : LyricsTranslationProvider {
+    override suspend fun translate(text: String, targetLanguage: String): String =
+        withContext(Dispatchers.IO) {
+            if (text.isBlank()) return@withContext ""
+            val target = targetLanguage.substringBefore('-').ifBlank { "pt" }
+            val query = URLEncoder.encode(text, "UTF-8")
+            val url = URL(
+                "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=$target&dt=t&q=$query"
+            )
+            val connection = url.openConnection() as HttpURLConnection
+            try {
+                connection.connectTimeout = 5_000
+                connection.readTimeout = 10_000
+                connection.requestMethod = "GET"
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0 MissionPlayer")
+                val code = connection.responseCode
+                if (code !in 200..299) throw IOException("Google translation HTTP $code")
+                val body = connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                val segments = JSONArray(body).optJSONArray(0)
+                    ?: throw IOException("Invalid Google translation response")
+                val translated = buildString {
+                    for (index in 0 until segments.length()) {
+                        val segment = segments.optJSONArray(index) ?: continue
+                        append(segment.optString(0))
+                    }
+                }.trim()
+                if (translated.isBlank()) throw IOException("Google translation returned an empty result")
+                translated
+            } finally {
+                connection.disconnect()
+            }
+        }
+}
+
+/**
+ * Apertium is a rule-based fallback with a limited language-pair catalogue. Restrict it to
+ * English-looking input because this public APY endpoint requires an explicit source language.
+ */
+class ApertiumEnglishPortugueseProvider : LyricsTranslationProvider {
+    override suspend fun translate(text: String, targetLanguage: String): String =
+        withContext(Dispatchers.IO) {
+            if (text.isBlank()) return@withContext ""
+            if (!looksLikeEnglish(text)) throw IOException("Apertium supports English source text only")
+            val query = URLEncoder.encode(text, "UTF-8")
+            val url = URL(
+                "https://apertium.org/apy/translate?langpair=en%7Cpt&markUnknown=no&format=txt&q=$query"
+            )
+            val connection = url.openConnection() as HttpURLConnection
+            try {
+                connection.connectTimeout = 5_000
+                connection.readTimeout = 10_000
+                connection.requestMethod = "GET"
+                connection.setRequestProperty("User-Agent", "MissionPlayer/2.7")
+                val code = connection.responseCode
+                if (code !in 200..299) throw IOException("Apertium translation HTTP $code")
+                val body = connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                val json = JSONObject(body)
+                if (json.optInt("responseStatus", 0) != 200) {
+                    throw IOException(json.optString("responseDetails", "Apertium unavailable"))
+                }
+                val translated = json.optJSONObject("responseData")
+                    ?.optString("translatedText").orEmpty().trim()
+                if (translated.isBlank()) throw IOException("Apertium returned an empty result")
+                translated
+            } finally {
+                connection.disconnect()
+            }
+        }
+
+    private fun looksLikeEnglish(text: String): Boolean {
+        val words = text.lowercase().split(Regex("[^a-z']+")).filter { it.length > 1 }
+        if (words.size < 3) return false
+        val common = setOf(
+            "the", "and", "you", "that", "this", "with", "for", "are", "was", "have",
+            "your", "not", "but", "all", "can", "will", "love", "know", "when", "what",
+            "from", "they", "she", "him", "her", "our", "out", "one", "who", "how"
+        )
+        return words.count { it in common } >= 2
+    }
+}
+
+/** Tries independent providers in order and propagates cancellation immediately. */
+class FallbackLyricsTranslationProvider(
+    private val providers: List<LyricsTranslationProvider> = listOf(
+        MyMemoryTranslationProvider(),
+        GoogleWebTranslationProvider(),
+        ApertiumEnglishPortugueseProvider()
+    )
+) : LyricsTranslationProvider {
+    override suspend fun translate(text: String, targetLanguage: String): String {
+        var lastError: Exception? = null
+        for (provider in providers) {
+            try {
+                val result = provider.translate(text, targetLanguage).trim()
+                if (result.isNotBlank()) return result
+                lastError = IOException("Translation provider returned an empty result")
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                lastError = error
+            }
+        }
+        throw IOException("All translation providers failed", lastError)
     }
 }
