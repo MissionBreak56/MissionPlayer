@@ -138,26 +138,8 @@ class PlayerActivity : PlayerBoundActivity() {
             startActivity(Intent(this, EqualizerActivity::class.java))
         }
         binding.btnLyrics.setOnClickListener { toggleLyrics() }
-        binding.btnTranslateLyrics.setOnClickListener {
-            if (translationEnabled) {
-                setLyricsTranslationEnabled(false)
-            } else {
-                val preferences = getSharedPreferences("lyrics_translation", MODE_PRIVATE)
-                if (preferences.getBoolean("privacy_notice_accepted", false)) {
-                    setLyricsTranslationEnabled(true)
-                } else {
-                    com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-                        .setTitle(R.string.lyrics_translation_notice_title)
-                        .setMessage(R.string.lyrics_translation_notice_body)
-                        .setPositiveButton(R.string.lyrics_translation_continue) { _, _ ->
-                            preferences.edit().putBoolean("privacy_notice_accepted", true).apply()
-                            setLyricsTranslationEnabled(true)
-                        }
-                        .setNegativeButton(R.string.cancel, null)
-                        .show()
-                }
-            }
-        }
+        // Translation is controlled from the player's three-dot menu to keep this screen clean.
+        binding.btnTranslateLyrics.visibility = View.GONE
         binding.btnSyncEarlier.text = tr("− 0,5 s", "− 0.5 s")
         binding.btnSyncLater.text = tr("+ 0,5 s", "+ 0.5 s")
         binding.btnSyncAuto.text = tr("Auto", "Auto")
@@ -696,6 +678,27 @@ class PlayerActivity : PlayerBoundActivity() {
         }
     }
 
+    private fun toggleLyricsTranslation() {
+        if (translationEnabled) {
+            setLyricsTranslationEnabled(false)
+            return
+        }
+        val preferences = getSharedPreferences("lyrics_translation", MODE_PRIVATE)
+        if (preferences.getBoolean("privacy_notice_accepted", false)) {
+            setLyricsTranslationEnabled(true)
+        } else {
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.lyrics_translation_notice_title)
+                .setMessage(R.string.lyrics_translation_notice_body)
+                .setPositiveButton(R.string.lyrics_translation_continue) { _, _ ->
+                    preferences.edit().putBoolean("privacy_notice_accepted", true).apply()
+                    setLyricsTranslationEnabled(true)
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        }
+    }
+
     private fun setLyricsTranslationEnabled(enabled: Boolean) {
         translationEnabled = enabled
         getSharedPreferences("lyrics_translation", MODE_PRIVATE).edit()
@@ -803,6 +806,10 @@ class PlayerActivity : PlayerBoundActivity() {
         popup.menu.add(0, 2, 1, R.string.set_ringtone)
         popup.menu.add(0, 3, 2, R.string.share)
         if (LyricsStore.has(this, song.id)) popup.menu.add(0, 5, 4, R.string.remove_lyrics)
+        popup.menu.add(0, 10, 3, tr("Tradução das letras", "Lyrics translation")).apply {
+            isCheckable = true
+            isChecked = translationEnabled
+        }
         popup.menu.add(0, 6, 5, tr("Importar capa", "Import cover"))
         popup.menu.add(0, 7, 6, tr("Buscar capa online", "Find cover online"))
         if (SongArt.has(this, song.id)) popup.menu.add(0, 8, 7, tr("Remover capa personalizada", "Remove custom cover"))
@@ -815,6 +822,7 @@ class PlayerActivity : PlayerBoundActivity() {
                     LyricsStore.delete(this, song.id)
                     loadLyrics(song.id)
                 }
+                10 -> toggleLyricsTranslation()
                 9 -> MetadataEditorActivity.start(this, song.id)
                 6 -> pickCover.launch("image/*")
                 7 -> CoverSearch.show(this, song) { refreshCover() }
