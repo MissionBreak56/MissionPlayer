@@ -42,7 +42,7 @@ internal object LyricsLanguageDetector {
         "me", "meu", "minha", "mais", "mas", "na", "nas", "nem", "no", "nos",
         "nossa", "não", "o", "os", "ou", "para", "pela", "pelas", "pelo", "pelos",
         "por", "porque", "que", "quem", "se", "sem", "ser", "seu", "sua", "suas",
-        "te", "tem", "tua", "tuas", "um", "uma", "você", "vocês", "vou"
+        "te", "tem", "tua", "tuas", "um", "uma", "você", "vocês", "vou", "pra", "pro", "tá", "tô", "cê"
     )
     private val englishWords = setOf(
         "the", "and", "you", "that", "this", "with", "for", "are", "was", "have",
@@ -54,7 +54,7 @@ internal object LyricsLanguageDetector {
     fun isPortuguese(lines: List<LyricLine>): Boolean {
         val words = lines.asSequence()
             .flatMap { it.text.lowercase().split(Regex("[^\\p{L}]+")).asSequence() }
-            .filter { it.length > 1 }
+            .filter { it.isNotBlank() }
             .toList()
         if (words.size < 12) return false
 
