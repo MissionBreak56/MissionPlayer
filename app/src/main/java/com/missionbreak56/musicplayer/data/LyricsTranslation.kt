@@ -36,7 +36,7 @@ class MyMemoryTranslationProvider : LyricsTranslationProvider {
                 throw IOException("Translation segment exceeds the service's 500-byte limit")
             }
             val query = URLEncoder.encode(text, "UTF-8")
-            val language = URLEncoder.encode("auto|$targetLanguage", "UTF-8")
+            val language = URLEncoder.encode("autodetect|$targetLanguage", "UTF-8")
             val connection = (URL(
                 "https://api.mymemory.translated.net/get?q=$query&langpair=$language"
             ).openConnection() as HttpURLConnection)
