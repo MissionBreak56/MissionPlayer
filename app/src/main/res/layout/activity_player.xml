@@ -108,6 +108,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topBar">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lyricsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="80dp"
+            android:paddingBottom="120dp" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnTranslateLyrics"
             style="@style/Widget.Material3.Button.TonalButton"
@@ -118,14 +126,6 @@
             android:minHeight="40dp"
             android:text="@string/lyrics_translate"
             android:visibility="gone" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/lyricsList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingTop="80dp"
-            android:paddingBottom="120dp" />
 
         <LinearLayout
             android:id="@+id/lyricsEmpty"
