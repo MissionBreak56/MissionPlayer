@@ -383,7 +383,7 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
                     LyricsVersionKind.REMASTERED -> tr(" · consulta: remasterizada", " · query: remastered")
                     LyricsVersionKind.EXTENDED -> tr(" · consulta: estendida", " · query: extended")
                     LyricsVersionKind.RADIO_EDIT -> tr(" · consulta: edição de rádio", " · query: radio edit")
-                    else -> ""
+                    LyricsVersionKind.OTHER, LyricsVersionKind.ORIGINAL -> ""
                 }
                 for (o in found.options.filter { it.synced }) {
                     val label = tr("Sincronizada (LRC) · ${o.source}", "Synced (LRC) · ${o.source}") + versionHint(o.requestedVersion)
@@ -400,8 +400,14 @@ class MetadataEditorViewModel(private val app: Application) : AndroidViewModel(a
                     choices.isNotEmpty() -> {
                         _state.update { it.copy(status = null) }
                         val replacing = edited[TagField.LYRICS].orEmpty().isNotBlank()
-                        if (choices.size == 1 && !replacing) applyLyrics(choices[0].text)
-                        else _events.emit(EditorEvent.ChooseLyrics(choices, replacing))
+                        val requestedVersion = LyricsVersionMatcher.detectVersion(probe.title, probe.album)
+                        val singleResultMatchesRequestedVersion = found.options.size == 1 &&
+                            found.options[0].requestedVersion == requestedVersion
+                        if (choices.size == 1 && !replacing && singleResultMatchesRequestedVersion) {
+                            applyLyrics(choices[0].text)
+                        } else {
+                            _events.emit(EditorEvent.ChooseLyrics(choices, replacing))
+                        }
                     }
                     found.outcome == LyricsFetcher.Outcome.RATE_LIMITED -> setStatus(
                         tr("As fontes de letra pediram para esperar. Tente de novo em instantes.", "The lyrics sources asked to wait. Try again shortly."), true
