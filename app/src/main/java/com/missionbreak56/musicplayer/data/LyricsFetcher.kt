@@ -208,7 +208,7 @@ private object NetEase : Provider("netease") {
             val dur = o.optLong("duration", o.optLong("dt", 0))
             if (song.durationMs > 0 && dur > 0) {
                 val diff = Math.abs(dur - song.durationMs)
-                if (diff <= durationTolerance(song) && (titleOk || artistOk) && diff < bestDiff) {
+                if (diff <= durationTolerance(song) && titleOk && artistOk && diff < bestDiff) {
                     bestDiff = diff; chosen = o.optLong("id", -1)
                 }
             } else if (titleOk && artistOk && chosen < 0) {
@@ -247,7 +247,8 @@ private object Kugou : Provider("kugou") {
             val dur = o.optLong("duration", 0)
             val diff = if (song.durationMs > 0 && dur > 0) Math.abs(dur - song.durationMs) else 0L
             if (song.durationMs > 0 && dur > 0 && diff > durationTolerance(song)) continue
-            if (!similar(o.optString("song"), title) && !similar(o.optString("singer"), song.artist)) continue
+            if (!similar(o.optString("song"), title)) continue
+            if (song.artist.isNotBlank() && !similar(o.optString("singer"), song.artist)) continue
             if (diff < bestDiff) {
                 bestDiff = diff
                 id = o.optString("id"); key = o.optString("accesskey")
