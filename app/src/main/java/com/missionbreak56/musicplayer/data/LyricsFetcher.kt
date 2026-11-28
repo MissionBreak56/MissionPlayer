@@ -53,7 +53,7 @@ private fun cleanTitle(title: String): String =
     // Remove guest credits only. Live/Remix/Acoustic/Remastered descriptors identify
     // a different recording and must remain part of the search query.
     title.replace(
-        Regex("""\s*[[(]\s*(feat\.?|ft\.?|featuring)\s+[^)\]]*[)\]]""", RegexOption.IGNORE_CASE),
+        Regex("""\s*(?:\(|\[)\s*(feat\.?|ft\.?|featuring)\s+.*?(?:\)|\])""", RegexOption.IGNORE_CASE),
         ""
     ).trim().ifBlank { title }
 
