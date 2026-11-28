@@ -2,7 +2,7 @@ name: Build ARM64 Release APK
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, feature/lyrics-translation-version-matching ]
   workflow_dispatch:
 
 permissions:
