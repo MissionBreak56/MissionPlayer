@@ -77,4 +77,4 @@ class LyricsVersionMatcherTest {
         assertEquals(first, unchanged)
         assertTrue(first != changed)
     }
-}\n
+}
