@@ -48,7 +48,7 @@ private val fails = ConcurrentHashMap<String, Int>()
 
 private fun enc(s: String): String = URLEncoder.encode(s, "UTF-8")
 
-/** "Song (feat. X) [Remastered]" -> "Song" */
+/** Removes guest credits while preserving recording-version descriptors. */
 private fun cleanTitle(title: String): String =
     // Remove guest credits only. Live/Remix/Acoustic/Remastered descriptors identify
     // a different recording and must remain part of the search query.
