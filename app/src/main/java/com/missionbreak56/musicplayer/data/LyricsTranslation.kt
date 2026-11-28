@@ -31,6 +31,45 @@ interface LyricsTranslationProvider {
 }
 
 /**
+ * Conservative offline language check for Portuguese lyrics. It uses common function words
+ * and Portuguese-specific spelling, and requires several independent signals to avoid treating
+ * short or ambiguous lyrics as Portuguese.
+ */
+internal object LyricsLanguageDetector {
+    private val portugueseWords = setOf(
+        "a", "as", "ao", "aos", "com", "como", "da", "das", "de", "dela", "dele",
+        "do", "dos", "e", "ela", "elas", "ele", "eles", "em", "eu", "foi", "isso",
+        "me", "meu", "minha", "mais", "mas", "na", "nas", "nem", "no", "nos",
+        "nossa", "não", "o", "os", "ou", "para", "pela", "pelas", "pelo", "pelos",
+        "por", "porque", "que", "quem", "se", "sem", "ser", "seu", "sua", "suas",
+        "te", "tem", "tua", "tuas", "um", "uma", "você", "vocês", "vou"
+    )
+    private val englishWords = setOf(
+        "the", "and", "you", "that", "this", "with", "for", "are", "was", "have",
+        "your", "not", "but", "all", "can", "will", "love", "know", "when", "what",
+        "from", "they", "she", "him", "her", "our", "out", "one", "who", "how",
+        "is", "of", "to", "in", "it", "we", "my", "me"
+    )
+
+    fun isPortuguese(lines: List<LyricLine>): Boolean {
+        val words = lines.asSequence()
+            .flatMap { it.text.lowercase().split(Regex("[^\\p{L}]+")).asSequence() }
+            .filter { it.length > 1 }
+            .toList()
+        if (words.size < 12) return false
+
+        val portugueseCount = words.count { it in portugueseWords }
+        val englishCount = words.count { it in englishWords }
+        val accentedPortuguese = words.count { word ->
+            word.any { it in "ãõçáàâêéíóôú" }
+        }
+
+        return (portugueseCount >= 4 && portugueseCount > englishCount) ||
+            (accentedPortuguese >= 2 && portugueseCount >= 2 && portugueseCount >= englishCount)
+    }
+}
+
+/**
  * Uses MyMemory's public endpoint. It does not require an API key, but it has public-service
  * quotas and availability limits. Lyrics are sent to this third-party service when requested.
  */
@@ -163,6 +202,16 @@ class LyricsTranslationManager(
     ): List<TranslatedLyricLine> {
         require(songId > 0L)
         require(targetLanguage.isNotBlank())
+
+        // Do not translate lyrics that are already in the requested language.
+        if (targetLanguage.startsWith("pt", ignoreCase = true) &&
+            LyricsLanguageDetector.isPortuguese(lines)
+        ) {
+            return lines.map { line ->
+                TranslatedLyricLine(line.timeMs, line.text, "")
+            }
+        }
+
         val cached = LyricsTranslationStore.load(context, songId, sourceRaw, targetLanguage)
         val translated = if (cached != null && cached.size == lines.size) {
             cached
