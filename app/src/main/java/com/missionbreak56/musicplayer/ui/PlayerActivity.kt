@@ -628,7 +628,7 @@ class PlayerActivity : PlayerBoundActivity() {
             lyricsAdapter.submit(lines)
             binding.lyricsList.visibility = if (lines.isEmpty()) View.GONE else View.VISIBLE
             binding.lyricsEmpty.visibility = if (lines.isEmpty()) View.VISIBLE else View.GONE
-            binding.btnTranslateLyrics.visibility = if (lines.isEmpty() && !translationEnabled) View.GONE else View.VISIBLE
+            binding.btnTranslateLyrics.visibility = View.GONE
             binding.btnTranslateLyrics.text = if (translationEnabled) {
                 getString(R.string.lyrics_disable_translation)
             } else {
