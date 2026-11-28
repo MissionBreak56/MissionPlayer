@@ -340,7 +340,7 @@ class LyricsAdapter(
 
     fun setTranslations(values: List<String>?) {
         translations = values?.takeIf { it.size == lines.size }
-        notifyDataSetChanged()
+        if (lines.isNotEmpty()) notifyItemRangeChanged(0, lines.size)
     }
 
     fun setCurrent(index: Int) {
