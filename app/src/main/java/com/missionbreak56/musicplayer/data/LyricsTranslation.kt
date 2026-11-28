@@ -2,6 +2,7 @@ package com.missionbreak56.musicplayer.data
 
 import android.content.Context
 import android.text.Html
+import android.os.Build
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -51,7 +52,12 @@ class MyMemoryTranslationProvider : LyricsTranslationProvider {
                 val translated = json.optJSONObject("responseData")
                     ?.optString("translatedText").orEmpty()
                 if (translated.isBlank()) throw IOException("Translation service returned an empty result")
-                Html.fromHtml(translated, Html.FROM_HTML_MODE_LEGACY).toString()
+                if (Build.VERSION.SDK_INT >= 24) {
+                    Html.fromHtml(translated, Html.FROM_HTML_MODE_LEGACY).toString()
+                } else {
+                    @Suppress("DEPRECATION")
+                    Html.fromHtml(translated).toString()
+                }
             } finally {
                 connection.disconnect()
             }
