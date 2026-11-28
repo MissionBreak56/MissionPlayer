@@ -492,15 +492,21 @@ object LyricsFetcher {
             listOf(
                 song.title,
                 "${cleanTitle(song.title)} (Live)",
-                "${cleanTitle(song.title)} (Remix)",
-                "${cleanTitle(song.title)} (Acoustic)"
+                "${cleanTitle(song.title)} (Remix)"
             ).distinct()
         } else {
             listOf(song.title)
         }
 
         search@ for (p in providers) {
-            for (queryTitle in queryTitles) {
+            // The two broadest catalogs receive the extra variant queries; the remaining
+            // sources are still queried once for the exact title to avoid excessive requests.
+            val titlesForProvider = if (p.name == "lrclib" || p.name == "netease") {
+                queryTitles
+            } else {
+                listOf(song.title)
+            }
+            for (queryTitle in titlesForProvider) {
                 if (found.size >= max) break@search
                 val until = coolUntil[p.name] ?: 0L
                 if (System.currentTimeMillis() < until) { skipped = true; continue }
