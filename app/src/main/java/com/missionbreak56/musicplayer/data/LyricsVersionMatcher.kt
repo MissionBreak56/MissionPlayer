@@ -51,7 +51,7 @@ object LyricsVersionMatcher {
     private fun normalized(value: String): String =
         Normalizer.normalize(value.lowercase(), Normalizer.Form.NFD)
             .replace(Regex("\\p{M}+"), "")
-            .replace(Regex("""\b(feat\.?|ft\.?|featuring)\\s+[^,;]+"""), " ")
+            .replace(Regex("""\b(feat\.?|ft\.?|featuring)\s+[^,;]+"""), " ")
             .replace(Regex("[^\\p{L}\\p{N}]+"), " ")
             .trim()
             .replace(Regex("\\s+"), " ")
