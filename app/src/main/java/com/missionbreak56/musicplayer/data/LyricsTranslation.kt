@@ -35,6 +35,16 @@ interface LyricsTranslationProvider {
  * quotas and availability limits. Lyrics are sent to this third-party service when requested.
  */
 class MyMemoryTranslationProvider : LyricsTranslationProvider {
+    override suspend fun translateBatch(texts: List<String>, targetLanguage: String): List<String> =
+        coroutineScope {
+            val semaphore = Semaphore(4)
+            texts.map { text ->
+                async(Dispatchers.IO) {
+                    semaphore.withPermit { translate(text, targetLanguage) }
+                }
+            }.map { it.await() }
+        }
+
     override suspend fun translate(text: String, targetLanguage: String): String =
         withContext(Dispatchers.IO) {
             if (text.isBlank()) return@withContext ""
