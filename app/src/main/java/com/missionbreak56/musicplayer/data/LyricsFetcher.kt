@@ -546,9 +546,11 @@ object LyricsFetcher {
                     id = index.toString(),
                     source = option.source,
                     title = option.searchTitle,
-                    artist = song.artist,
-                    album = song.album,
-                    durationMs = song.durationMs,
+                    // The providers return lyric text only, not verified candidate metadata.
+                    // Leave unavailable fields unknown instead of borrowing the local track's values.
+                    artist = "",
+                    album = "",
+                    durationMs = 0L,
                     lyrics = option.text,
                     synced = option.synced
                 )
