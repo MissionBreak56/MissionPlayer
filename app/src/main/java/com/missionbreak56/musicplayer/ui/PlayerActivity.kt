@@ -139,17 +139,23 @@ class PlayerActivity : PlayerBoundActivity() {
         }
         binding.btnLyrics.setOnClickListener { toggleLyrics() }
         binding.btnTranslateLyrics.setOnClickListener {
-            translationEnabled = !translationEnabled
-            getSharedPreferences("lyrics_translation", MODE_PRIVATE).edit()
-                .putBoolean("enabled", translationEnabled).apply()
             if (translationEnabled) {
-                translateCurrentLyrics()
+                setLyricsTranslationEnabled(false)
             } else {
-                translationJob?.cancel()
-                translationJob = null
-                lyricsAdapter.setTranslations(null)
-                binding.btnTranslateLyrics.text = getString(R.string.lyrics_translate)
-                binding.btnTranslateLyrics.isEnabled = true
+                val preferences = getSharedPreferences("lyrics_translation", MODE_PRIVATE)
+                if (preferences.getBoolean("privacy_notice_accepted", false)) {
+                    setLyricsTranslationEnabled(true)
+                } else {
+                    com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.lyrics_translation_notice_title)
+                        .setMessage(R.string.lyrics_translation_notice_body)
+                        .setPositiveButton(R.string.lyrics_translation_continue) { _, _ ->
+                            preferences.edit().putBoolean("privacy_notice_accepted", true).apply()
+                            setLyricsTranslationEnabled(true)
+                        }
+                        .setNegativeButton(R.string.cancel, null)
+                        .show()
+                }
             }
         }
         binding.btnSyncEarlier.text = tr("− 0,5 s", "− 0.5 s")
@@ -687,6 +693,21 @@ class PlayerActivity : PlayerBoundActivity() {
                 }
                 if (found && shownId == id) loadLyrics(id)
             }
+        }
+    }
+
+    private fun setLyricsTranslationEnabled(enabled: Boolean) {
+        translationEnabled = enabled
+        getSharedPreferences("lyrics_translation", MODE_PRIVATE).edit()
+            .putBoolean("enabled", enabled).apply()
+        if (enabled) {
+            translateCurrentLyrics()
+        } else {
+            translationJob?.cancel()
+            translationJob = null
+            lyricsAdapter.setTranslations(null)
+            binding.btnTranslateLyrics.text = getString(R.string.lyrics_translate)
+            binding.btnTranslateLyrics.isEnabled = true
         }
     }
 
