@@ -225,8 +225,12 @@ Em Configurações → **Backup**:
 O arquivo guarda: favoritas, playlists (e suas fotos), músicas e pastas ocultas, estatísticas
 (reproduções, tempo ouvido, recentes), ajustes de aparência (tema claro/escuro, cor, fonte, cantos,
 fundo e imagem de fundo, ícone e nome do app), ordem das abas, ordenações, equalizador, aleatório/repetir,
-letras automáticas, fotos das pastas, capas personalizadas de músicas e letras anexadas. A fila atual e
+letras automáticas, fotos das pastas, capas personalizadas de músicas e letras anexadas, além das traduções de letras já armazenadas em cache. A fila atual e
 o ponto de reprodução não entram.
+
+As traduções em cache também são incluídas no ZIP. Na restauração, o app associa os arquivos de tradução
+à música correspondente usando o mapeamento de músicas do backup, ajustando os IDs internos quando
+necessário. Assim, traduções já obtidas podem continuar disponíveis sem novo download.
 
 As músicas são salvas com caminho, título, artista e duração, porque o número interno do Android muda
 em outro aparelho. Ao restaurar, cada música é encontrada de novo pelo caminho ou por título + artista +
@@ -303,6 +307,14 @@ tempo ouvido).
 - A busca roda a cada 15 minutos (o menor intervalo que o Android permite), com 4 músicas ao mesmo
   tempo; músicas não encontradas são tentadas de novo após 15 minutos.
 - Nada para configurar. Para desligar: Configurações → *Letras automáticas*.
+
+### Tradução das letras
+No player, abra o menu ⋮ e ative **Tradução das letras**. A opção fica salva e continua ativa ao trocar de música.
+- As linhas traduzidas aparecem abaixo das linhas originais sincronizadas; os tempos e a letra original não são alterados.
+- O app usa cache local para reutilizar traduções já obtidas e agrupa versos para reduzir o número de requisições. A tradução é iniciada por escolha do usuário.
+- Letras identificadas como português (incluindo expressões brasileiras informais) não são enviadas para tradução nem recebem uma segunda linha duplicada. Letras curtas ou misturadas podem não ser identificadas corretamente.
+- A tradução depende de serviços externos e de internet. Os provedores públicos podem limitar requisições ou ficar indisponíveis; nesse caso, a letra original continua disponível.
+- Quando a tradução é solicitada, o texto da letra é enviado ao serviço de tradução escolhido. Desative a opção no mesmo menu para parar novas traduções.
 
 ### Sincronia das letras
 Letras de outras versões da música (ao vivo, edição de rádio, intro mais longa) podem ficar adiantadas
@@ -413,6 +425,7 @@ app/src/main/java/com/missionbreak56/musicplayer/
 
 | Versão | Principais mudanças |
 |---|---|
+| **2.25.0** | Tradução opcional das letras sincronizadas para português, com cache local, vários provedores e detecção para não traduzir letras que já estão em português; controle no menu ⋮ do player; busca de letras mais precisa para versões ao vivo e remixes; backup e restauração também preservam as traduções em cache |
 | **2.24.4** | Álbuns e artistas que só diferiam na capitalização (ex.: Kamaitachi / kamaitachi) deixam de aparecer duplicados |
 | **2.24.3** | Os nomes das abas (Pastas, Músicas, Álbuns, Artistas) passam a acompanhar a fonte escolhida em Personalizar |
 | **2.24.2** | Escolher a foto de uma pasta a partir das músicas mostra todas as capas da biblioteca (antes parava em 100) |
