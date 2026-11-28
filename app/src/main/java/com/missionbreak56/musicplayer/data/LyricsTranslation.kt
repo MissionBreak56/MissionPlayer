@@ -9,6 +9,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.delay
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
@@ -45,8 +46,8 @@ class MyMemoryTranslationProvider : LyricsTranslationProvider {
                 "https://api.mymemory.translated.net/get?q=$query&langpair=$language"
             ).openConnection() as HttpURLConnection)
             try {
-                connection.connectTimeout = 3_500
-                connection.readTimeout = 6_000
+                connection.connectTimeout = 5_000
+                connection.readTimeout = 10_000
                 connection.requestMethod = "GET"
                 connection.setRequestProperty("User-Agent", "MissionPlayer/2.7")
                 val code = connection.responseCode
@@ -157,7 +158,7 @@ class LyricsTranslationManager(
         } else {
             // Translate several lines at once instead of waiting for one HTTP round-trip
             // per verse. A small concurrency cap keeps the free endpoint from being flooded.
-            val semaphore = Semaphore(4)
+            val semaphore = Semaphore(2)
             val uniqueTexts = lines.map { it.text.trim() }
                 .filter { it.isNotBlank() && it !in setOf("♪", "♫", "♬") }
                 .distinct()
