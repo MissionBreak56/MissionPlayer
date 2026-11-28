@@ -4,6 +4,10 @@ import android.content.Context
 import android.text.Html
 import android.os.Build
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
@@ -41,8 +45,8 @@ class MyMemoryTranslationProvider : LyricsTranslationProvider {
                 "https://api.mymemory.translated.net/get?q=$query&langpair=$language"
             ).openConnection() as HttpURLConnection)
             try {
-                connection.connectTimeout = 5_000
-                connection.readTimeout = 10_000
+                connection.connectTimeout = 3_500
+                connection.readTimeout = 6_000
                 connection.requestMethod = "GET"
                 connection.setRequestProperty("User-Agent", "MissionPlayer/2.7")
                 val code = connection.responseCode
@@ -151,14 +155,24 @@ class LyricsTranslationManager(
         val translated = if (cached != null && cached.size == lines.size) {
             cached
         } else {
-            val results = ArrayList<String>(lines.size)
-            for (line in lines) {
+            // Translate several lines at once instead of waiting for one HTTP round-trip
+            // per verse. A small concurrency cap keeps the free endpoint from being flooded.
+            val semaphore = Semaphore(4)
+            val uniqueTexts = lines.map { it.text.trim() }
+                .filter { it.isNotBlank() && it !in setOf("♪", "♫", "♬") }
+                .distinct()
+            val translatedByText = coroutineScope {
+                uniqueTexts.map { text ->
+                    async(Dispatchers.IO) {
+                        text to semaphore.withPermit {
+                            provider.translate(text, targetLanguage).trim()
+                        }
+                    }
+                }.map { it.await() }.toMap()
+            }
+            val results = lines.map { line ->
                 val text = line.text.trim()
-                results += if (text.isBlank() || text in setOf("♪", "♫", "♬")) {
-                    ""
-                } else {
-                    provider.translate(text, targetLanguage).trim()
-                }
+                if (text.isBlank() || text in setOf("♪", "♫", "♬")) "" else translatedByText[text].orEmpty()
             }
             if (results.size != lines.size || results.anyIndexed { index, value ->
                     lines[index].text.isNotBlank() && lines[index].text !in setOf("♪", "♫", "♬") && value.isBlank()
